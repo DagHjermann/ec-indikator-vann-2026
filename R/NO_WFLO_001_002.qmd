@@ -433,7 +433,11 @@ We use the observed daily riverflow from the last 20 years that data are availab
 # run if "dat" is not defined in memory
 if (!"dat" %in% ls()){
 
-  dat <- read_csv("../data/seriedata.zip")
+  dat <- read_csv("../data/seriedata.zip") |> 
+    mutate(
+      year = lubridate::year(date),
+      month = lubridate::month(date))
+  )
   
 }
 
@@ -1235,8 +1239,8 @@ sessionInfo()
 
 if (FALSE){
   
-  # CREATE geo_points.gpkg  
-  # FOR LOCAL USE ON DAG'S PC
+  # CREATE geo_points.gpkg from GeoNorge county data (NorskeFylkerKommunerIllustrasjonsdata2024)
+
   
   # read county data  
   Sys.setlocale("LC_CTYPE", "Norwegian_Norway.utf8")
