@@ -8,3 +8,5 @@ seriedata.zip
 seriestasjoner.csv     
 seriestasjoner_meta.csv  
 
+## NO_EELG_001.qmd  
+VM_export_eelgrass_station-based-search_2026-09-13.csv  
