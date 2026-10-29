@@ -2,18 +2,16 @@
 
 _Vennligst fyll ut denne README.md-malen i henhold til instruksjonene. Gjør prosjektspesifikke tilpasninger der det er nødvendig. Fjern alle instruksjoner og kommentarer når du er ferdig._
 
-- **Norsk tittel**: [Prosjektnavn]-[Årstall]
+- **Norsk tittel**: Indikatorutvikling for vassdrag og kystvann i 2026-2026
 - **Prosjekteier**: Miljødirektoratet
-- **Oppdragstaker**: [Oppdragstaker]
-- **Leveringsdato**: [Leveringsdato]
+- **Oppdragstaker**: NIVA
+- **Leveringsdato**: 30.10.2026
 - **Nedlastingslenke:** [dataleveranser.miljodirektoratet.no/nedlasting/leveranse-id](https://dataleveranser.miljodirektoratet.no/nedlasting/<leveranse-id>) _Fyll inn URL til nedlastingssiden for leveransen i Dataleveranse-applikasjonen (kun for offentlige leveranser)._
 
 Kort beskrivelse av formål og innhold i repoet.
 
-- **English**:
-- **Norwegian**:
-
-Eksempel: "Beregninger av bestandsindekser og flerartsindekser i Norsk hekkefuglovervåking 2026"
+- **Develop and calculate indicators for rivers and coastal water for national ecosystem condition accounting**:
+- **Utvikle og beregne indikatorer for vassdrag og kystvann til bruk i nasjonalt tilstandsregnskap**:
 
 ## 1. Bidragsytere / Kontakt
 
