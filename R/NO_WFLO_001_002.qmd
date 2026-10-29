@@ -39,7 +39,7 @@ verbatimEcosystem: # add name of the ecosystem or naturetype according to any re
   - Elv
 yearAdded: 2026 # the year when the indicator was first submitted to ecRxiv
 yearLastUpdate: 2026
-status: incomplete # options are complete, incomplete, or deprecated
+status: complete # options are complete, incomplete, or deprecated
 Version: "0.1.0" # See wiki page: https://github.com/NINAnor/ecRxiv/wiki#versioning
 VersionComment: First try # Describe briefly how this version differs from earlier versions 
 url: https://github.com/NINAnor/ecRxiv/tree/main/indicators/XX_YYYY_ZZZ
@@ -58,24 +58,20 @@ format:
 execute: 
   cache: true
 author:
-  - name: Roar Brænden              # Enter name
-    email: roar.branden@niva.no  # Enter email
-    affiliations:
-      - id: 1
-        name: Norwegian Institute for Water Research # Enter affiliations
   - name: Dag Øystein Hjermann
     email: dag.hjermann@niva.no
     affiliations:
-      - ref: 1               # To reuse affiliations reference the id like this
-  - name: Johnny Håll
-    email: johnny.hall@niva.no
+      - id: 1
+        name: Norwegian Institute for Water Research # Enter affiliations
+  - name: Roar Brænden              # Enter name
+    email: roar.branden@niva.no  # Enter email
     affiliations:
       - ref: 1               # To reuse affiliations reference the id like this
-AuthorList: Brænden, R., Hjermann, D.Ø. and Håll. J.  # Doe, J. and Last, F.  
-date: January 1, 1901 # Enter date
-data_availability: none
-code_reproducibility: none
-open_science_badge: none
+AuthorList: Hjermann, D.Ø. and Brænden, R.  # Doe, J. and Last, F.  
+date: October 30, 2026 # Enter date
+data_availability: gold
+code_reproducibility: gold
+open_science_badge: gold
 callout-icon: false
 lightbox: true
 css: ../../../style.css
@@ -99,7 +95,7 @@ codeReviewers:
     reviewType: reproducibility check
     github: johndoe
 editor_options: 
-  chunk_output_type: inline
+  chunk_output_type: console
 ---
 
 <!--# This is a template for how to document the indicator analyses. Make sure also to not change the order, or modify, the headers, unless you really need to. This is because it easier to read if all the indicators are presented using the same layout. If there is one header where you don't have anything to write, just leave the header as is, and don't write anything below it. If you are providing code, be careful to annotate and comment on every step in the analysis. Before starting it is recommended to fill in as much as you can in the metadata file. This file will populate the initial table in your output.-->
@@ -374,7 +370,7 @@ The variables are scaled at the point level and then aggregated.
 
 <!--# Define the reference condition (or refer to where it is defined). Note the distinction between reference condition and reference levels 10.3897/oneeco.5.e58216  -->
 
-The reference condition is that seasonal water flow patterns are unaffected by upstream hydropower development. Note that the NEVINA estimates used to estimate reference levels of flood and low-water is based on the current land area use, including agricultural fields which also affect flood levels.
+The reference condition is that seasonal water flow patterns are unaffected by upstream hydropower development. Note that the NEVINA estimates used to estimate reference levels of flood and low-water is based on the current land area use, including agricultural fields which also affect flood levels (NVE 2025).  
 
 ### 4.2 Reference levels
 
@@ -416,6 +412,10 @@ We report the statistical uncertainty, i.e. the standard error of the weighted m
 
 <!--# You can add references manually or use a citation manager and add intext citations as with crossreferencing and hyperlinks. See https://quarto.org/docs/authoring/footnotes-and-citations.html -->
 
+Hofstad, Knut; Halleraker, Jo Halvard; Bakken, Tor Haakon 2026. Vannkraft. Store norske leksikon på snl.no. Retrieved 29. oktober 2026 from https://snl.no/vannkraft.  
+  
+NVE 2205. NEVINA Brukerveiledning. Retrieved 29. oktober 2026 from https://publikasjoner.nve.no/diverse/2025/Brukerveiledning.i.Nevina2025.pdf.   
+
 ## 7. Import and prepare datasets
 
 <!--# All the data import and preparation should be done in this chapter, before the analysis chapter. As a minimum, add code for importing data, and describe or show the data structure. You may also explain certain variables, what they represent, and their distributions -->
@@ -430,14 +430,15 @@ We use the observed daily riverflow from the last 20 years that data are availab
 
 # read data and station data (the latter includes NEVINA calculations)  
 
-# run if "dat" is not defined in memory
+# run if "dat" doesn't exist in memory 
+# (just to save a little time when debugging)
 if (!"dat" %in% ls()){
 
   dat <- read_csv("../data/seriedata.zip") |> 
     mutate(
       year = lubridate::year(date),
-      month = lubridate::month(date))
-  )
+      month = lubridate::month(date)
+    )
   
 }
 
@@ -588,7 +589,7 @@ flow_statistics |>
   left_join(stations, by = join_by(stasjonsnr)) |> 
   ggplot(aes(highflow_mean, lowflow_mean, fill = areal_km2)) +
          geom_point(shape = 21, size = rel(2)) +
-  scale_fill_viridis_b() +
+  scale_fill_viridis_b(breaks = c(0,100,200,500,1000,3000,6000, 12000), option = "inferno") +
   scale_x_log10() +
   scale_y_log10()
 
@@ -598,7 +599,7 @@ flow_statistics |>
 ### 9.2 Indices and indicators  
 
 
-#### a. Calculate flood index and low-water indicator        
+#### Calculate flood index and low-water indicator        
 
 The indices are calculated by comparing the observed statistics of flood and low-water flow with NEVINA's estimates of the same parameters. 
   
@@ -643,7 +644,7 @@ plot_grid(gg1, gg2, ncol=1)
 
 ```
 
-#### b. Add geodata and county    
+#### Add geodata and county    
 
 ```{r}
 
@@ -898,7 +899,7 @@ normal_riverflow_limit <- 5
 
 As the original dataset has many small rivers, as well as river at high altitudes, we decided do focus on relatively low-lying rivers over a certain size. We selected rivers below `r altitude_limit` m altitude, except in Finnmark (which has lower maximum altitude) where we selected rivers below `r altitude_limit_finnmark` m. We also selected only rivers above `r normal_riverflow_limit` m3/second river flow on average.  
 
-#### a. Add groupings  
+#### Add groupings  
 
 ```{r}
 dat_indekser <- dat_indekser |> 
@@ -928,50 +929,10 @@ dat_indekser <- dat_indekser |>
 ```
 
 
-#### b. LEAFLET
-
-```{r}
-if (FALSE){
-  
-  library(leaflet)
-  
-  # use this to choose transformation from normal water flow to point size:
-  quantile(log10(dat_leaflet$normalQ_m3s))
-  hist(log10(dat_leaflet$normalQ_m3s)+3)
-  hist((log10(dat_leaflet$normalQ_m3s)+2.5)*1.3)
-
-  dat_leaflet <- dat_indekser |>
-    st_as_sf() |> 
-    st_transform(4326) |> 
-    mutate(
-      col = case_when(
-        group2 == "low,big" ~ "red",
-        group2 == "low,small" ~ "green",
-        group2 == "high,big" ~ "black",
-        group2 == "high,small" ~ "blue"),
-      size = 1.3*(log10(normalQ_m3s)+2.5),
-      popup = paste0(navn, "<br>", 
-                     areal_km2, " km2<br>",
-                     normalQ_m3s, " m3/s<br>",
-                     altitude, " m<br>",
-                     "dam index = ", index_dams)
-    )
-  coord <- st_coordinates(dat_leaflet)
-  dat_leaflet$lng <- coord[,1]
-  dat_leaflet$lat <- coord[,2]
-  # dat_leaflet 
-  leaflet(dat_leaflet) |> 
-    addTiles() |> 
-    addCircleMarkers(radius = ~size, weight = 2, 
-                     color = "black", 
-                     fillColor = ~col, fillOpacity = 0.7,
-                     popup = ~popup)
-
-  }
-```
 
 
-#### b. Map   
+
+#### Map   
 ```{r}
 
 ggplot(dat_indekser) + 
@@ -982,7 +943,7 @@ ggplot(dat_indekser) +
 
 ```
 
-#### d. Altitude vs dams 
+#### Altitude vs dams 
 ```{r}
 
 ggplot(dat_indekser, aes(altitude, log(index_dams+1), 
@@ -1120,15 +1081,25 @@ ref_1
 
 ### 9.8 National means  
 
-* Despite having made a subset of dataset with only low-lying rivers, and excluding very small rivers, only 47% of the rivers have dams in their catchment  
-* In Norway, approxmately 70% of rivers are affected by hydropower, usually with dams (we were not able to find more exact estimates). Thus, in our sample, we have over-representation of rivers not affected by dams   
-* To compensate for the bias of the dataset, we use inverse weighting for the rivers in ours selected subset.  
-
+**Calculate proportion of rivers affected by hydropower development**   
 ```{r}
 # weights
 n_dam <- sum(dat_indekser2$dams == "dams")
 n_nodam <- sum(dat_indekser2$dams == "no dams")
-n_dam/(n_dam + n_nodam)  # 47% dams
+dam_proportion <- round(n_dam/(n_dam + n_nodam),3)
+cat(
+  "Proportion of the dataset's rivers that are affected by hydropower development:",
+  dam_proportion,
+  "\n")
+```
+
+* Despite having made a subset of dataset with only low-lying rivers, and excluding very small rivers, only `r 100*dam_proportion` % of the rivers have dams in their catchment  
+* In Norway, it is estimated that approximately 70% of rivers are affected by hydropower, usually with dams (Hofstad et al. 2026). We were not able to find more exact estimates. Thus, in our sample, we have a strong overrepresentation of rivers not affected by dams-     
+* To compensate for the bias of the dataset, we use inverse weighting for the rivers in ours selected subset. 
+
+**Estimated weighted mean of flood indicator**  
+```{r}
+# inverse weighting, assuming that the true proportion of Norway's rivers that are affected by hydropower is 0.7   
 w <- c(0.7/n_dam, 0.3/n_nodam)
 w <- w/sum(w)
 
@@ -1139,17 +1110,19 @@ dat_indekser2 <- dat_indekser2 |>
   )
 
 # weighted mean
-mod <- lm(flood_indicator ~ 1, dat_indekser2, weights = dam_weight)
-summary(mod)
-
-# weighted mean
-mod <- lm(lowwater_indicator ~ 1, dat_indekser2, weights = dam_weight)
-summary(mod)
-
+mod1 <- lm(flood_indicator ~ 1, dat_indekser2, weights = dam_weight)
+summary(mod1)
 
 ```
 
+**Estimated weighted mean of low-water indicator**  
+```{r}
+# weighted mean
+mod2 <- lm(lowwater_indicator ~ 1, dat_indekser2, weights = dam_weight)
+summary(mod2)
 
+
+```
 
 ## 10. Results
 
@@ -1160,6 +1133,25 @@ Repeat the final results here. Typically this is a map or table of indicator val
 This is typically where people will harvest data from, so make sure to include all relevant output here, but don't clutter this section with too much output either.
 
 -->
+
+```{r}
+
+result <- data.frame(
+  Estimate = c(
+    summary(mod1)$coef[1,1],
+    summary(mod2)$coef[1,1]
+  )
+)
+rownames(result) <- c(
+    "Weighted mean of flood indicator",
+    "Weighted mean of low-water indicator")
+
+result %>%
+  kbl(caption = "Final estimates of flood and low-water indicators") %>%
+  kable_classic()
+
+```
+
 
 ## 11. Export file
 
@@ -1180,20 +1172,19 @@ Optional: Display the code (don't execute it) or the workflow for exporting the 
 
 **CRediT statement**
 
-* Conceptualization: [Initials]
-* Methodology: [Initials]
-* Data curation: [Initials]
-* Formal analysis: [Initials]
-* Investigation: [Initials]
-* Software: [Initials]
-* Validation: [Initials]
-* Visualization: [Initials]
-* Resources: [Initials]
-* Writing – original draft: [Initials]
-* Writing – review & editing: [Initials]
-* Supervision: [Initials]
-* Project administration: [Initials]
-* Funding acquisition: [Initials]
+* Conceptualization: DØH
+* Methodology: DØH
+* Data curation: DØH
+* Formal analysis: DØH
+* Investigation: DØH
+* Software: RB,DØH
+* Validation: DØH,RB
+* Visualization: DØH
+* Resources: DØH,RB
+* Writing – original draft: DØH
+* Writing – review & editing: DØH
+* Project administration: DØH
+* Funding acquisition: DØH and several others  
 
 
 **MeRIT attribution**
@@ -1201,25 +1192,16 @@ Optional: Display the code (don't execute it) or the workflow for exporting the 
 This part supplements the CRediT statement with more granularity for method section.
 
 **Study design**
-The study was designed by [AB, CD].
-
-**Data collection / fieldwork**
-Field data were collected by [AB, EF] between [years]. Sampling protocol was developed by [CD].
-
-**Laboratory procedures**
-DNA extraction was performed by [GH]. Sequencing was conducted by [IJ].
+The study was designed by DØH.
 
 **Data processing**
-Raw data were curated and cleaned by [EF]. Code for preprocessing was written by [KL].
+Raw data were curated and cleaned by RB and DØH. Code for preprocessing was written by RB.
 
 **Statistical analysis**
-All analyses were conducted by [CD] using [software], with verification by [AB].
+All analyses were conducted by DØH using R.
 
 **Visualization**
-Figures were produced by [KL], with input from [CD].
-
-**Reproducibility**
-All code was reviewed and validated by [AB, CD].
+Figures were produced by DØH.
 
 
 
@@ -1239,7 +1221,11 @@ sessionInfo()
 
 if (FALSE){
   
-  # CREATE geo_points.gpkg from GeoNorge county data (NorskeFylkerKommunerIllustrasjonsdata2024)
+  #
+  # APPENDIX 1 - geo_points.gpkg  
+  # Create geo_points.gpkg from GeoNorge county data
+  #   (NorskeFylkerKommunerIllustrasjonsdata2024)  
+  #
 
   
   # read county data  
@@ -1303,5 +1289,49 @@ if (FALSE){
 
 ```
 
+
+```{r Appendix_2}
+if (FALSE){
+  
+  #
+  # APPENDIX 2 - LEAFLET MAP
+  #
+  
+  library(leaflet)
+  
+  # use this to choose transformation from normal water flow to point size:
+  quantile(log10(dat_leaflet$normalQ_m3s))
+  hist(log10(dat_leaflet$normalQ_m3s)+3)
+  hist((log10(dat_leaflet$normalQ_m3s)+2.5)*1.3)
+
+  dat_leaflet <- dat_indekser |>
+    st_as_sf() |> 
+    st_transform(4326) |> 
+    mutate(
+      col = case_when(
+        group2 == "low,big" ~ "red",
+        group2 == "low,small" ~ "green",
+        group2 == "high,big" ~ "black",
+        group2 == "high,small" ~ "blue"),
+      size = 1.3*(log10(normalQ_m3s)+2.5),
+      popup = paste0(navn, "<br>", 
+                     areal_km2, " km2<br>",
+                     normalQ_m3s, " m3/s<br>",
+                     altitude, " m<br>",
+                     "dam index = ", index_dams)
+    )
+  coord <- st_coordinates(dat_leaflet)
+  dat_leaflet$lng <- coord[,1]
+  dat_leaflet$lat <- coord[,2]
+  # dat_leaflet 
+  leaflet(dat_leaflet) |> 
+    addTiles() |> 
+    addCircleMarkers(radius = ~size, weight = 2, 
+                     color = "black", 
+                     fillColor = ~col, fillOpacity = 0.7,
+                     popup = ~popup)
+
+  }
+```
 
 :::
