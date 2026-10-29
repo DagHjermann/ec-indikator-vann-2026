@@ -1,0 +1,1303 @@
+---
+title: "Change in river water flow due to hydropower"
+subtitle: |
+  [NO_WFLO_001] (flood water flow) \
+  [NO_WFLO_002] (winter water flow)  
+# delete the line with the second indicatorID (line 5) 
+# if it's not relevant for you.
+# In the parentheses you can add a word to distinguish multiple indicators 
+# from each other, for example the ecosystem type that they cover
+indicatorID: 
+  - NO_WFLO_001
+  - NO_WFLO_002 # delete whole line if not needed
+# If you are presenting multiple indicators, and have multiple 
+# indicator IDs, then add them as a list here, and make sure you add
+# the same number of list entries, 
+# and in the same order that corresponds to the indicator IDs,  
+# to the meta data fields where the indicators differ. 
+# For example, if the indicators cover different ecosystem types, 
+# add the ecosystems as a list under 'Ecosystems', but if they are in the
+# same realm, same country etc., then you only need to write the realm and
+# country once. 
+indicatorName: 
+  - Change in river water flow due to hydropower # add more by adding another line starting '-'
+verbatimName: 
+  - Endring i elvevannføring grunnet kraftutbygging # the indicator name that us used in the native language
+folderName: XXX_YYY_ZZZ # Leave to be filled out by ecRxiv during typesetting (name of the folder under 'indicators/'). 
+# If it's a single indicator being reported, the folder name should be the same as the indicatorID. 
+# If there are multiple ID's then the folder name could look something like XX_YYY_ZZZ-ÅÅÅ.
+country: Norway
+continent: Europe
+ECT: A1 - Physical state characteristics # e.g. A2 - Chemical State characteristics
+Realm: # Please copy and paste Realms, Biomes and Ecostsem names from here: https://github.com/NINAnor/ecRxiv/wiki#ecosystem-typology 
+  - Freshwater (F)
+Biome: 
+  - F1 Rivers and streams biome
+Ecosystem: 
+  - F1.2 Perm lowland rivers # e.g. F1.3 Freeze-thaw streams
+verbatimEcosystem: # add name of the ecosystem or naturetype according to any relevant local or national typology. E.g. fjell, skog, ... 
+  - Elv
+yearAdded: 2026 # the year when the indicator was first submitted to ecRxiv
+yearLastUpdate: 2026
+status: incomplete # options are complete, incomplete, or deprecated
+Version: "0.1.0" # See wiki page: https://github.com/NINAnor/ecRxiv/wiki#versioning
+VersionComment: First try # Describe briefly how this version differs from earlier versions 
+url: https://github.com/NINAnor/ecRxiv/tree/main/indicators/XX_YYYY_ZZZ
+# To be filled out by ecRxiv during the typesetting, when they will replace XX_YYYY_ZZ with the name of the root folder for the current indicator(s). It should be the same as the indicatorID, but if there are more indicator IDs presented in the same folder, the folder name might be different, e.g. XX_YYYY_AAA-BBB 
+Normalised: Yes  # Yes or no depending on whether the metric has been normliased or not.
+SpatialAggregationPathway: Scale - Aggregate # Describe the aggregation using the standrdaise terminology # e.g. Scale - Transform - Aggregate (length-weighted arithmetic mean) - Truncate
+Precision: #Describe the precition metric you have used. Precision may be reported either as variation among observed values (e.g. standard deviation, variance, range, interquartile range) or as uncertainty around an estimated value (e.g. standard error, confidence interval, credible interval). 
+format: 
+  html:
+    embed-resources: true
+    code-fold: true
+    toc: true
+    toc-title: Contents
+    toc-depth: 3
+    smooth-scroll: true
+execute: 
+  cache: true
+author:
+  - name: Roar Brænden              # Enter name
+    email: roar.branden@niva.no  # Enter email
+    affiliations:
+      - id: 1
+        name: Norwegian Institute for Water Research # Enter affiliations
+  - name: Dag Øystein Hjermann
+    email: dag.hjermann@niva.no
+    affiliations:
+      - ref: 1               # To reuse affiliations reference the id like this
+  - name: Johnny Håll
+    email: johnny.hall@niva.no
+    affiliations:
+      - ref: 1               # To reuse affiliations reference the id like this
+AuthorList: Brænden, R., Hjermann, D.Ø. and Håll. J.  # Doe, J. and Last, F.  
+date: January 1, 1901 # Enter date
+data_availability: none
+code_reproducibility: none
+open_science_badge: none
+callout-icon: false
+lightbox: true
+css: ../../../style.css
+code-links:
+      - text: Add a review
+        icon: github
+        href: https://github.com/NINAnor/ecRxiv
+hide: TRUE # Change to FALSE
+bibliography: references.bib
+codeReviewers:
+  - name: Jane Smith
+    email: jane.smith@example.no
+    affiliations:
+      - id: reviewerInst
+        name: Example Institute
+    reviewType: code review
+    github: janesmith
+  - name: John Doe
+    affiliations:
+      - ref: myID
+    reviewType: reproducibility check
+    github: johndoe
+editor_options: 
+  chunk_output_type: inline
+---
+
+<!--# This is a template for how to document the indicator analyses. Make sure also to not change the order, or modify, the headers, unless you really need to. This is because it easier to read if all the indicators are presented using the same layout. If there is one header where you don't have anything to write, just leave the header as is, and don't write anything below it. If you are providing code, be careful to annotate and comment on every step in the analysis. Before starting it is recommended to fill in as much as you can in the metadata file. This file will populate the initial table in your output.-->
+
+<!--# Load all you dependencies here -->
+
+```{r setup}
+#| include: false
+#| cache: false
+library(knitr)
+library(tidyverse)
+library(kableExtra)
+library(here)
+library(anybadger)
+library(yaml)
+library(tibble)
+library(conflicted)
+# weird workarounds for cache issues
+conflicts_prefer(dplyr::filter)
+conflicts_prefer(dplyr::lag)
+conflicts_prefer(dplyr::select)
+pull<-dplyr::pull
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<!--# Load functions specific to this indicator -->
+
+```{r custom_functions_and_additional_packages}
+
+library(cowplot)     # plot_grid()
+library(visreg)      # visreg() 
+library(MuMIn)       # dredge()
+library(sf)          # read_
+source("NO_WFLO_001_002_functions.R")
+
+# handling Norwegian letters 
+Sys.setlocale("LC_CTYPE", "Norwegian_Norway.utf8")
+
+```
+
+
+<!--# The following parts are autogenerated. Do not edit. -->
+
+
+```{r source}
+#| echo: false
+#| cache: false
+source(here::here("_common.R"))
+```
+
+```{r reviewers}
+#| echo: false
+#| results: asis
+
+if (!is.null(yaml_data$codeReviewers)) {
+  reviewers <- purrr::map_chr(yaml_data$codeReviewers, "name")
+  
+  htmltools::HTML(paste0(
+    '<div id="title-block-header" class="quarto-title-block default">
+       <div class="quarto-title-meta">
+         <div>
+           <div class="quarto-title-meta-heading">Reviewed by</div>
+           <div class="quarto-title-meta-contents">',
+    paste(reviewers, collapse = "; "),
+    '</div>
+         </div>
+       </div>
+     </div>',
+    sep = ""
+  ))
+}
+```
+
+::: {layout-ncol="6"}
+
+```{r statusBadge}
+#| echo: false
+status_badge(as.character(st))
+```
+
+```{r versionBadge}
+#| echo: false
+version_badge(my_version_number = as.character(version[[1]]))
+```
+
+```{r dataBadge}
+#| echo: false
+data_badge(as.character(badges[[1]]))
+```
+
+```{r codeBadge}
+#| echo: false
+code_badge(as.character(badges[[2]]))
+```
+
+```{r openScienceBadge}
+#| echo: false
+open_science_badge(as.character(badges[[3]]))
+```
+
+```{r licenseBadge}
+#| echo: false
+# The following inserts a badge specifying the GPL GNU version 3 license. ecRxiv recommends using this license, but you can decide to use another. Contact ecRxiv for help in insert a badge for a different license
+license_badge()
+```
+
+
+::: 
+ 
+
+> **Recommended citation**: `r paste(auth, " ", year, ". ", name, " (ID(s): ", folder_name, ") ", "v. ", version, ". ecRxiv: ", url, sep="")`
+
+
+
+::: {.callout-tip collapse="true"}
+## Metadata
+```{r tbl-meta2}
+#| tbl-cap: 'Indicator metadata'
+#| echo: false
+#| warning: false
+meta |>
+  dplyr::filter(Variable %in% c(
+    "Indicator ID",
+    "Indicator Name",
+    "verbatimName",
+    "Continent",
+    "Country",
+    "Ecosystem Condition Typology Class", 
+    "Realm",
+    "Biome",
+    "Ecosystem",
+    "verbatimEcosystem",
+    "Year added", 
+    "Last update",
+    "Version",
+    "Version comment",
+    "Normalised",
+    "Spatial aggregation pathway",
+    "Precision")) |>   
+  kable()
+
+```
+:::
+
+::: {.callout-tip collapse="true"}
+
+## Log
+
+<!--# Update this logg with short messages for each update -->
+- 01 Jan. 1901 - Original PR
+:::
+
+
+<hr />
+
+<!--# Document you work below.  -->
+
+## 1. Summary
+
+<!--# 
+With a maximum of 300 words, describe the indicator in general terms as you would to a non-expert. Think of this as a kind of common language summary. Follow the four numbers sub-headers below. under point 2, it is possible under  include a bullet point list of the specific steps in the workflow. 
+ -->
+The natural pattern of river water flow in most parts of Scandinavia is low flow during winter, when most precipitation comes in the form of snow, and with a flood peak during spring and early summer when the snow melts. Hydropower development involving large water reservoirs affects this pattern, typically by increasing the water flow during winter and decreasing water flow during spring and early summer. This indicator uses measurements of water flow from NVE's stations during the last 20 years and compares it with estimates of natural water flow at the same locations, using NVE'S NEVINA model tool.
+
+1. **Background and rationale**:
+<!-- What does the metric represent? Why is this relevant for describing ecosystem condition in this ecosystem?
+What are the main anthropogenic impact factors? -->
+The seasonal pattern of river water flow is an important factor shaping river ecosystems. [Add more on how both winter low water flow and spring floods affect ecosystems.] 
+
+2. **Methods**:
+<!-- What kind of data is used? How is the data customized (modified, estimated, integrated) to fit its purpose as an indicator? -->
+3. **Interpretation**:
+<!-- Add a very short description of how the indicator values should be interpreted. Here's an example for a bumblebee indicator: An indicator value of 1 signifies an intact bumblebee community. Values decreasing toward zero reflect negative ecological change, specifically the decline of species expected to be present. This metric does not account for potentially positive changes, such as increases in species' abundance or the arrival of new species. Tip: Add text on the line directly following the subheader, and don't introduce blank lines. This way the whole paragraph renders as a block quote. -->
+An indicator value of 1 signifies ...
+Values decreasing toward zero reflect...
+
+4. **Results and development needs**:
+<!-- Briefly, what does the indicator say about the ecosystem condition. What is the current status of  the metric (can it be used or is it still in development), and what immediate tasks remain to improve the indicator or to make the indicator operational -->
+
+
+
+## 2. About the underlying data
+
+<!--# Give a general introduction the datasets you have used, and provide more specific details in the sub-chapters.  -->  
+
+There are two main datasets of underlaying data:
+
+1) Measured low-flow indices and flood values for rivers (at the posiotion of river flow measurement stations)
+Low-flow indices was set to the 5% percentile of water flow during the winter months (1. October-30. April) in both cases.
+
+2) Estimated low-flow indices and flood values for rivers (at the posiotion of river flow measurement stations) if the upstream river catchment was unaffected by hydropower development. The estimates were found using NEVINA, which calculates catchment boundaries and catchment characteristics based on natural watershed boundaries. This means that existing regulations, reservoirs, or other hydrological alterations within the catchment are not taken into account. All catchment characteristics, low-flow indices, and flood values are calculated automatically. The estimates are based on the observed climate in the period 1991-2020.
+
+
+### 2.1 Spatial and temporal resolution and extent
+
+<!--# Describe the temporal and spatial resolution and extent of the data used -->
+
+Point-based measurements.
+
+### 2.2 Sampling design
+
+<!-- How was the data sampled? Describe potential sampling biases -->
+
+BAsed on NVEs network of river flow stations
+
+### 2.3 Original units
+
+<!--# What are the original units for the most relevant  variables in the data-->
+
+Cubic meters/second.
+
+### 2.4 Instructions for citing, using and accessing data
+
+<!--# Is the data openly available? If not, how can one access it? What are the key references to the datasets?   -->
+
+### 2.5 Additional comments about the dataset
+
+<!--# Optional. Text here -->
+
+## 3. Indicator properties
+
+### 3.1 Ecosystem Condition Typology Class (ECT)
+
+<!--# Describe the rationale for assigning the indicator to the ECT class. See https://oneecosystem.pensoft.net/article/58218/
+This doesnt need to be very long. Maybe just a single sentence. -->
+
+The indicator is assigned to "A1 - Physical state characteristics" as it relates to extremes of water flow, which affects the physical effects of river and river-related habitats. For instance, with decreasing floods, sand banks along the rivers become colonised  by plants and sand banks no longer functions as a habitat for specialised, red-listed species.
+
+
+
+
+### 3.1.1 Other condition typologies
+
+<!--# Optional: Add text about other standards or typologies, such as alternative national condition typologies, and how the indicator relates to these -->
+
+
+
+
+### 3.2 Ecosystem condition characteristic
+
+<!--# 
+
+A short (one to three word) tag or name for the ecosystem condition characteristic represented in the indicator. See 10.3897/oneeco.6.e58218 for information on what these characteristics might be.
+
+Examples: 'intact hydrology'; 'near-natural species composition'; 'soil stability'; sustainable trophic interactions'. 
+
+The term 'characteristic' is used in a similar way  to the term 'criteria' in Multiple Criteria Decision Making.  
+
+-->
+
+### 3.3 Collinearities with other indicators
+
+<!--# Describe known collinearities with other metrics (indicators or variables) that could become problematic if they were also included in the same Ecosystem Condition Assessment as the indicator described here. -->
+
+
+### 3.4 Impact factors
+
+<!--# Describe the main natural and anthropogenic factors that affecst the metric -->
+
+The specific impact factor in this analysis is hydropower development. Other impact factors are area use (especially extent of agricultural and urban land) and climate change. These are specifically not taken into account.
+
+### 3.5 Spatial aggregation
+
+<!-- Describe in word the same aggregation pathway presented in the top yaml (the metadata). If you have scaled against the reference value, it is especially important to know if you did any avergaing or summations etc. beforehand. An example text for a rather simple case could be: "The variable is scaled at the initial polygon level and the point estimate is a area-weighted arithmetic mean of all polygins. There is no transformation, and truncation is not needed as the indicator becomes naturally bound between 0 and 1".  -->  
+
+The variables are scaled at the point level and then aggregated. 
+
+## 4. Reference condition and levels
+
+### 4.1 Reference condition
+
+<!--# Define the reference condition (or refer to where it is defined). Note the distinction between reference condition and reference levels 10.3897/oneeco.5.e58216  -->
+
+The reference condition is that seasonal water flow patterns are unaffected by upstream hydropower development. Note that the NEVINA estimates used to estimate reference levels of flood and low-water is based on the current land area use, including agricultural fields which also affect flood levels.
+
+### 4.2 Reference levels
+
+<!--# 
+
+If relevant (i.e. if you have normalised a variable), describe the reference levels used to normalise the variable. 
+
+Use the terminology where X~0~ refers to the reference level (the variable value) denoting the worst possible condition; X~100~denotes the optimum or best possible condition; and X~*n*~, where in is between 0 and 100, denotes any other anchoring points linking the variable scale to the indicator scale (e.g. the threshold value between good and bad condition X~60^). 
+
+Why was the current option chosen and how were the reference levels quantified? If the reference values are calculated as part of the analyses further down, please repeat the main information here.
+
+ -->
+ 
+Reference condition for seasonal water flow patterns are based on calculations done by Nevina. 
+
+
+#### 4.2.1 Spatial resolution and validity
+
+<!--# 
+
+Describe the spatial resolution of the reference levels. E.g. is it defined as a fixed value for all areas, or does it vary. Also, at what spatial scale are the reference levels valid? For example, if the reference levels have a regional resolution (varies between regions), it might mean that it is only valid and correct to use for normalising local variable values that are first aggregated to regional scale. However, sometimes the reference levels are insensitive to this and can be used to scale variables at the local (e.g. plot) scale. 
+
+ -->
+
+## 5. Uncertainties
+### 5.1 General uncertainties
+<!--# Describe the main reasons why you might not trust 100% the final value to represent the given ecosystem characteristic for the give ecosystem type. What aspects of this condition metric are most sensitive to subjective decitions? Is the spatial sampling sufficient? Does the choice of modeling framework affect the values? Is the metric relevant do describe ecosystem condition for the give ecosystem type?  -->
+
+The mathematical model used in NEVINA is based on the runoff map for the 1961-1990 period. We have used the runoff map for 1991-2020 as input to this model, but as the model itself has not been updated, this constitutes a source of error and possibly also an unknown bias.  
+
+
+### 5.2 Reported uncertainties
+<!-- Describe the nature of the errors you (hopefully) provide alongside the point estimate for the condition metric. It is especially important to clarify if the errors are inferential (referring to the uncertainty of the point estimate) or descriptive (referring to the data itself). Here' an example text: "What we report as uncertainties in @tbl-finalTable are inferential and refer to the uncertainty around the point estimates. It does not directly describe variation in the data itself. 
+However, the variation in the mean is defined by the spatial variation only, and quartiles are obtained by bootstrapping the set of localities within a region, and calculating the indicator for each of 9999 such samples".   -->
+
+We report the statistical uncertainty, i.e. the standard error of the weighted mean of the indicator.  
+
+## 6. References
+
+<!--# You can add references manually or use a citation manager and add intext citations as with crossreferencing and hyperlinks. See https://quarto.org/docs/authoring/footnotes-and-citations.html -->
+
+## 7. Import and prepare datasets
+
+<!--# All the data import and preparation should be done in this chapter, before the analysis chapter. As a minimum, add code for importing data, and describe or show the data structure. You may also explain certain variables, what they represent, and their distributions -->
+
+### 7.1 Observed river flow
+
+<!--# Import and prepare the first dataset for analysis. Change the header from Dataset A to the name of the actual dataset. -->
+
+We use the observed daily riverflow from the last 20 years that data are available (2004-2023). 
+
+```{r read_observed_riverflow}
+
+# read data and station data (the latter includes NEVINA calculations)  
+
+# run if "dat" is not defined in memory
+if (!"dat" %in% ls()){
+
+  dat <- read_csv("../data/seriedata.zip")
+  
+}
+
+cat("Number of measurements:", nrow(dat), "\n")
+cat("Number of stations:", length(unique(dat$stasjonsnr)), "\n")
+cat("Time coverage:", min(dat$date), "-", max(dat$date), "\n")
+
+head(dat, 3) |> kable(caption = "Data sample (one station, three days)")
+
+```
+
+
+### 7.2 Estimated flood and low-water values for natural watershed
+
+These are estimates of the mean flood (highest daily water flow over a year) and low-water values (5% percentiles) of water flow through the winter (1. October-30. April), esimated using the NEVINA tool offered by NVE (nevina.nve.no),  For mean flood, we used the estimates based on "Regional flomfrekvensanalyse" (RFFA-2018).  Is input, we used the observed meteorological data (precipitation, snow, temperature, etc.) for the 30-year period 1991-2020. 
+
+```{r read_nevina_results}  
+
+stations_orig <- read_seriestasjoner("../data/seriestasjoner.csv")
+
+head(stations_orig, 3) |> kable(caption = "Data sample (three stations)")  
+
+```
+
+### 7.3. Watershed metadata    
+
+These data was downloaded from seriekart.nve.no and contains a large number of variables for the catchment of each measurement station. The most interesting ones for our analysis are the indices of hydropower regulation and hydropower dams, which both on scale 0-1 and indicate how much of the catchment  that is affected by hydropower regulation (including run-of-river hydro power stations) and hydropower regulation dams ("Reguleringsgrad magasin"). We focused on the latter, hereby called **dam index**. For many stations these indices are small or zero, but they mostly have quite small catchments.  
+
+```{r read_metadata}  
+
+# add degree of hydropower dams to the station data
+
+# all metadata 
+stations_meta <- readr::read_csv("../data/seriestasjoner_meta.csv", col_types = columntypes_meta, na = c("NA", "Ikke angitt"))
+
+# spec(stations_meta)
+# names(stations_meta)
+
+# we pick degree of hydropower dams, change column name, and add that column to 'stations_orig'  
+
+stations_meta <- stations_meta |> 
+  rename(
+    steepness = `Bratthet (1085-gradient, m/km)`,
+    perc_bogs = Myrprosent,
+    perc_lake = `Effektiv sjøprosent`,
+    perc_agri = Jordbruksprosent,
+    perc_forest = Skogprosent,
+    perc_mount = Snaufjellprosent,
+    perc_glacier = Breprosent,
+    river_gradient = `Elvegradient (m/km)`,
+    river_length = `Elvelengde (km)`,
+    river_density = `Elvetetthet (m/km)`,
+    alti_med = `Medianhøyde (m)`,
+    alti_10p = `Høyde 10 persentil (m)`,
+    alti_90p = `Høyde 90 persentil (m)`,
+    altitude = `Høyde over havet (m)`,
+    index_regul = `Reguleringsgrad areal`,
+    index_dams = `Reguleringsgrad mag,`
+  )
+
+stations_orig2 <- merge(stations_orig, stations_meta, by =  "stasjonsnr") 
+
+# all metadata 
+stations <- stations_orig2 |> 
+  filter(!is.na(areal_km2) & !is.na(index_dams))
+
+gg1 <- ggplot(stations, aes(x = areal_km2, y = index_dams)) +
+  geom_point() +
+  labs(x = "Catchment area (km2)", y = "Hydropower dam index")  
+
+gg2 <- ggplot(stations, aes(x = areal_km2, y = index_regul)) +
+  geom_point() +
+  labs(x = "Catchment size (km2)", y = "Fraction hydropower regulation (0 - 1)")  
+
+gg3 <- ggplot(stations, aes(x = index_regul, y = index_dams)) +
+  geom_point() +
+  labs(x = "Fraction hydropower regulation (0 - 1", y = "Hydropower dam index")  
+
+cowplot::plot_grid(gg1, gg2, gg3, nrow = 1)
+
+```
+
+#### Distribution of normal river flow  
+```{r}
+ggplot(stations, aes(x = normalQ_m3s)) +
+  geom_histogram(breaks = seq(0,300,5))
+```
+
+#### Number of stations by normal river flow (rows) and  the dam index (columns).  
+```{r}
+stations |> 
+  mutate(
+    normalQ_m3s_c = cut(normalQ_m3s, breaks = c(0,3,5,10,20,50,100,300)),
+    index_dams_c = cut(index_dams, breaks = seq(0,1,0.2), right = FALSE)
+        ) %>% 
+  xtabs(~normalQ_m3s_c + index_dams_c, .)
+
+```
+
+
+
+
+
+
+### 7.4 Spatial data of river flow stations  
+
+```{r}
+
+geo_points <- sf::read_sf("../data/geo_points.gpkg")  
+
+county_order  <- c(
+  "Finnmark", "Troms", "Nordland", "Trøndelag", 
+  "Møre og Romsdal", "Vestland", "Rogaland",
+  "Buskerud", "Telemark", "Innlandet", 
+  "Agder", "Vestfold", "Oslo", "Akershus", "Østfold")
+
+```
+
+## 8. Spatial units
+
+<!--# Describe the spatial units that you rely on in your analyses. Highlight the spatial units (the resolution) that the indicator values should be interpreted at. Potential spatial delineation data (maksing layers etc.) should be introduced under chapert 7. We recommend using the SEEA EA terminology of Basic Spatial Units (BSU), Ecosystem Asses (EA) and Ecosystem Accounting Area (EAA). -->
+
+The spatial unit of the observations is the catchment covered by each waterflow measurement station. The analyses will be performed at that level. Since the catchments vary a lot in size,  range of  The data can be summarized by county (fylke) or region (landsdel; Østlandet, Vestlandet, Nord-Norge, etc.). 
+
+## 9. Analyses
+
+<!--# 
+
+Use this header for documenting the analyses. Put code in separate code chunks, and annotate the code in between using normal text (i.e. between the chunks, and try to avoid too many hashed out comments inside the code chunks). Add subheaders as needed. 
+
+Code folding is activated, meaning the code will be hidden by default in the html (one can click to expand it).
+
+Caching is also activated (from the top YAML), meaning that rendering to html will be quicker the second time you do it. This will create a folder inside you project folder (called INDICATORID_cache). Sometimes caching created problems because some operations are not rerun when they should be rerun. Try deleting the cash folder and try again.
+
+-->
+
+### 9.1 Calculate observed flow statistics  
+
+For each station and year, we find the annual flood value (maximum  river flow) and the winter low-flow value (the 5% of the months October to April). Then we find the mean and standard deviation of those values for every station. The two are (as expected) highly correlated (figure below). 
+```{r, calculate_observed_stats}
+
+# get observed means 
+flow_high <- yearly_highflow(dat)
+flow_winter <- yearly_lowflow(dat)
+flow_statistics <- flow_stats(flow_winter, flow_high)
+
+flow_statistics |> 
+  left_join(stations, by = join_by(stasjonsnr)) |> 
+  ggplot(aes(highflow_mean, lowflow_mean, fill = areal_km2)) +
+         geom_point(shape = 21, size = rel(2)) +
+  scale_fill_viridis_b() +
+  scale_x_log10() +
+  scale_y_log10()
+
+```
+
+
+### 9.2 Indices and indicators  
+
+
+#### a. Calculate flood index and low-water indicator        
+
+The indices are calculated by comparing the observed statistics of flood and low-water flow with NEVINA's estimates of the same parameters. 
+  
+For floods, we started by creating a flood index (this index turned out to departure from 1 for rivers without dams, so the flood indicator will therefore be derived later). For river *i*, this is  
+
+$$
+\text{Flood\_index}_i
+= 1 - \frac{Q_{\text{model,high,i}} - \overline{Q_{\text{obs,high,i}}}}
+           {Q_{\text{model,high,i}}}
+$$
+
+where $Q_{\text{model,high,i}}$ is the modelled natural flood of river *i* from NEVINA, and $\overline{Q_{\text{obs,high,i}}}$ is the mean of the  observed flood for the same river. 
+  combined$lowwater_indicator <- with(combined, 1-(lowflow_mean-lowflow_m3s)/(highflow_mean-lowflow_m3s))
+  
+The low-water indicator for river *i* depends on the both the modelled natural low-water flow as well as the observed mean flood. If the observed low-water flow is equal to the modelled natural low-water flow, the indicator is 1. If the observed low-water flow is equal to the observed flood flow, the indicator is 0. 
+
+$$
+\text{Lowwater\_indicator\}
+= 1 - \frac{\overline{Q_{\text{obs,low}}} - Q_{\text{model,low}}}
+           {\overline{Q_{\text{obs,high}}} - Q_{\text{model,low}}}
+$$
+
+where $Q_{\text{model,low,i}}$ is the modelled mean low water flow of river *i* from NEVINA, and $\overline{Q_{\text{obs,low,i}}}$ is the mean of the  observed low water flow for the same river.  
+
+
+```{r calculate_indices_1}
+
+# indicator 001: effect of hydropower on floods and low water  
+# indicator 002, : effect of hydropower on low water  
+dat_indekser_1 <- kalkuler_indikatorer(
+  flowstats = flow_statistics, 
+  seriestasjoner = stations) |> 
+  mutate(log_areal = log10(areal_km2))
+
+gg1 <- ggplot(dat_indekser_1, aes(flood_index)) +
+  geom_histogram() +
+  scale_x_log10()
+gg2 <- ggplot(dat_indekser_1, aes(lowwater_indicator)) +
+  geom_histogram() +
+  scale_x_log10()
+plot_grid(gg1, gg2, ncol=1)
+
+```
+
+#### b. Add geodata and county    
+
+```{r}
+
+dat_indekser <- dat_indekser_1 |> 
+  left_join(geo_points, 
+            by = join_by(stasjonsnr), relationship = "many-to-one")  |> 
+  mutate(county = factor(county, levels = county_order))
+
+```
+
+
+
+### 9.3. Spatial and altitudinal spread   
+
+#### Map 1 - color by dam index  
+```{r}
+
+ggplot(dat_indekser) + 
+  geom_sf(aes(geometry = geom, fill = index_dams, size = normalQ_m3s), 
+          shape = 21, alpha = 0.4)+
+  scale_fill_viridis_b(
+    breaks = c(0,0.05,0.1,0.15,0.2,0.25,0.5,1)) +
+  theme_bw()
+
+```
+
+#### Map 2 - color by altitude     
+```{r}
+
+ggplot(dat_indekser) + 
+  geom_sf(aes(geometry = geom, fill = altitude, size = normalQ_m3s), 
+          shape = 21, alpha = 0.4) +
+  scale_fill_viridis_b() +
+  theme_bw()
+
+```
+#### Number of stations by altitude  
+
+```{r}
+# cut with non-scientific formatting 
+cut_noscient <- function(x, breaks){
+  # format non-scientific
+  breaks_str <- format(breaks, scientific = FALSE)
+  # remove extra spaces
+  breaks_str <- gsub(" ", "", breaks_str)
+  # create labels
+  labs <- paste0(
+    "(", head(breaks_str, -1),
+    ",",
+    tail(breaks_str, -1),
+    "]"
+  )
+  cut(x, breaks = breaks, labels = labs)
+}
+# debugonce(cut_noscient)
+# cut_noscient(c(1:10,200), c(0,3,12,300))
+
+# quantile(dat_indekser$altitude)
+# quantile(dat_indekser$normalQ_m3s)
+# dat_indekser |> 
+#   mutate(
+#     altitude = cut_noscient(altitude, breaks = c(0,200,500,1300)),
+#     `water flow (m3/s)` = cut(normalQ_m3s, breaks = c(0,5,20,50,100,300))
+#   ) %>% 
+#   xtabs(~`water flow (m3/s)` + altitude, .)
+# 
+# tab <- dat_indekser |> 
+#   mutate(
+#     altitude = cut_noscient(altitude, breaks = c(0,200,500,1300)),
+#     `water flow (m3/s)` = cut(normalQ_m3s, breaks = c(0,5,20,50,100,300))
+#   ) %>% 
+#   xtabs(~`water flow (m3/s)` + altitude + (index_dams==0), .)
+
+# tab[,,1]
+# tab[,,2]
+# tab_n <- tab[,,1] + tab[,,2]
+# tab_p <- 100*round(tab[,,2]/(tab[,,1] + tab[,,2]), 3)
+# 
+# tab_comb <- matrix("", dim(tab)[1], dim(tab)[2])
+# rownames(tab_comb) <- 1:5
+# nr = dim(tab)[1]
+# nc = dim(tab)[2]
+# for (i in 1:nr){
+#   for (j in 1:nc){
+#     tab_comb[i,j] <- paste0(tab_n[i,j], " / ", tab_p[i,j])
+#   }
+# }
+# tab_comb |> knitr::kable()
+  
+dat_indekser |>
+  mutate(
+    altitude = cut_noscient(altitude, breaks = c(0,200,500,1300)),
+    `water flow (m3/s)` = cut(normalQ_m3s, breaks = c(0,5,20,50,100,300))
+  ) %>%
+  xtabs(~`water flow (m3/s)` + altitude , .)
+
+```
+
+### 9.4 Examine observed and modelled water flow  
+
+
+#### Observed and modelled natural flood values  
+
+In rivers affected, by hydropower, observed values of mean annual flood are expected to lie somewhere below modelled natural flood values.
+
+Figure: Observed values of mean annual flood (y axis, red) and low-water value (y axis, blue) on y axis plotted towards modelled natural flood values (x axis). The line indicates y = x. 
+```{r}
+
+ggplot(dat_indekser, 
+       aes(highflow_m3s, highflow_mean)) +
+  geom_point(shape = 21, size = rel(2), fill = "red") +
+  geom_point(aes(y=lowflow_m3s), shape = 21, size = rel(2), fill = "blue2") +
+  geom_abline(intercept = 0, slope = 1) +
+  scale_x_log10() +
+  scale_y_log10()
+
+```
+
+#### Examine flood indices vs. indices of hydropower  
+
+As shown below (figure a), the index of effect of hydropower on floods varies around 1 for rivers were `index_dams` is zero (i.e. there are no dams in the catchment of the station). As the amount of dams increases, the index goes towards lower numbers. Thus, the flood indices appear to work well. As we see from figure b, `index_regul` (measuring all sorts of hydropower development, including run-of-river hydropower plants that has no large dam) is much less correlated to the flood indicator, indicating that this index is trule closely connected to presence of large dams upstream.
+
+
+```{r}
+
+# 1. index_dams
+
+mod <- lm(flood_index ~ index_dams, 
+          data = dat_indekser |> filter(index_dams > 0), 
+          na.action = na.omit)
+
+gg1 <- ggplot(dat_indekser, aes(index_dams, flood_index)) +
+  geom_point() +
+  geom_smooth(
+    data = dat_indekser |> filter(flood_index > 0),
+    method = "lm", linetype = "dashed", color = "red3") +
+  scale_y_log10() +
+  labs(x = "Index of hydropower dams", y = "Flood index") +
+  labs(subtitle = paste("Model: ", get_model_summ(mod), 
+       "\nNote: regression fitted to catchments with dams")) +
+  theme(plot.subtitle = element_text(size = 7))
+
+# 2. index_regul
+
+mod <- lm(flood_index ~ index_regul, 
+          data = dat_indekser |> filter(index_regul > 0), 
+          na.action = na.omit)
+
+gg2 <- ggplot(dat_indekser, aes(index_regul, flood_index)) +
+  geom_point() +
+  geom_smooth(
+    data = dat_indekser |> filter(index_regul > 0),
+    method = "lm", linetype = "dashed", color = "red3") +
+  scale_y_log10() +
+  labs(x = "Index of hydropower development", y = "Flood index") +
+  labs(subtitle = paste("Model: ", get_model_summ(mod), 
+       "\nNote: regression fitted to catchments with hydropower")) +
+  theme(plot.subtitle = element_text(size = 7))
+
+plot_grid(gg1, gg2, nrow = 1)
+
+```
+
+
+
+#### Observed and modelled natural low-water values  
+```{r}
+ggplot(dat_indekser, 
+       aes(lowflow_m3s, lowflow_mean)) +
+  geom_point(shape = 21, size = rel(2), fill = "red") +
+  geom_point(aes(y=highflow_mean), shape = 21, size = rel(2), fill = "blue2") +
+  geom_abline(intercept = 0, slope = 1) +
+  scale_x_log10() +
+  scale_y_log10()
+
+```
+
+#### Low-water: Test observed/predicted ratio 1  
+```{r}
+ggplot(dat_indekser, 
+       aes(lowflow_m3s, lowflow_mean/lowflow_m3s)) +
+  geom_point(shape = 21, size = rel(2), fill = "red") +
+  geom_hline(yintercept = 1) +
+  scale_x_log10() +
+  scale_y_log10()
+
+
+```
+
+#### Low-water: Test observed/predicted ratio 2    
+```{r}
+ggplot(dat_indekser, 
+       aes(index_dams, lowflow_mean/lowflow_m3s)) +
+  geom_point(shape = 21, size = rel(2), fill = "red") +
+  geom_hline(yintercept = 1) +
+  scale_y_log10()
+
+```
+
+#### g. Examine low-water indices vs. indices of hydropower  
+
+The index of effect of hydropower on low-water shows a similar pattern, with values around 1 when there are no dams in the catchment of the station. It appears to be more closely linked to the amount of hydropower development in general than to the amount of dams in the catchment. 
+
+```{r}
+
+# 1. index_dams
+
+mod <- lm(lowwater_indicator ~ index_dams, 
+          data = dat_indekser |> filter(index_dams > 0), 
+          na.action = na.omit)
+
+gg1 <- ggplot(dat_indekser, aes(index_dams, lowwater_indicator)) +
+  geom_point() +
+  geom_smooth(
+    data = dat_indekser |> filter(lowwater_indicator > 0),
+    method = "lm", linetype = "dashed", color = "red3") +
+  scale_y_log10() +
+  labs(x = "Index of hydropower dams", y = "Low-water indicator") +
+  labs(subtitle = paste("Model: ", get_model_summ(mod), 
+       "\nNote: regression fitted to catchments with dams")) +
+  theme(plot.subtitle = element_text(size = 7))
+
+# 2. index_regul
+
+mod <- lm(lowwater_indicator ~ index_regul, 
+          data = dat_indekser |> filter(index_regul > 0), 
+          na.action = na.omit)
+
+gg2 <- ggplot(dat_indekser, aes(index_regul, lowwater_indicator)) +
+  geom_point() +
+  geom_smooth(
+    data = dat_indekser |> filter(index_regul > 0),
+    method = "lm", linetype = "dashed", color = "red3") +
+  scale_y_log10() +
+  labs(x = "Index of hydropower development", y = "Low-water indicator") +
+  labs(subtitle = paste("Model: ", get_model_summ(mod), 
+       "\nNote: regression fitted to catchments with hydropower")) +
+  theme(plot.subtitle = element_text(size = 7))
+
+plot_grid(gg1, gg2, nrow = 1)
+
+```
+
+
+### 9.5 Check subsets of data  
+
+```{r}
+altitude_limit <- 450
+altitude_limit_finnmark <- 200  
+normal_riverflow_limit <- 5
+```
+
+As the original dataset has many small rivers, as well as river at high altitudes, we decided do focus on relatively low-lying rivers over a certain size. We selected rivers below `r altitude_limit` m altitude, except in Finnmark (which has lower maximum altitude) where we selected rivers below `r altitude_limit_finnmark` m. We also selected only rivers above `r normal_riverflow_limit` m3/second river flow on average.  
+
+#### a. Add groupings  
+
+```{r}
+dat_indekser <- dat_indekser |> 
+  mutate(
+    region = case_when(
+      county %in% "Finnmark" ~ "Finnmark",
+      county %in% c("Troms", "Finnmark") ~ "Troms og Nordland",
+      county %in% c("Trøndelag") ~ "Trøndelag",
+      county %in% c("Møre og Romsdal","Vestland","Rogaland") ~ "Vestlandet",
+      county %in% c("Agder","Telemark") ~ "Agder og Telemark",
+      TRUE ~ "Østlandet"),
+    altitude_limit = case_when(
+      region %in% "Finnmark" ~ altitude_limit_finnmark,
+      TRUE ~ altitude_limit),
+    Q_limit = normal_riverflow_limit,
+    group1 = case_when(
+      altitude < altitude_limit ~ "low",
+      altitude >= altitude_limit ~ "high"), 
+    group2 = case_when(
+      altitude < altitude_limit & normalQ_m3s >= Q_limit ~ "low,big",
+      altitude < altitude_limit & normalQ_m3s < Q_limit ~ "low,small",
+      altitude >= altitude_limit & normalQ_m3s >= Q_limit ~ "high,big",
+      altitude >= altitude_limit & normalQ_m3s < Q_limit ~ "high,small"),
+    dams = ifelse(index_dams == 0, "no dams", "dams"),
+  )
+
+```
+
+
+#### b. LEAFLET
+
+```{r}
+if (FALSE){
+  
+  library(leaflet)
+  
+  # use this to choose transformation from normal water flow to point size:
+  quantile(log10(dat_leaflet$normalQ_m3s))
+  hist(log10(dat_leaflet$normalQ_m3s)+3)
+  hist((log10(dat_leaflet$normalQ_m3s)+2.5)*1.3)
+
+  dat_leaflet <- dat_indekser |>
+    st_as_sf() |> 
+    st_transform(4326) |> 
+    mutate(
+      col = case_when(
+        group2 == "low,big" ~ "red",
+        group2 == "low,small" ~ "green",
+        group2 == "high,big" ~ "black",
+        group2 == "high,small" ~ "blue"),
+      size = 1.3*(log10(normalQ_m3s)+2.5),
+      popup = paste0(navn, "<br>", 
+                     areal_km2, " km2<br>",
+                     normalQ_m3s, " m3/s<br>",
+                     altitude, " m<br>",
+                     "dam index = ", index_dams)
+    )
+  coord <- st_coordinates(dat_leaflet)
+  dat_leaflet$lng <- coord[,1]
+  dat_leaflet$lat <- coord[,2]
+  # dat_leaflet 
+  leaflet(dat_leaflet) |> 
+    addTiles() |> 
+    addCircleMarkers(radius = ~size, weight = 2, 
+                     color = "black", 
+                     fillColor = ~col, fillOpacity = 0.7,
+                     popup = ~popup)
+
+  }
+```
+
+
+#### b. Map   
+```{r}
+
+ggplot(dat_indekser) + 
+  geom_sf(aes(geometry = geom, fill = group2, size = normalQ_m3s), 
+          shape = 21, alpha = 0.4) +
+  scale_fill_viridis_d() +
+  theme_bw()
+
+```
+
+#### d. Altitude vs dams 
+```{r}
+
+ggplot(dat_indekser, aes(altitude, log(index_dams+1), 
+                         fill = normalQ_m3s,
+                         size = areal_km2)) +
+  geom_point(shape = 21) +
+  # scale_x_log10() +
+  scale_fill_viridis_b() +
+  facet_wrap(vars(region))
+  
+```
+
+#### Table by groups and dams    
+```{r}
+dat_indekser |> 
+  count(group2, index_dams==0) 
+
+```
+
+
+#### Plot flood index vs dams, by group  
+```{r}
+ggplot(dat_indekser, aes(index_dams, lowwater_indicator)) +
+  geom_point() +
+  geom_smooth(
+    data = dat_indekser |> filter(index_dams > 0),
+    method = "lm", linetype = "dashed", color = "red3") +
+  scale_y_log10() +
+  labs(x = "Index of hydropower dams", y = "Low-water indicator") +
+  theme(plot.subtitle = element_text(size = 7)) +
+  facet_wrap(vars(group2))
+
+```
+
+### 9.6 Make subset to use for the indicators  
+
+#### Choose subset:   
+* Relatively low-altitude rivers (below `r `altitude_limit_finnmark` in Finnmark, below `r altitude_limit` in the rest of Norway)  
+* Normal river flow > `r normal_riverflow_limit`  m3/s  
+```{r}
+
+dat_indekser2 <- dat_indekser |> filter(group2 %in% "low,big")
+
+cat("Selected number in subset:\n")
+nrow(dat_indekser2)
+cat("Percentage of total:\n")
+round(100*nrow(dat_indekser2)/nrow(dat_indekser), 1)
+
+cat("Selected number of dam-free rivers in subset:\n")
+sum(dat_indekser2$index_dams == 0)
+cat("Percentage of total:\n")
+round(100*sum(dat_indekser2$index_dams == 0)/nrow(dat_indekser2), 1)
+
+```
+
+#### Table - mean low-water indicator  
+```{r} 
+
+dat_indekser |> 
+  group_by(group2) |> 
+  summarise(
+    lowwater_indicator_zerodams = mean(lowwater_indicator),
+    n = n()
+  )
+dat_indekser |> 
+  filter(index_dams == 0) |> 
+  group_by(group2) |> 
+  summarise(
+    lowwater_indicator = mean(lowwater_indicator),
+    n = n()
+  )
+
+```
+
+### 9.7 Calculate flood indicator  
+
+We create the final flood indicator based on the flood index. Ideally, the flood index should be 1 for the mean of rivers (within the chosen subset) with no dams in their catchment (reference condition). However, it turns out to be signinficanly higher:
+```{r}
+mod <- lm(flood_index ~ 1, data = subset(dat_indekser2, dams == "no dams"))
+summary(mod)$coef
+```
+
+Thus, we create a flood indicator which should be 1 for the mean of rivers (within the chosen subset) with no dams in their catchment (reference condition), and 0 for rivers where the annual flood has been reduced to 20% of the origican flood size, which we take to be no flood in an ecological sense: 
+
+$$
+\text{Flood\_indicator}_i
+= \frac{Flood\_index_{\text{i}} - 0.2}
+           {Flood\_index_{\text{reference}} - 0.2}
+$$
+where $Flood\_index_{\text{reference}}$ is the mean flood index for rivers with no dams in their catchment.
+
+```{r}
+
+# Reference level 1 = mean for rivers without dams  
+ref_1 <- mean(subset(dat_indekser2, dams == "no dams")$flood_index)
+ref_0 <- 0.20
+```
+
+The $Flood\_index_{\text{reference}}$ was found to be `r ref_1`. 
+
+```{r}
+
+# relatively low-lying rivers over a certain size = data set "dat_indekser2"  
+
+
+# table(dat_indekser2$dams)
+dat_indekser2 <- dat_indekser2 |> 
+  mutate(
+    flood_indicator = (flood_index - ref_0)/(ref_1 - ref_0),
+    dam_weight = ifelse(dams == "dams", 0.7, 0.3)
+  )
+
+# check
+# mean(subset(dat_indekser2, dams == "no dams")$flood_indicator)
+# range(dat_indekser2$flood_indicator)  
+
+```
+
+#### Check the low-water indicator  
+
+We find that the reference level for the low-water indicator is already very close to 1.   
+
+```{r}
+
+# relatively low-lying rivers over a certain size = data set "dat_indekser2"  
+
+# Reference level 1 = mean for rivers without dams  
+ref_1 <- mean(subset(dat_indekser2, dams == "no dams")$lowwater_indicator)
+ref_1
+# ref_1 is already approximately zero  
+
+```
+
+
+
+### 9.8 National means  
+
+* Despite having made a subset of dataset with only low-lying rivers, and excluding very small rivers, only 47% of the rivers have dams in their catchment  
+* In Norway, approxmately 70% of rivers are affected by hydropower, usually with dams (we were not able to find more exact estimates). Thus, in our sample, we have over-representation of rivers not affected by dams   
+* To compensate for the bias of the dataset, we use inverse weighting for the rivers in ours selected subset.  
+
+```{r}
+# weights
+n_dam <- sum(dat_indekser2$dams == "dams")
+n_nodam <- sum(dat_indekser2$dams == "no dams")
+n_dam/(n_dam + n_nodam)  # 47% dams
+w <- c(0.7/n_dam, 0.3/n_nodam)
+w <- w/sum(w)
+
+# table(dat_indekser2$dams)
+dat_indekser2 <- dat_indekser2 |> 
+  mutate(
+    dam_weight = ifelse(dams == "dams", w[1], w[2])
+  )
+
+# weighted mean
+mod <- lm(flood_indicator ~ 1, dat_indekser2, weights = dam_weight)
+summary(mod)
+
+# weighted mean
+mod <- lm(lowwater_indicator ~ 1, dat_indekser2, weights = dam_weight)
+summary(mod)
+
+
+```
+
+
+
+## 10. Results
+
+<!--# 
+
+Repeat the final results here. Typically this is a map or table of indicator values.
+
+This is typically where people will harvest data from, so make sure to include all relevant output here, but don't clutter this section with too much output either.
+
+-->
+
+## 11. Export file
+
+<!--# 
+
+Optional: Display the code (don't execute it) or the workflow for exporting the indicator values to file. Ideally the indicator values are exported as a georeferenced shape or raster file with indicators values, reference values and errors. You can also chose to export the raw (un-normalised or unscaled variable) as a separate product. You should not save large sptaial output data on GitHub. You can use eval=FALSE to avoid code from being executed (example below - delete if not relevant) 
+
+-->
+
+```{r export}
+#| eval: false
+```
+
+
+## 12. Author contributions
+
+<!-- Fill in CReDIT and MeRIT statments to clarify the contributions from individual authors. For MeRIT, see https://www.nature.com/articles/s41467-023-37039-1. For CRedit, see https://credit.niso.org/. You can start with the template structur below, and just delete the rows you dont use.  -->
+
+**CRediT statement**
+
+* Conceptualization: [Initials]
+* Methodology: [Initials]
+* Data curation: [Initials]
+* Formal analysis: [Initials]
+* Investigation: [Initials]
+* Software: [Initials]
+* Validation: [Initials]
+* Visualization: [Initials]
+* Resources: [Initials]
+* Writing – original draft: [Initials]
+* Writing – review & editing: [Initials]
+* Supervision: [Initials]
+* Project administration: [Initials]
+* Funding acquisition: [Initials]
+
+
+**MeRIT attribution**
+
+This part supplements the CRediT statement with more granularity for method section.
+
+**Study design**
+The study was designed by [AB, CD].
+
+**Data collection / fieldwork**
+Field data were collected by [AB, EF] between [years]. Sampling protocol was developed by [CD].
+
+**Laboratory procedures**
+DNA extraction was performed by [GH]. Sequencing was conducted by [IJ].
+
+**Data processing**
+Raw data were curated and cleaned by [EF]. Code for preprocessing was written by [KL].
+
+**Statistical analysis**
+All analyses were conducted by [CD] using [software], with verification by [AB].
+
+**Visualization**
+Figures were produced by [KL], with input from [CD].
+
+**Reproducibility**
+All code was reviewed and validated by [AB, CD].
+
+
+
+::: {.callout-tip collapse="true"}
+## Session Info
+<!-- You can leave this last part as it is, unless you have a good reason to alter it. -->
+
+This information is mainly aimed at developers that need to recreate the R environment that produced the html.
+Important note: this information is about the R session that was running when the html was rendered, and if some of the code chunks were not evaluated when the html was rendered, they may have been executed in a different environment.  
+
+```{r sessionInfo}
+#| echo: false
+sessionInfo()
+```
+
+```{r Appendix_1}
+
+if (FALSE){
+  
+  # CREATE geo_points.gpkg  
+  # FOR LOCAL USE ON DAG'S PC
+  
+  # read county data  
+  Sys.setlocale("LC_CTYPE", "Norwegian_Norway.utf8")
+  geo_counties <- sf::st_read("../../../Mapdata/Basisdata_0000_Norge_25833_NorskeFylkerKommunerIllustrasjonsdata2024_GeoJSON/GeoJSON/Fylker_simple300.geojson")
+  
+  # read point data for riverflow measurement series (and many, many other point data)
+  geo_points_all <- sf::st_read(
+    "../../ecRxiv_hydropower_waterflow_test/R/data_observed_waterflow/NVE_seriekart_metadata/NVEKartdata/NVEData.gdb")
+  
+  geo_points_all 
+  tab <- table(geo_points_all$stasjonID)
+  geo_points_all |> filter(stasjonID %in% names(tab)[1]) |> View()
+  # plot(geo_points_1)
+  # geo_points_1 |> filter(stasjonsnr %in% names(tab)[1:5]) |> plot()
+
+  # select by stasjonID (=stasjonsnr)  
+  geo_points_1 <- geo_points_all |> 
+    filter(stasjonID %in% dat_indekser$stasjonsnr) |> 
+    rename(stasjonsnr = stasjonID)
+  
+  # tab <- table(geo_points_1$stasjonsnr)
+  # plot(geo_points_1)
+  # geo_points_1 |> filter(stasjonsnr %in% names(tab)[1:5]) |> plot("stasjonsnr")
+  # geo_points_1 |> filter(stasjonsnr %in% names(tab)[1]) |> View()
+  
+  # there are several rows per station  
+  # order rows from the newest (by serieFraDato) to oldesr
+  # make variable station_sub which is ordered 1,2,3 from the newest station   
+  geo_points_2 <- geo_points_1 |>
+    arrange(stasjonsnr, desc(serieFraDato)) |> 
+    group_by(stasjonsnr) |> 
+    mutate(station_sub = 1:length(stasjonsnr))
+    
+  # pick newset (highest serieFraDato) only
+  geo_points <- geo_points_2[geo_points_2$station_sub == 1,] |> 
+    select(stasjonsnr, SHAPE) 
+  
+  # add county information
+  geo_counties <- st_transform(geo_counties, crs = st_crs(geo_points))
+  geo_counties <- geo_counties |> 
+    mutate(county_area = st_area(geometry)) |> 
+    rename(county = navn)
+  # set unit to km2 instead of m2 (the number auytomatically changes!)
+  units(geo_counties$county_area)$numerator <- c("km", "km")
+  
+  geo_counties$county_area
+  sum(geo_counties$county_area)
+  
+  geo_points <- st_join(
+    geo_points,
+    geo_counties[c("county", "county_area")],
+    join = st_within
+  )
+  
+  # file.remove("../data/geo_points.gpkg")
+  st_write(geo_points, "../data/geo_points.gpkg")
+  
+}
+
+
+```
+
+
+:::
