@@ -1,13 +1,12 @@
 ---
 title: "Eelgrass ecological status"
 subtitle: |
-  [NO_EELG_001] 
+  possible code: NO_EELG_001 (decision on code pending)  
 # delete the line with the second indicatorID (line 5) 
 # if it's not relevant for you.
 # In the parentheses you can add a word to distinguish multiple indicators 
 # from each other, for example the ecosystem type that they cover
 indicatorID: 
-  - NO_EELG_001
 # If you are presenting multiple indicators, and have multiple 
 # indicator IDs, then add them as a list here, and make sure you add
 # the same number of list entries, 
@@ -57,16 +56,16 @@ format:
 execute: 
   cache: true
 author:
-  - name: Dag Hjermann              # Enter name
+  - name: Dag Øystein Hjermann              # Enter name
     email: dag.hjermann@niva.no  # Enter email
     affiliations:
       - id: 1
         name: Norwegian Institute for Water Research # Enter affiliations
-AuthorList: Hjermann, D.H. og ????  
-date: September 17, 2026   # January 1, 1901 # Enter date
-data_availability: none
-code_reproducibility: none
-open_science_badge: none
+AuthorList: Hjermann, D.Ø.    
+date: October 30, 2026   # January 1, 1901 # Enter date
+data_availability: gold
+code_reproducibility: gold
+open_science_badge: gold
 callout-icon: false
 lightbox: true
 css: ../../../style.css
@@ -76,19 +75,8 @@ code-links:
         href: https://github.com/NINAnor/ecRxiv
 hide: TRUE # Change to FALSE
 bibliography: references.bib
-codeReviewers:
-  - name: Jane Smith
-    email: jane.smith@example.no
-    affiliations:
-      - id: reviewerInst
-        name: Example Institute
-    reviewType: code review
-    github: janesmith
-  - name: John Doe
-    affiliations:
-      - ref: myID
-    reviewType: reproducibility check
-    github: johndoe
+editor_options: 
+  chunk_output_type: console
 ---
 
 <!--# This is a template for how to document the indicator analyses. Make sure also to not change the order, or modify, the headers, unless you really need to. This is because it easier to read if all the indicators are presented using the same layout. If there is one header where you don't have anything to write, just leave the header as is, and don't write anything below it. If you are providing code, be careful to annotate and comment on every step in the analysis. Before starting it is recommended to fill in as much as you can in the metadata file. This file will populate the initial table in your output.-->
@@ -114,6 +102,8 @@ pull<-dplyr::pull
 
 knitr::opts_chunk$set(echo = TRUE)
 
+# for this parcticular script:  
+library(emmeans)
 source("NO_EELG_001_functions.R")    # self-defined functions
 
 ```
@@ -131,7 +121,8 @@ source(here::here("_common.R"))
 #| echo: false
 #| results: asis
 
-if (!is.null(yaml_data$codeReviewers)) {
+# if (!is.null(yaml_data$codeReviewers)) {
+if (FALSE) {
   reviewers <- purrr::map_chr(yaml_data$codeReviewers, "name")
   
   htmltools::HTML(paste0(
@@ -439,6 +430,8 @@ Describe the spatial resolution of the reference levels. E.g. is it defined as a
 ### 5.1 General uncertainties
 <!--# Describe the main reasons why you might not trust 100% the final value to represent the given ecosystem characteristic for the give ecosystem type. What aspects of this condition metric are most sensitive to subjective decitions? Is the spatial sampling sufficient? Does the choice of modeling framework affect the values? Is the metric relevant do describe ecosystem condition for the give ecosystem type?  -->
 
+The measurements of eelgrass status at each site can be considered to be good. However, the number of assessed sites is very low: only eight sites on a national level. This is to some degree offset by careful selection of sites that are though to be representative for each geographic area.  
+
 ### 5.2 Reported uncertainties
 <!-- Describe the nature of the errors you (hopefully) provide alongside the point estimate for the condition metric. It is especially important to clarify if the errors are inferential (referring to the uncertainty of the point estimate) or descriptive (referreing to the data itself). Here' an example text: "What we report as uncertainties in @tbl-finalTable are inferential and refer to the uncertainty around the point estimates. It does not directly describe variation in the data itself. 
 However, the variation in the mean is defined by the spatial variation only, and quartiles are obtained by bootstrapping the set of localities within a region, and calculating the indicator for each of 9999 such samples".   -->
@@ -449,6 +442,9 @@ However, the variation in the mean is defined by the spatial variation only, and
 
 <!--# You can add references manually or use a citation manager and add intext citations as with crossreferencing and hyperlinks. See https://quarto.org/docs/authoring/footnotes-and-citations.html -->
 
+
+Direktoratsgruppen vanndirektivet 2018. Veileder 02:2018. Klassifisering av miljøtilstand i vann.  
+
 ## 7. Import and prepare datasets
 
 <!--# All the data import and preparation should be done in this chapter, before the analysis chapter. As a minimum, add code for importing data, and describe or show the data structure. You may also explain certain variables, what they represent, and their distributions -->
@@ -456,7 +452,9 @@ However, the variation in the mean is defined by the spatial variation only, and
 
 ### 7.1 Data from Vannmiljø  
 
-<!--# Import and prepare the first dataset for analysis. Change the header from Dataset A to the name of the actual dataset. -->
+<!--# Import and prepare the first dataset for analysis. Change the header from Dataset A to the name of the actual dataset. -->  
+
+The data used were downloaded from Vannmiljø, the Norwegian Environmental Agency¨s database for aquatic environmental data, on  13 September 2026.  
 
 ```{r}
 
@@ -474,14 +472,9 @@ eelgrass_raw <-
 ```
 
 
-### 7.2. Station metadata (ecoregion and water type)
+### 7.2. Station metadata (ecoregion and water type)  
 
-```{r}
-
-```
-
-
-### 7.2. Station metadata (ecoregion and water type)
+The station data includes the water type, which affects the classification.  
 
 ```{r}
 
@@ -518,7 +511,7 @@ eelgrass_raw |>
 
 <!--# Describe the spatial units that you rely on in your analyses. Highlight the spatial units (the resolution) that the indicator values should be interpreted at. Potential spatial delineation data (maksing layers etc.) should be introduced under chapert 7. We recommend using the SEEA EA terminology of Basic Spatial Units (BSU), Ecosystem Asses (EA) and Ecosystem Accounting Area (EAA). -->
 
-
+The data are station-based. The stations have been located carefully in order to be a representative location for the region.  
 
 
 ## 9. Analyses
@@ -532,6 +525,8 @@ Code folding is activated, meaning the code will be hidden by default in the htm
 Caching is also activated (from the top YAML), meaning that rendering to html will be quicker the second time you do it. This will create a folder inside you project folder (called INDICATORID_cache). Sometimes caching created problems because some operations are not rerun when they should be rerun. Try deleting the cash folder and try again.
 
 -->
+
+### 9.1 Prepare the data  
 
 ```{r convert_to_wide}
 
@@ -604,7 +599,9 @@ eelgrass_wide_2 <- eelgrass_wide_1 |>
 
 ```
 
-The calculation of nEQR is based on `Nedre voksegrense ålegresseng (takson)`, `Dekningsgrad ålegresseng (skala)`, and `Dekningsgrad marine begroingsalger (skala)`, as given in 
+### 9.2 Calculate nEQR for each station and year  
+
+The calculation of nEQR is based on `Nedre voksegrense ålegresseng (takson)`, `Dekningsgrad ålegresseng (skala)`, and `Dekningsgrad marine begroingsalger (skala)`, as given in the guidelines (Direktoratsgruppen vanndirektivet 2018).  
 ```{r calculate_nEQR}
 
 # calculate nEQR for each station / year  
@@ -640,13 +637,19 @@ eelgrass_eqr <- eelgrass_wide_2 %>%
 
 ```
 
-As an example, we show the measured values (depth_limit, density, epiphytes), the scores (depth_score, density_score, epiphyte_score), and the nEQR for three stations.  
-```{r results_by_station_2025}
+```{r select_example_year}
 
-# results_by_station, 2025
+# select example year
+sel_year <- 2024
+```
+
+As an example, we show the measured values (depth_limit, density, epiphytes), the scores (depth_score, density_score, epiphyte_score), and the nEQR for three stations in one year (`r sel_year`).  
+```{r results_by_station_oneyear}
+
+# results_by_statio
 
 eqr_table1 <- eelgrass_eqr |>
-  filter(!is.na(nEQR) & year == 2024) |>
+  filter(!is.na(nEQR) & year == sel_year) |>
   select(Vannlokalitetsnavn, okoregion,
          depth_limit, density, epiphytes,
          depth_score, density_score, epiphyte_score, nEQR) |>
@@ -671,13 +674,13 @@ eqr_table2 <- eelgrass_eqr |>
 
 ```
 
-Below, we show the mean score for each of the three criteria for each ecoregion as well as the mean of the resulting nEQR.
-```{r results_by_ecoregion_2025}
+Below, we show the mean score in the same year (`r sel_year`) for each of the three criteria for each ecoregion as well as the mean of the resulting nEQR.
+```{r results_by_ecoregion_oneyear}
 
-# results_by_station, 2025
+# results_by_station  
 
 eqr_region <- eelgrass_eqr |>
-  filter(!is.na(nEQR) & year == 2025) |>
+  filter(!is.na(nEQR) & year == sel_year) |>
   group_by(okoregion) |> 
   summarise(
     depth_score = mean(depth_score, na.rm = TRUE), 
@@ -692,6 +695,27 @@ eqr_region |>
 
 ```
 
+### Overall nEQR  
+
+We take the overall nEQR (over all regions and over the years 2022-2024) to be the estimated marginal mean ("emmean" in the table below).  
+
+```{r}
+
+# statistical model
+mod <- lm(nEQR ~ factor(year) + okoregion, data = eelgrass_eqr)
+# estimated marginal mean
+emm <- emmeans(mod, ~1, weights = "equal")
+
+# for Results section:
+formatted_est <- sprintf("%.3f", summary(emm)$emmean)
+formatted_se <- sprintf("%.3f", summary(emm)$SE)
+
+# show table
+kable(emm)  
+
+```
+
+
 ## 10. Results
 
 <!--# 
@@ -702,27 +726,8 @@ This is typically where people will harvest data from, so make sure to include a
 
 -->
 
-The results by ecoregion for 2025 are shown below.
+The final indicator value (nEQR) on a national level was estimated to be `r formatted_est` with a standard error of `r formatted_se`.
 
-```{r}
-
-eqr_region |> 
-  select(okoregion, nEQR) |> 
-  kable()  
-
-```
-
-
-Over all results (average) are:
-
-```{r}
-
-library(emmeans)
-mod <- lm(nEQR ~ factor(year) + okoregion, data = eelgrass_eqr)
-emmeans(mod, ~1, weights = "equal") |> 
-  kable()  
-
-```
 
 ## 11. Export file
 
@@ -742,49 +747,6 @@ Optional: Display the code (don't execute it) or the workflow for exporting the 
 ## 12. Author contributions
 
 <!-- Fill in CReDIT and MeRIT statments to clarify the contributions from individual authors. For MeRIT, see https://www.nature.com/articles/s41467-023-37039-1. For CRedit, see https://credit.niso.org/. You can start with the template structur below, and just delete the rows you dont use.  -->
-
-**CRediT statement**
-
-* Conceptualization: [Initials]
-* Methodology: [Initials]
-* Data curation: [Initials]
-* Formal analysis: [Initials]
-* Investigation: [Initials]
-* Software: [Initials]
-* Validation: [Initials]
-* Visualization: [Initials]
-* Resources: [Initials]
-* Writing – original draft: [Initials]
-* Writing – review & editing: [Initials]
-* Supervision: [Initials]
-* Project administration: [Initials]
-* Funding acquisition: [Initials]
-
-
-**MeRIT attribution**
-
-This part supplements the CRediT statement with more granularity for method section.
-
-**Study design**
-The study was designed by [AB, CD].
-
-**Data collection / fieldwork**
-Field data were collected by [AB, EF] between [years]. Sampling protocol was developed by [CD].
-
-**Laboratory procedures**
-DNA extraction was performed by [GH]. Sequencing was conducted by [IJ].
-
-**Data processing**
-Raw data were curated and cleaned by [EF]. Code for preprocessing was written by [KL].
-
-**Statistical analysis**
-All analyses were conducted by [CD] using [software], with verification by [AB].
-
-**Visualization**
-Figures were produced by [KL], with input from [CD].
-
-**Reproducibility**
-All code was reviewed and validated by [AB, CD].
 
 
 
