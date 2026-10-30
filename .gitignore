@@ -2,5 +2,13 @@
 .Rhistory
 .RData
 .Ruserdata
-R/NO_WFLO_001_002_cache/*
-
+R/*_cache/*
+R/*_files/*
+R/*.html
+data/*.html
+data/Data for KLFA SECCI and summer NTOT PTOT/VF.gdb/*
+data/Data for KLFA SECCI and summer NTOT PTOT/WFD2ECA/*
+#R/NO_WFLO_001_002_cache/*
+#R/NO_EELG_001_cache/*
+#R/NO_WFLO_001_002_files/
+#R/NO_EELG_001_files/
