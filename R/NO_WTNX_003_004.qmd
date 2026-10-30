@@ -121,7 +121,7 @@ pull<-dplyr::pull
 
 knitr::opts_chunk$set(echo = TRUE)
 
-source("functions.R")    # self-defined functions
+source("NO_WTNX_WTPX_functions.R")    # self-defined functions
 
 ```
 
@@ -440,9 +440,11 @@ However, the variation in the mean is defined by the spatial variation only, and
 # read data in Vannmiljø format  
 
 ntot_raw <-
-  read_xlsx("~/shared/common/EEG/ecRxiv_nutrients/data/N-TOT vannmiljø saltvann des2021-nov2024.xlsx", guess_max = 50000) %>%
+  read_xlsx("../data/NO_WTNX_WTPX/N-TOT vannmiljø saltvann des2021-nov2024.xlsx", guess_max = 50000) %>%
   mutate(
     year = lubridate::year(Tid_provetak))
+
+# ~/shared/common/EEG/ecRxiv_nutrients/data
 
 ```
 
@@ -455,10 +457,10 @@ ntot_raw <-
 # Station metadata ----
 # . # . # . # . # . # . # . # . # . # . # . # . # . # . # . # . # . 
 
-vannlok_vannmiljø <- read_csv("~/shared/common/EEG/ecRxiv_nutrients/data/vannlokaliteter_kyst_2024.csv")
-vf_vannmiljø <- read_csv("~/shared/common/EEG/ecRxiv_nutrients/data/vannforekomster_kyst_2024.csv")
-class_limits_sum <- read_xlsx("~/shared/common/EEG/ecRxiv_nutrients/data/klassegrenser_TOTN_sommer.xlsx")
-class_limits_win <- read_xlsx("~/shared/common/EEG/ecRxiv_nutrients/data/klassegrenser_TOTN_vinter.xlsx")
+vannlok_vannmiljø <- read_csv("../data/NO_WTNX_WTPX/vannlokaliteter_kyst_2024.csv")
+vf_vannmiljø <- read_csv("../data/NO_WTNX_WTPX/vannforekomster_kyst_2024.csv")
+class_limits_sum <- read_xlsx("../data/NO_WTNX_WTPX/klassegrenser_TOTN_sommer.xlsx")
+class_limits_win <- read_xlsx("../data/NO_WTNX_WTPX/klassegrenser_TOTN_vinter.xlsx")
 
 station_lookup <- ntot_raw %>% dplyr::select(Vannlokalitet_kode, Vannlokalitetsnavn) %>% distinct()
 
