@@ -1,0 +1,317 @@
+### sjekkPAR
+# Funksjoner til WFD2ECA
+# ved Hanno Sandvik
+# juni 2025
+# se https://github.com/NINAnor/WFD2ECA
+###
+
+
+
+sjekkAIP <- 
+sjekkPIT <- 
+  function(maaling, slingring, fraMaaned, tilMaaned) {
+  # Funksjonen fjerner målinger som ikke er tatt mellom juni og oktober
+  if (missing(fraMaaned)) fraMaaned <-  6  # juni måned
+  if (missing(tilMaaned)) tilMaaned <- 10  # oktober måned
+  if (missing(slingring)) slingring <- 14  # dager
+  DAG <- somDag(maaling$dag, maaling$mnd, maaling$aar)
+  fjern <- c(which(DAG < somDag(1, fraMaaned,     maaling$aar) - slingring),
+             which(DAG > somDag(1, tilMaaned + 1, maaling$aar) + slingring - 1))
+  return(fjern)
+}
+
+
+
+sjekkANC <- 
+sjekkPH  <- 
+  function(maaling) {
+    # Funksjonen fjerner data fra vannforekomster der det ikke er foretatt
+    # målinger minst én gang per årstid
+    antall <- 4
+    fjern <- c()
+    ID <- maaling$aar %+% maaling$vfo
+    for (i in unique(ID)) {
+      w <- which(ID == i)
+      m <- maaling[w, ]
+      y <- m$aar[1]
+      DAG <- somDag(m$dag, m$mnd, y)
+      if (length(w) < antall) {
+        fjern <- c(fjern, w)
+      } else {
+        if       (any(DAG %mellom% c(somDag(1, 4, y), somDag(30,  6, y)))) {
+          if     (any(DAG %mellom% c(somDag(1, 6, y), somDag(31,  8, y)))) {
+            if   (any(DAG %mellom% c(somDag(1, 9, y), somDag(30, 11, y)))) {
+              if (any(DAG %utafor% c(somDag(1, 5, y), somDag(31, 10, y)))) {
+                # alt i skjønneste orden!
+              } else {
+                if ((m$reg[1] %in% c("N", "F") | m$son[1] %in% c("M", "H")) &
+                    any(DAG %utafor% c(somDag(1, 6, y), somDag(30, 9, y)))) {
+                  # også helt toppers!
+                } else fjern <- c(fjern, w)
+              }
+            } else fjern <- c(fjern, w)
+          } else fjern <- c(fjern, w)
+        } else fjern <- c(fjern, w)
+      }
+    }
+    return(unique(fjern))
+  }
+
+
+
+sjekkASPT <- 
+  function(maaling) {
+  # Funksjonen fjerner målinger som er tatt i brepåvirka vannforekomster
+  fjern <- which(maaling$tur == 2)
+  attr(fjern, "ikkeInkluder") <- list(typ = "tur", vrd = 2)
+  return(fjern)
+}
+
+
+
+sjekkHBI2 <- 
+  function(maaling) {
+  # Funksjonen fjerner data fra vannforekomster der det ikke er foretatt 
+  # målinger på både våren (januar til april) og høsten (oktober til desember)
+  fjern <- c()
+  ID <- maaling$aar %+% maaling$id
+  for (i in unique(ID)) {
+    w <- which(ID == i)
+    m <- maaling[w, ]
+    y <- m$aar[1]
+    ganger <- 0
+    DAG <- somDag(m$dag, m$mnd, y)
+    if (any(DAG >= somDag(1, 1, y) & DAG <= somDag(30, 4, y))) {
+      ganger <- ganger + 1
+    }
+    if (any(DAG >= somDag(1, 10, y) & DAG <= somDag(31, 12, y))) {
+      ganger <- ganger + 1
+    }
+    if (ganger < 2) {
+      fjern <- c(fjern, w)
+    }
+  }
+  return(fjern)
+}
+  
+
+#sjekkKLFA <-
+#sjekkNTOT <- 
+sjekkPPBIOMTOVO <- 
+sjekkPPTI <- 
+#sjekkPTOT <- 
+  function(maaling, slingring, fraMaaned, tilMaaned, antallSyd, antallNor) {
+  # Funksjonen fjerner data fra vannforekomster der det ikke er foretatt
+  # målinger (omtrent) månedlig gjennom hele vekstsesongen
+  if (missing(fraMaaned)) fraMaaned <-  5  # mai måned
+  if (missing(tilMaaned)) tilMaaned <- 10  # oktober måned
+  if (missing(slingring)) slingring <- 14  # dager
+  if (missing(antallSyd)) antallSyd <-  4  # målinger
+  if (missing(antallNor)) antallNor <-  3  # målinger
+  DAG <- somDag(maaling$dag, maaling$mnd, maaling$aar)
+  fjern <- c(which(DAG < somDag(1, fraMaaned,     maaling$aar) - slingring),
+             which(DAG > somDag(1, tilMaaned + 1, maaling$aar) + slingring - 1))
+  ID <- maaling$aar %+% maaling$vfo
+  for (i in unique(ID)) {
+    w <- which(ID == i)
+    m <- maaling[w, ]
+    y <- m$aar[1]
+    DAG <- somDag(m$dag, m$mnd, y)
+    ganger <- 0
+    if (length(w) >= antallSyd | 
+       (length(w) >= antallNor & (m$reg[1] %in% c("N", "F") | 
+                                  m$son[1] %in% c("M", "H")))) {
+      for (j in fraMaaned:tilMaaned) {
+        if (any(DAG >= somDag(1, j,     y) - slingring     &
+                DAG <= somDag(1, j + 1, y) + slingring - 1)) {
+          ganger <- ganger + 1
+        }
+      }
+    }
+    if (!(ganger >= antallSyd |
+         (ganger >= antallNor & (m$reg[1] %in% c("N", "F") | 
+                                 m$son[1] %in% c("M", "H"))))) {
+      fjern <- c(fjern, w)
+    }
+  }
+  return(unique(fjern))
+}
+
+### ADDED ND  #################################################################
+
+sjekkNTOTs <- ## ADDED ND
+sjekkPTOTs <- ## ADDED ND
+sjekkSECCI <- ## ADDED ND 
+  function(maaling, slingring, fraMaaned, tilMaaned, antallSyd) {
+    # Funksjonen fjerner data fra vannforekomster der det ikke er foretatt
+    # målinger  månedlig gjennom hele vekstsesongen (Juni til August)
+    if (missing(fraMaaned)) fraMaaned <-  6  # juni måned
+    if (missing(tilMaaned)) tilMaaned <- 8  # august måned
+    if (missing(slingring)) slingring <- 0  # dager (dagen må være innen den juni-august perioden)
+    if (missing(antallSyd)) antallSyd <-  3  # målinger
+    DAG <- somDag(maaling$dag, maaling$mnd, maaling$aar)
+    fjern <- c(which(DAG < somDag(1, fraMaaned,     maaling$aar) - slingring),
+               which(DAG > somDag(1, tilMaaned + 1, maaling$aar) + slingring - 1))
+    ID <- maaling$aar %+% maaling$vfo
+    for (i in unique(ID)) {
+      w <- which(ID == i)
+      m <- maaling[w, ]
+      y <- m$aar[1]
+      DAG <- somDag(m$dag, m$mnd, y)
+      ganger <- 0
+      if (all(fraMaaned:tilMaaned %in% m$mnd)) {
+        for (j in fraMaaned:tilMaaned) {
+          if (any(DAG >= somDag(1, j,     y) - slingring     &
+                  DAG <= somDag(1, j + 1, y) + slingring - 1)) {
+            ganger <- ganger + 1
+          }
+        }
+      }
+      if (!(ganger >= antallSyd)) {
+        fjern <- c(fjern, w)
+      }
+    }
+    return(unique(fjern))
+  }
+
+sjekkNTOTw <-
+sjekkPTOTw <-
+function(maaling, slingring, fraMaaned, tilMaaned, antallSyd) {
+  # Funksjonen fjerner data fra vannforekomster der det ikke er foretatt
+  # målinger  månedlig gjennom hele klassifisieringsperiode (Desember til August)
+  # tar i betrakning at periode inkluderer to forskjellige år
+  if (missing(fraMaaned)) fraMaaned <-  12  # juni måned
+  if (missing(tilMaaned)) tilMaaned <- 2  # august måned
+  if (missing(slingring)) slingring <- 0  # dager (dagen må være innen den juni-august perioden)
+  if (missing(antallSyd)) antallSyd <-  3  # målinger
+    
+  fjern <- integer(0)
+    
+  ## Define season year:
+  ## Dec 2020 + Jan-Feb 2021 belong to season 2021
+  sesongaar <- ifelse(maaling$mnd == 12,
+                        maaling$aar + 1,
+                        maaling$aar)
+    
+  ID <- sesongaar %+% maaling$vfo
+    
+  for (i in unique(ID)) {
+      
+    w <- which(ID == i)
+    m <- maaling[w, ]
+    y <- unique(sesongaar[w])[1]
+      
+    ## Required months in the season
+    maaneder <- c(12, 1, 2)
+    ganger <- 0
+      
+    if (all(maaneder %in% m$mnd)) {
+        
+      ## December of previous year
+      dag_dec <- somDag(m$dag[m$mnd == 12],12,y - 1)
+      if (any(
+        dag_dec >= somDag(1, 12, y - 1) - slingring &
+        dag_dec <= somDag(31, 12, y - 1) # no slingring because we are at the end of the year
+      )) {
+        ganger <- ganger + 1
+      }
+        
+      ## January and February of season year
+      for (j in c(1, 2)) {
+      dag_j <- somDag(
+          m$dag[m$mnd == j],
+          j,
+          y
+        )
+        if (any(
+          dag_j >= somDag(1, j, y) - slingring &
+          dag_j <= somDag(1, j + 1, y) + slingring - 1
+        )) {
+          ganger <- ganger + 1
+        }
+      }
+    }
+    if (ganger < antallSyd) {
+      fjern <- c(fjern, w)
+    }
+  }
+    
+  unique(fjern)
+}
+
+
+################################################################################
+
+
+sjekkLAL <- 
+  function(maaling) {
+    # Funksjonen fjerner data fra vannforekomster der det ikke er foretatt
+    # målinger minst én gang per årstid og sparer kun på den som har størst verdi
+    antall <- 4
+    fjern <- c()
+    ID <- maaling$aar %+% maaling$vfo
+    for (i in unique(ID)) {
+      w <- which(ID == i)
+      m <- maaling[w, ]
+      y <- m$aar[1]
+      DAG <- somDag(m$dag, m$mnd, y)
+      if (length(w) < antall) {
+        fjern <- c(fjern, w)
+      } else {
+        if       (any(DAG %mellom% c(somDag(1, 4, y), somDag(30,  6, y)))) {
+          if     (any(DAG %mellom% c(somDag(1, 6, y), somDag(31,  8, y)))) {
+            if   (any(DAG %mellom% c(somDag(1, 9, y), somDag(30, 11, y)))) {
+              if (any(DAG %utafor% c(somDag(1, 5, y), somDag(31, 10, y)))) {
+                fjern <- c(fjern, w[-order(m$vrd, decreasing = TRUE)[1]])
+              } else {
+                if ((m$reg[1] %in% c("N", "F") | m$son[1] %in% c("M", "H")) &
+                    any(DAG %utafor% c(somDag(1, 6, y), somDag(30, 9, y)))) {
+                  fjern <- c(fjern, w[-order(m$vrd, decreasing = TRUE)[1]])
+                } else fjern <- c(fjern, w)
+              }
+            } else fjern <- c(fjern, w)
+          } else fjern <- c(fjern, w)
+        } else fjern <- c(fjern, w)
+      }
+    }
+    return(unique(fjern))
+  }
+
+
+
+sjekkRADDUM1 <- 
+  function(maaling) {
+  # Funksjonen fjerner målinger som er tatt i humøse vannforekomster
+  fjern <- which(maaling$hum %in% 2:3)
+  attr(fjern, "ikkeInkluder") <- list(typ = rep("hum", 2), vrd = 2:3)
+  return(fjern)
+}
+
+
+
+sjekkTIANTL <- 
+  function(maaling, slingring, fraMaaned, tilMaaned) {
+  # Funksjonen fjerner målinger som ikke er tatt mellom juli og september
+  if (missing(fraMaaned)) fraMaaned <-  7  # juni måned
+  if (missing(tilMaaned)) tilMaaned <-  9  # september måned
+  if (missing(slingring)) slingring <- 14  # dager
+  DAG <- somDag(maaling$dag, maaling$mnd, maaling$aar)
+  fjern <- c(which(DAG < somDag(1, fraMaaned,     maaling$aar) - slingring),
+             which(DAG > somDag(1, tilMaaned + 1, maaling$aar) + slingring - 1))
+  return(fjern)
+}
+
+
+# Variabel som holder oversikt over de mulige argumentene av "sjekk"-funksjonene
+sjekkArgumenter <- 
+  c("slingring", "fraMaaned", "tilMaaned", "antallSyd", "antallNor")
+
+
+
+
+
+
+
+
+
+
