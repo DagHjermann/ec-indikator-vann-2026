@@ -1,0 +1,1319 @@
+---
+title: "Marine pH"
+editor: visual
+editor_options: 
+  chunk_output_type: console
+format:
+  html:
+    code-fold: true
+    toc: true
+    toc-title: Contents
+    toc-depth: 3
+    smooth-scroll: true
+---
+
+## Packages
+
+```{r}
+#| include: false
+#| cache: false
+
+library(dplyr)
+library(purrr)      # map()
+library(forcats)  
+library(lubridate)  # year(), month()
+library(ggplot2)
+library(ggeasy)
+library(cowplot)
+library(readxl)     # read_excel()
+library(emmeans)    # emmeans()
+library(visreg)
+
+```
+
+
+## Data from Vannmiljø    
+
+We use data extracted from Vannmiljø, filtered by program (Ocean Acidification) and years (2023-2024)  
+
+```{r}
+
+fn <- "../data/vannmiljo_ocean-acidification_2022-2024.xlsx"
+dat_all <- read_excel(fn, guess_max = 17900) 
+
+if (FALSE){
+  table(dat_all$Vannlokalitetsnavn)
+}
+
+```
+
+
+
+## One model per region
+
+### Define regions   
+
+This table links stations to regions. For the longer transects, we have hand-picked a few stations that by location and data consistency appears to be most representative for the region. Stations with 'NA' in the Region column are not included in the analysis.  
+
+```{r}
+
+# datapasta::tribble_paste(dat_all |> distinct(Vannlokalitetsnavn))
+
+lookup_region <- tibble::tribble(
+                               ~Vannlokalitetsnavn,   ~region,
+                                         "Arendal",   "Skagerrak",
+                                  "Torbjørnskjær",    "Skagerrak",   
+                                          "Skrova", "Norskehavet",
+                            "Torungen - Hirtshals",   "Skagerrak",
+                                 "Svinøy-snittet",  "Norskehavet",
+                             "Fugløya - Bjørnøya", "Barentshavet",
+                                      "Barentshav","Barentshavet",
+                                         "Gimsøy",  "Norskehavet",
+                                       "Stasjon M",  "Norskehavet",
+             "Korsfjorden, Vestlandsfjorder (692)",   "Nordsjøen",
+     "Ytre Hardangerfjord, Vestlandsfjorder (694)",   "Nordsjøen",
+                                     "Oslo-Kiel 4",            NA,
+                                     "Oslo-Kiel 8",            NA,
+                                     "Oslo-Kiel 9",            NA,
+                        "Straumsfjorden, Bakkland", "Barentshavet",
+                              "Tromsø-Svalbard 1",  "Norskehavet",
+                          "Isfjorden-Grønfjorden",  "Barentshavet",
+                                "Karlskronadjupet",            NA,
+                                   "Huglahammaren",            NA,
+                                    "Straumsneset",  "Norskehavet",
+                          "Huglahammaren, terskel",            NA,
+                                     "Oslo-Kiel 1",   "Skagerrak",
+                                     "Oslo-Kiel 2",   "Skagerrak",
+                                     "Oslo-Kiel 3",   "Skagerrak",
+                                     "Oslo-Kiel 7",            NA,
+                                     "Oslo-Kiel 5",            NA,
+                                    "Stjernsundet", "Barentshavet",
+                                          "Tisler",  "Skagerrak",
+                                        "Utsira-V",   "Nordsjøen",
+                                     "Oslo-Kiel 6",            NA,
+                              "Tromsø-Svalbard 2",             NA,
+                              "Tromsø-Svalbard 3",             NA,
+                              "Tromsø-Svalbard 4",            NA,
+                              "Tromsø-Svalbard 5",            NA,
+                              "Tromsø-Svalbard 6",            NA,
+                              "Tromsø-Svalbard 7", "Barentshavet",
+                              "Tromsø-Svalbard 8", "Barentshavet",
+                              "Tromsø-Svalbard 9", "Barentshavet",
+                             "Tromsø-Svalbard 10",            NA,
+                             "Tromsø-Svalbard 11",            NA,
+                             "Tromsø-Svalbard 12",            NA,
+                             "Tromsø-Svalbard 13",            NA,
+                             "Tromsø-Svalbard 14",            NA,
+                             "Tromsø-Svalbard 15",            NA,
+                             "Fugløya-Bjørnøya",   "Barentshavet"
+     )
+```
+
+### Add the 'region' column to the data  
+
+```{r}
+
+dat_all2 <- dat_all |> 
+  left_join(lookup_region, 
+            by = join_by(Vannlokalitetsnavn),
+            relationship = "many-to-one") |> 
+  filter(!is.na(region))
+
+```
+
+## Analysis per region
+
+For each region, we estimate the marginal mean pH based on the following linear model:   
+```
+pH ~ station + year_f + season*depth
+```
+Factors: 
+- station: station name (categorical)
+- year_f: year (categorical)
+- season: the four meteorological seasons (categorical)  
+- depth: sample depth (continuous)  
+
+By taking the marginal mean, we avoid biased estimates due to imbalanced sampling, e.g. imbalance among seasons   
+
+### Function for checking map
+
+```{r}
+
+check_map <- function(data){
+  df_stations <- data |> 
+    count(Vannlokalitetsnavn, Betegnelse, `UTM33 Ost (X)`, `UTM33 Nord (Y)`) |> 
+    st_as_sf(coords = c("UTM33 Ost (X)", "UTM33 Nord (Y)"),
+             crs = 25833) |> 
+    st_transform(4326)
+  coord <- st_coordinates(df_stations)
+  df_stations$x <- coord[,1]
+  df_stations$y <- coord[,2]
+  df_stations |> 
+    mutate(popup = paste0(Vannlokalitetsnavn, "<br>", Betegnelse)) |> 
+    # filter(grepl("Barentshav", Vannlokalitetsnavn)) |> 
+    leaflet() |> 
+    addTiles() |> 
+    addMarkers(~x, ~y, popup = ~popup)
+}
+
+```
+
+### Barentshavet deep oceanic
+
+```{r}
+
+dat <- dat_all2 |> 
+  filter(region %in% "Barentshavet",
+         !(grepl("Straumsfjord", Vannlokalitetsnavn) |
+         grepl("Stjernsundet", Vannlokalitetsnavn)),
+         Parameter_id %in% "PHT",
+         Ovre_dyp >= 100)
+# table(is.na(dat$Betegnelse))
+# table(addNA(dat$Betegnelse))
+
+# check_map(dat)
+
+dat <- dat |> 
+  mutate(
+    Betegnelse = as.numeric(Betegnelse),
+    cruise = substr(Vannlokalitetsnavn, 1, 12),
+    station = paste0(cruise, sprintf("%02.0f", Betegnelse)),
+    year = year(Tid_provetak),
+    year_f = factor(year),
+    month = month(Tid_provetak),
+    season = case_when(
+      month %in%  3:5 ~ "Spring (MAM)",
+      month %in%  6:8 ~ "Summer (JJA)",
+      month %in%  9:11 ~ "Autumn (SON)",
+      month %in% c(12,1,2) ~ "Winter (DJF)"),
+    season = factor(season, 
+                    levels = c("Winter (DJF)", "Spring (MAM)",
+                               "Summer (JJA)","Autumn (SON)")),
+    year_month = sprintf("%.2f", year + month/100),
+  depth = cut(Ovre_dyp, breaks = c(0,5,10,20,50,100,200,500))
+  )
+
+if (FALSE){
+  hist(dat$Nedre_dyp)
+  xtabs(~cruise, dat)
+  xtabs(~station, dat)
+  xtabs(~year_month + station, dat)
+  xtabs(~season + depth + station, dat)
+  # xtabs(~paste(Ovre_dyp, Nedre_dyp) + Vannlokalitetsnavn, dat)
+}
+
+
+mod <- lm(Verdi ~ station + year_f + season*depth, data = dat)  
+
+# check  
+plot_grid(
+  visreg(mod, "year_f"),
+  visreg(mod, "season", "depth") + easy_rotate_x_labels(-15), 
+  visreg(mod, "station") + easy_rotate_x_labels(-15), 
+  ncol = 1)
+
+emm <- emmeans(mod, ~ depth, weights = "equal")
+est_barents_deep_oceanic_d <- summary(emm)
+
+# Refit model with only the existing depths
+sel <- is.na(summary(emm)$emmean)
+sel_depths <- summary(emm)$depth[!sel]
+dat2 <- dat |> filter(depth %in% sel_depths)
+if (length(sel_depths)>1){ mod <- lm(Verdi ~ station + year_f + season*depth, data = dat2)  } else { mod <- lm(Verdi ~ station + year_f + season, data = dat2)   }  
+
+emm <- emmeans(mod, ~ 1, weights = "equal")
+est_barents_deep_oceanic <- summary(emm)
+
+```
+
+### Barentshavet deep coastal
+
+```{r}
+
+dat <- dat_all2 |> 
+  filter(region %in% "Barentshavet",
+         (grepl("Straumsfjord", Vannlokalitetsnavn) |
+         grepl("Stjernsundet", Vannlokalitetsnavn)),
+         Parameter_id %in% "PHT",
+         Ovre_dyp >= 100)
+# table(is.na(dat$Betegnelse))
+# table(addNA(dat$Betegnelse))
+
+# check_map(dat)
+
+dat <- dat |> 
+  mutate(
+    Betegnelse = as.numeric(Betegnelse),
+    cruise = substr(Vannlokalitetsnavn, 1, 12),
+    station = paste0(cruise, sprintf("%02.0f", Betegnelse)),
+    year = year(Tid_provetak),
+    year_f = factor(year),
+    month = month(Tid_provetak),
+    season = case_when(
+      month %in%  3:5 ~ "Spring (MAM)",
+      month %in%  6:8 ~ "Summer (JJA)",
+      month %in%  9:11 ~ "Autumn (SON)",
+      month %in% c(12,1,2) ~ "Winter (DJF)"),
+    season = factor(season, 
+                    levels = c("Winter (DJF)", "Spring (MAM)",
+                               "Summer (JJA)","Autumn (SON)")),
+    year_month = sprintf("%.2f", year + month/100),
+  depth = cut(Ovre_dyp, breaks = c(0,5,10,20,50,100,200,500))
+  )
+
+if (FALSE){
+  hist(dat$Nedre_dyp)
+  xtabs(~cruise, dat)
+  xtabs(~station, dat)
+  xtabs(~year_month + station, dat)
+  xtabs(~season + depth + station, dat)
+  # xtabs(~paste(Ovre_dyp, Nedre_dyp) + Vannlokalitetsnavn, dat)
+}
+
+
+mod <- lm(Verdi ~ station + year_f + season*depth, data = dat)  
+
+# check  
+plot_grid(
+  visreg(mod, "year_f"),
+  visreg(mod, "season", "depth") + easy_rotate_x_labels(-15), 
+  visreg(mod, "station") + easy_rotate_x_labels(-15), 
+  ncol = 1)
+
+emm <- emmeans(mod, ~ depth, weights = "equal")
+est_barents_deep_coastal_d <- summary(emm)
+
+# Refit model with only the existing depths
+sel <- is.na(summary(emm)$emmean)
+sel_depths <- summary(emm)$depth[!sel]
+dat2 <- dat |> filter(depth %in% sel_depths)
+if (length(sel_depths)>1){ mod <- lm(Verdi ~ station + year_f + season*depth, data = dat2)  } else { mod <- lm(Verdi ~ station + year_f + season, data = dat2)   }  
+
+emm <- emmeans(mod, ~ 1, weights = "equal")
+est_barents_deep_coastal <- summary(emm)
+
+```
+
+### Barentshavet shallow oceanic
+
+- Note: the Northernmost "Barentshav" stations (from 31 and Northwards) have been excluded as they have extremely high pH (sea-ices processes?)
+
+```{r}
+
+dat <- dat_all2 |> 
+  filter(region %in% "Barentshavet",
+         !(grepl("Straumsfjord", Vannlokalitetsnavn) |
+         grepl("Stjernsundet", Vannlokalitetsnavn)),
+         Parameter_id %in% "PHT",
+         Ovre_dyp <= 20)
+
+sel <- with(dat, as.numeric(Betegnelse) >= 31)
+sel[is.na(sel)] <- FALSE
+# table(addNA(sel))
+dat <- dat[!sel,]
+
+# check_map(dat)
+
+dat <- dat |> 
+  mutate(
+    Betegnelse = as.numeric(Betegnelse),
+    cruise = substr(Vannlokalitetsnavn, 1, 12),
+    station = paste0(cruise, sprintf("%02.0f", Betegnelse)),
+    year = year(Tid_provetak),
+    year_f = factor(year),
+    month = month(Tid_provetak),
+    season = case_when(
+      month %in%  3:5 ~ "Spring (MAM)",
+      month %in%  6:8 ~ "Summer (JJA)",
+      month %in%  9:11 ~ "Autumn (SON)",
+      month %in% c(12,1,2) ~ "Winter (DJF)"),
+    season = factor(season, 
+                    levels = c("Winter (DJF)", "Spring (MAM)",
+                               "Summer (JJA)","Autumn (SON)")),
+    year_month = sprintf("%.2f", year + month/100),
+  depth = cut(Ovre_dyp, breaks = c(0,5,10,20,50,100,200,500))
+  )
+
+if (FALSE){
+  hist(dat$Nedre_dyp)
+  xtabs(~cruise, dat)
+  xtabs(~station, dat)
+  xtabs(~year_month + station, dat)
+  xtabs(~season + depth + station, dat)
+  # xtabs(~paste(Ovre_dyp, Nedre_dyp) + Vannlokalitetsnavn, dat)
+}
+
+
+mod <- lm(Verdi ~ station + year_f + season*depth, data = dat)  
+
+# check  
+plot_grid(
+  visreg(mod, "year_f"),
+  visreg(mod, "season", "depth") + easy_rotate_x_labels(-15), 
+  visreg(mod, "station") + easy_rotate_x_labels(-15), 
+  ncol = 1)
+
+emm <- emmeans(mod, ~ depth, weights = "equal")
+est_barents_shallow_oceanic_d <- summary(emm)
+
+# Refit model with only the existing depths
+sel <- is.na(summary(emm)$emmean)
+sel_depths <- summary(emm)$depth[!sel]
+dat2 <- dat |> filter(depth %in% sel_depths)
+if (length(sel_depths)>1){ mod <- lm(Verdi ~ station + year_f + season*depth, data = dat2)  } else { mod <- lm(Verdi ~ station + year_f + season, data = dat2)   }  
+
+emm <- emmeans(mod, ~ 1, weights = "equal")
+est_barents_shallow_oceanic <- summary(emm)
+
+```
+
+### Barentshavet shallow coastal
+
+```{r}
+
+dat <- dat_all2 |> 
+  filter(region %in% "Barentshavet",
+         (grepl("Straumsfjord", Vannlokalitetsnavn) |
+         grepl("Stjernsundet", Vannlokalitetsnavn)),
+         Parameter_id %in% "PHT",
+         Ovre_dyp <= 20)
+# table(is.na(dat$Betegnelse))
+# table(addNA(dat$Betegnelse))
+
+# check_map(dat)
+
+dat <- dat |> 
+  mutate(
+    Betegnelse = as.numeric(Betegnelse),
+    cruise = substr(Vannlokalitetsnavn, 1, 12),
+    station = paste0(cruise, sprintf("%02.0f", Betegnelse)),
+    year = year(Tid_provetak),
+    year_f = factor(year),
+    month = month(Tid_provetak),
+    season = case_when(
+      month %in%  3:5 ~ "Spring (MAM)",
+      month %in%  6:8 ~ "Summer (JJA)",
+      month %in%  9:11 ~ "Autumn (SON)",
+      month %in% c(12,1,2) ~ "Winter (DJF)"),
+    season = factor(season, 
+                    levels = c("Winter (DJF)", "Spring (MAM)",
+                               "Summer (JJA)","Autumn (SON)")),
+    year_month = sprintf("%.2f", year + month/100),
+  depth = cut(Ovre_dyp, breaks = c(0,5,10,20,50,100,200,500))
+  )
+
+if (FALSE){
+  hist(dat$Nedre_dyp)
+  xtabs(~cruise, dat)
+  xtabs(~station, dat)
+  xtabs(~year_month + station, dat)
+  xtabs(~season + depth + station, dat)
+  # xtabs(~paste(Ovre_dyp, Nedre_dyp) + Vannlokalitetsnavn, dat)
+}
+
+
+mod <- lm(Verdi ~ station + year_f + season*depth, data = dat)  
+
+# check  
+plot_grid(
+  visreg(mod, "year_f"),
+  visreg(mod, "season", "depth") + easy_rotate_x_labels(-15), 
+  visreg(mod, "station") + easy_rotate_x_labels(-15), 
+  ncol = 1)
+
+emm <- emmeans(mod, ~ depth, weights = "equal")
+est_barents_shallow_coastal_d <- summary(emm)
+
+# Refit model with only the existing depths
+sel <- is.na(summary(emm)$emmean)
+sel_depths <- summary(emm)$depth[!sel]
+dat2 <- dat |> filter(depth %in% sel_depths)
+if (length(sel_depths)>1){ mod <- lm(Verdi ~ station + year_f + season*depth, data = dat2)  } else { mod <- lm(Verdi ~ station + year_f + season, data = dat2)   }  
+
+emm <- emmeans(mod, ~ 1, weights = "equal")
+est_barents_shallow_coastal <- summary(emm)
+
+```
+
+### Norskehavet deep oceanic
+
+```{r}
+
+dat <- dat_all2 |> 
+  filter(region %in% "Norskehavet",
+         !(grepl("Skrova", Vannlokalitetsnavn) |
+         grepl("Straumsneset", Vannlokalitetsnavn)),
+         Parameter_id %in% "PHT",
+         Ovre_dyp >= 100)
+
+# check_map(dat)
+
+dat <- dat |> 
+  mutate(
+    Betegnelse = as.numeric(Betegnelse),
+    cruise = substr(Vannlokalitetsnavn, 1, 12),
+        station = paste0(cruise,                       ifelse(is.na(Betegnelse), "", sprintf("%02.0f", Betegnelse))                      ),
+    year = year(Tid_provetak),
+    year_f = factor(year),
+    month = month(Tid_provetak),
+    season = case_when(
+      month %in%  3:5 ~ "Spring (MAM)",
+      month %in%  6:8 ~ "Summer (JJA)",
+      month %in%  9:11 ~ "Autumn (SON)",
+      month %in% c(12,1,2) ~ "Winter (DJF)"),
+    season = factor(season, 
+                    levels = c("Winter (DJF)", "Spring (MAM)",
+                               "Summer (JJA)","Autumn (SON)")),
+    year_month = sprintf("%.2f", year + month/100),
+  depth = cut(Ovre_dyp, breaks = c(0,5,10,20,50,100,200,500))
+  )
+
+if (FALSE){
+  hist(dat$Nedre_dyp)
+  xtabs(~cruise, dat)
+  xtabs(~station, dat)
+  xtabs(~year_month + station, dat)
+  xtabs(~season + depth + station, dat)
+  # xtabs(~paste(Ovre_dyp, Nedre_dyp) + Vannlokalitetsnavn, dat)
+}
+
+
+mod <- lm(Verdi ~ station + year_f + season*depth, data = dat)  
+
+# check  
+plot_grid(
+  visreg(mod, "year_f"),
+  visreg(mod, "season", "depth") + easy_rotate_x_labels(-15), 
+  visreg(mod, "station") + easy_rotate_x_labels(-15), 
+  ncol = 1)
+
+emm <- emmeans(mod, ~ depth, weights = "equal")
+est_norskehavet_deep_oceanic_d <- summary(emm)
+
+# Refit model with only the existing depths
+sel <- is.na(summary(emm)$emmean)
+sel_depths <- summary(emm)$depth[!sel]
+dat2 <- dat |> filter(depth %in% sel_depths)
+if (length(sel_depths)>1){ mod <- lm(Verdi ~ station + year_f + season*depth, data = dat2)  } else { mod <- lm(Verdi ~ station + year_f + season, data = dat2)   }  
+
+emm <- emmeans(mod, ~ 1, weights = "equal")
+est_norskehavet_deep_oceanic <- summary(emm)
+
+```
+
+### Norskehavet deep coastal
+
+```{r}
+
+dat <- dat_all2 |> 
+  filter(region %in% "Norskehavet",
+         (grepl("Skrova", Vannlokalitetsnavn) |
+         grepl("Straumsneset", Vannlokalitetsnavn)),
+         Parameter_id %in% "PHT",
+         Ovre_dyp >= 100)
+# table(is.na(dat$Betegnelse))
+# table(addNA(dat$Betegnelse))
+
+# check_map(dat)
+
+dat <- dat |> 
+  mutate(
+    Betegnelse = as.numeric(Betegnelse),
+    cruise = substr(Vannlokalitetsnavn, 1, 12),
+        station = paste0(cruise,                       ifelse(is.na(Betegnelse), "", sprintf("%02.0f", Betegnelse))                      ),
+    year = year(Tid_provetak),
+    year_f = factor(year),
+    month = month(Tid_provetak),
+    season = case_when(
+      month %in%  3:5 ~ "Spring (MAM)",
+      month %in%  6:8 ~ "Summer (JJA)",
+      month %in%  9:11 ~ "Autumn (SON)",
+      month %in% c(12,1,2) ~ "Winter (DJF)"),
+    season = factor(season, 
+                    levels = c("Winter (DJF)", "Spring (MAM)",
+                               "Summer (JJA)","Autumn (SON)")),
+    year_month = sprintf("%.2f", year + month/100),
+  depth = cut(Ovre_dyp, breaks = c(0,5,10,20,50,100,200,500))
+  )
+
+if (FALSE){
+  hist(dat$Nedre_dyp)
+  xtabs(~cruise, dat)
+  xtabs(~station, dat)
+  xtabs(~year_month + station, dat)
+  xtabs(~season + depth + station, dat)
+  # xtabs(~paste(Ovre_dyp, Nedre_dyp) + Vannlokalitetsnavn, dat)
+}
+
+
+mod <- lm(Verdi ~ station + year_f + season*depth, data = dat)  
+
+# check  
+plot_grid(
+  visreg(mod, "year_f"),
+  visreg(mod, "season", "depth") + easy_rotate_x_labels(-15), 
+  visreg(mod, "station") + easy_rotate_x_labels(-15), 
+  ncol = 1)
+
+emm <- emmeans(mod, ~ depth, weights = "equal")
+est_norskehavet_deep_coastal_d <- summary(emm)
+
+# Refit model with only the existing depths
+sel <- is.na(summary(emm)$emmean)
+sel_depths <- summary(emm)$depth[!sel]
+dat2 <- dat |> filter(depth %in% sel_depths)
+if (length(sel_depths)>1){ mod <- lm(Verdi ~ station + year_f + season*depth, data = dat2)  } else { mod <- lm(Verdi ~ station + year_f + season, data = dat2)   }  
+
+emm <- emmeans(mod, ~ 1, weights = "equal")
+est_norskehavet_deep_coastal <- summary(emm)
+
+```
+
+### Norskehavet shallow oceanic
+
+- In addition to the fixed stations Skrova and Straumsneset, also excludes the first station on the Tromsø - Svalbard ferrybox transect
+
+```{r}
+
+dat <- dat_all2 |> 
+  filter(region %in% "Norskehavet",
+         !(grepl("Skrova", Vannlokalitetsnavn) |
+         grepl("Straumsneset", Vannlokalitetsnavn) |
+           grepl("Tromsø-Svalbard 1", Vannlokalitetsnavn)),
+         Parameter_id %in% "PHT",
+         Ovre_dyp <= 20)
+
+# check_map(dat)
+
+dat <- dat |> 
+  mutate(
+    Betegnelse = as.numeric(Betegnelse),
+    cruise = substr(Vannlokalitetsnavn, 1, 12),
+        station = paste0(cruise,                       ifelse(is.na(Betegnelse), "", sprintf("%02.0f", Betegnelse))                      ),
+    year = year(Tid_provetak),
+    year_f = factor(year),
+    month = month(Tid_provetak),
+    season = case_when(
+      month %in%  3:5 ~ "Spring (MAM)",
+      month %in%  6:8 ~ "Summer (JJA)",
+      month %in%  9:11 ~ "Autumn (SON)",
+      month %in% c(12,1,2) ~ "Winter (DJF)"),
+    season = factor(season, 
+                    levels = c("Winter (DJF)", "Spring (MAM)",
+                               "Summer (JJA)","Autumn (SON)")),
+    year_month = sprintf("%.2f", year + month/100),
+  depth = cut(Ovre_dyp, breaks = c(0,5,10,20,50,100,200,500))
+  )
+
+if (FALSE){
+  hist(dat$Nedre_dyp)
+  xtabs(~cruise, dat)
+  xtabs(~station, dat)
+  xtabs(~year_month + station, dat)
+  xtabs(~season + depth + station, dat)
+  # xtabs(~paste(Ovre_dyp, Nedre_dyp) + Vannlokalitetsnavn, dat)
+}
+
+
+mod <- lm(Verdi ~ station + year_f + season*depth, data = dat)  
+
+# check  
+plot_grid(
+  visreg(mod, "year_f"),
+  visreg(mod, "season", "depth") + easy_rotate_x_labels(-15), 
+  visreg(mod, "station") + easy_rotate_x_labels(-15), 
+  ncol = 1)
+
+emm <- emmeans(mod, ~ depth, weights = "equal")
+est_norskehavet_shallow_oceanic_d <- summary(emm)
+
+# Refit model with only the existing depths
+sel <- is.na(summary(emm)$emmean)
+sel_depths <- summary(emm)$depth[!sel]
+dat2 <- dat |> filter(depth %in% sel_depths)
+if (length(sel_depths)>1){
+mod <- lm(Verdi ~ station + year_f + season*depth, data = dat2) 
+} else {
+mod <- lm(Verdi ~ station + year_f + season, data = dat2)  
+}
+
+emm <- emmeans(mod, ~ 1, weights = "equal")
+est_norskehavet_shallow_oceanic <- summary(emm)
+
+```
+
+### Norskehavet shallow coastal
+
+```{r}
+
+dat <- dat_all2 |> 
+  filter(region %in% "Norskehavet",
+         (grepl("Skrova", Vannlokalitetsnavn) |
+         grepl("Straumsneset", Vannlokalitetsnavn) |
+           grepl("Tromsø-Svalbard 1", Vannlokalitetsnavn)),
+         Parameter_id %in% "PHT",
+         Ovre_dyp <= 20)
+# table(is.na(dat$Betegnelse))
+# table(addNA(dat$Betegnelse))
+
+# check_map(dat)
+
+dat <- dat |> 
+  mutate(
+    Betegnelse = as.numeric(Betegnelse),
+    cruise = substr(Vannlokalitetsnavn, 1, 12),
+        station = paste0(cruise,                       ifelse(is.na(Betegnelse), "", sprintf("%02.0f", Betegnelse))                      ),
+    year = year(Tid_provetak),
+    year_f = factor(year),
+    month = month(Tid_provetak),
+    season = case_when(
+      month %in%  3:5 ~ "Spring (MAM)",
+      month %in%  6:8 ~ "Summer (JJA)",
+      month %in%  9:11 ~ "Autumn (SON)",
+      month %in% c(12,1,2) ~ "Winter (DJF)"),
+    season = factor(season, 
+                    levels = c("Winter (DJF)", "Spring (MAM)",
+                               "Summer (JJA)","Autumn (SON)")),
+    year_month = sprintf("%.2f", year + month/100),
+  depth = cut(Ovre_dyp, breaks = c(0,5,10,20,50,100,200,500))
+  )
+
+if (FALSE){
+  hist(dat$Nedre_dyp)
+  xtabs(~cruise, dat)
+  xtabs(~station, dat)
+  xtabs(~year_month + station, dat)
+  xtabs(~season + depth + station, dat)
+  # xtabs(~paste(Ovre_dyp, Nedre_dyp) + Vannlokalitetsnavn, dat)
+}
+
+
+mod <- lm(Verdi ~ station + year_f + season*depth, data = dat)  
+
+# check  
+plot_grid(
+  visreg(mod, "year_f"),
+  visreg(mod, "season", "depth") + easy_rotate_x_labels(-15), 
+  visreg(mod, "station") + easy_rotate_x_labels(-15), 
+  ncol = 1)
+
+emm <- emmeans(mod, ~ depth, weights = "equal")
+est_norskehavet_shallow_coastal_d <- summary(emm)
+
+# Refit model with only the existing depths
+sel <- is.na(summary(emm)$emmean)
+sel_depths <- summary(emm)$depth[!sel]
+dat2 <- dat |> filter(depth %in% sel_depths)
+if (length(sel_depths)>1){ mod <- lm(Verdi ~ station + year_f + season*depth, data = dat2)  } else { mod <- lm(Verdi ~ station + year_f + season, data = dat2)   }  
+
+emm <- emmeans(mod, ~ 1, weights = "equal")
+est_norskehavet_shallow_coastal <- summary(emm)
+
+```
+
+### Skagerrak deep oceanic
+
+```{r}
+
+dat <- dat_all2 |> 
+  filter(region %in% "Skagerrak",
+         !(grepl("Tisler", Vannlokalitetsnavn) |
+             grepl("H*røydypet", Betegnelse)),
+         Parameter_id %in% "PHT",
+         Ovre_dyp >= 100)
+
+# check_map(dat)
+
+dat <- dat |> 
+  mutate(
+    # Betegnelse = as.numeric(Betegnelse),
+    cruise = substr(Vannlokalitetsnavn, 1, 12),
+        station = paste0(cruise, 
+                         ifelse(is.na(Betegnelse), "", Betegnelse)),
+    year = year(Tid_provetak),
+    year_f = factor(year),
+    month = month(Tid_provetak),
+    season = case_when(
+      month %in%  3:5 ~ "Spring (MAM)",
+      month %in%  6:8 ~ "Summer (JJA)",
+      month %in%  9:11 ~ "Autumn (SON)",
+      month %in% c(12,1,2) ~ "Winter (DJF)"),
+    season = factor(season, 
+                    levels = c("Winter (DJF)", "Spring (MAM)",
+                               "Summer (JJA)","Autumn (SON)")),
+    year_month = sprintf("%.2f", year + month/100),
+  depth = cut(Ovre_dyp, breaks = c(0,5,10,20,50,100,200,500))
+  )
+
+if (FALSE){
+  hist(dat$Nedre_dyp)
+  xtabs(~cruise, dat)
+  xtabs(~station, dat)
+  xtabs(~year_month + station, dat)
+  xtabs(~season + depth + station, dat)
+  # xtabs(~paste(Ovre_dyp, Nedre_dyp) + Vannlokalitetsnavn, dat)
+}
+
+
+mod <- lm(Verdi ~ station + year_f + season*depth, data = dat)  
+
+# check  
+plot_grid(
+  visreg(mod, "year_f"),
+  visreg(mod, "season", "depth") + easy_rotate_x_labels(-15), 
+  visreg(mod, "station") + easy_rotate_x_labels(-15), 
+  ncol = 1)
+
+emm <- emmeans(mod, ~ depth, weights = "equal")
+est_skagerrak_deep_oceanic_d <- summary(emm)
+
+# Refit model with only the existing depths
+sel <- is.na(summary(emm)$emmean)
+sel_depths <- summary(emm)$depth[!sel]
+dat2 <- dat |> filter(depth %in% sel_depths)
+if (length(sel_depths)>1){ mod <- lm(Verdi ~ station + year_f + season*depth, data = dat2)  } else { mod <- lm(Verdi ~ station + year_f + season, data = dat2)   }  
+
+emm <- emmeans(mod, ~ 1, weights = "equal")
+est_skagerrak_deep_oceanic <- summary(emm)
+
+```
+
+### Skagerrak deep coastal
+
+```{r}
+
+dat <- dat_all2 |> 
+  filter(region %in% "Skagerrak",
+         (grepl("Tisler", Vannlokalitetsnavn) |
+            grepl("H*røydypet", Betegnelse)),
+         Parameter_id %in% "PHT",
+         Ovre_dyp >= 100)
+# table(is.na(dat$Betegnelse))
+# table(addNA(dat$Betegnelse))
+
+# check_map(dat)
+
+dat <- dat |> 
+  mutate(
+    # Betegnelse = as.numeric(Betegnelse),
+    cruise = substr(Vannlokalitetsnavn, 1, 12),
+    station = paste0(cruise,
+                     ifelse(is.na(Betegnelse), "", Betegnelse)),
+    year = year(Tid_provetak),
+    year_f = factor(year),
+    month = month(Tid_provetak),
+    season = case_when(
+      month %in%  3:5 ~ "Spring (MAM)",
+      month %in%  6:8 ~ "Summer (JJA)",
+      month %in%  9:11 ~ "Autumn (SON)",
+      month %in% c(12,1,2) ~ "Winter (DJF)"),
+    season = factor(season, 
+                    levels = c("Winter (DJF)", "Spring (MAM)",
+                               "Summer (JJA)","Autumn (SON)")),
+    year_month = sprintf("%.2f", year + month/100),
+  depth = cut(Ovre_dyp, breaks = c(0,5,10,20,50,100,200,500))
+  )
+
+if (FALSE){
+  hist(dat$Nedre_dyp)
+  xtabs(~cruise, dat)
+  xtabs(~station, dat)
+  xtabs(~year_month + station, dat)
+  xtabs(~season + depth + station, dat)
+  # xtabs(~paste(Ovre_dyp, Nedre_dyp) + Vannlokalitetsnavn, dat)
+}
+
+
+mod <- lm(Verdi ~ station + year_f + season*depth, data = dat)  
+
+# check  
+plot_grid(
+  visreg(mod, "year_f"),
+  visreg(mod, "season", "depth") + easy_rotate_x_labels(-15), 
+  visreg(mod, "station") + easy_rotate_x_labels(-15), 
+  ncol = 1)
+
+emm <- emmeans(mod, ~ depth, weights = "equal")
+est_skagerrak_deep_coastal_d <- summary(emm)
+
+# Refit model with only the existing depths
+sel <- is.na(summary(emm)$emmean)
+sel_depths <- summary(emm)$depth[!sel]
+dat2 <- dat |> filter(depth %in% sel_depths)
+if (length(sel_depths)>1){ mod <- lm(Verdi ~ station + year_f + season*depth, data = dat2)  } else { mod <- lm(Verdi ~ station + year_f + season, data = dat2)   }  
+
+emm <- emmeans(mod, ~ 1, weights = "equal")
+est_skagerrak_deep_coastal <- summary(emm)
+
+```
+
+### Skagerrak shallow oceanic
+
+- In addition to the fixed stations Skrova and Straumsneset, also excludes the first station on the Tromsø - Svalbard ferrybox transect
+
+```{r}
+
+dat <- dat_all2 |> 
+  filter(region %in% "Skagerrak",
+         !(grepl("Tisler", Vannlokalitetsnavn) |
+             grepl("H*røydypet", Betegnelse)),
+         Parameter_id %in% "PHT",
+         Ovre_dyp <= 20)
+
+# check_map(dat)
+
+dat <- dat |> 
+  mutate(
+    # Betegnelse = as.numeric(Betegnelse),
+    cruise = substr(Vannlokalitetsnavn, 1, 12),
+    station = paste0(cruise,
+                     ifelse(is.na(Betegnelse), "", Betegnelse)),
+    year = year(Tid_provetak),
+    year_f = factor(year),
+    month = month(Tid_provetak),
+    season = case_when(
+      month %in%  3:5 ~ "Spring (MAM)",
+      month %in%  6:8 ~ "Summer (JJA)",
+      month %in%  9:11 ~ "Autumn (SON)",
+      month %in% c(12,1,2) ~ "Winter (DJF)"),
+    season = factor(season, 
+                    levels = c("Winter (DJF)", "Spring (MAM)",
+                               "Summer (JJA)","Autumn (SON)")),
+    year_month = sprintf("%.2f", year + month/100),
+  depth = cut(Ovre_dyp, breaks = c(0,5,10,20,50,100,200,500))
+  )
+
+if (FALSE){
+  hist(dat$Nedre_dyp)
+  xtabs(~cruise, dat)
+  xtabs(~station, dat)
+  xtabs(~year_month + station, dat)
+  xtabs(~season + depth + station, dat)
+  # xtabs(~paste(Ovre_dyp, Nedre_dyp) + Vannlokalitetsnavn, dat)
+}
+
+
+mod <- lm(Verdi ~ station + year_f + season*depth, data = dat)  
+
+# check  
+plot_grid(
+  visreg(mod, "year_f"),
+  visreg(mod, "season", "depth") + easy_rotate_x_labels(-15), 
+  visreg(mod, "station") + easy_rotate_x_labels(-15), 
+  ncol = 1)
+
+emm <- emmeans(mod, ~ depth, weights = "equal")
+est_skagerrak_shallow_oceanic_d <- summary(emm)
+
+# Refit model with only the existing depths
+sel <- is.na(summary(emm)$emmean)
+sel_depths <- summary(emm)$depth[!sel]
+dat2 <- dat |> filter(depth %in% sel_depths)
+if (length(sel_depths)>1){ mod <- lm(Verdi ~ station + year_f + season*depth, data = dat2)  } else { mod <- lm(Verdi ~ station + year_f + season, data = dat2)   }  
+
+emm <- emmeans(mod, ~ 1, weights = "equal")
+est_skagerrak_shallow_oceanic <- summary(emm)
+
+```
+
+### Skagerrak shallow coastal
+
+```{r}
+
+dat <- dat_all2 |> 
+  filter(region %in% "Skagerrak",
+         (grepl("Tisler", Vannlokalitetsnavn) |
+             grepl("H*røydypet", Betegnelse)),
+         Parameter_id %in% "PHT",
+         Ovre_dyp <= 20)
+# table(is.na(dat$Betegnelse))
+# table(addNA(dat$Betegnelse))
+
+# check_map(dat)
+
+dat <- dat |> 
+  mutate(
+    # Betegnelse = as.numeric(Betegnelse),
+    cruise = substr(Vannlokalitetsnavn, 1, 12),
+    station = paste0(cruise,
+                     ifelse(is.na(Betegnelse), "", Betegnelse)),
+    year = year(Tid_provetak),
+    year_f = factor(year),
+    month = month(Tid_provetak),
+    season = case_when(
+      month %in%  3:5 ~ "Spring (MAM)",
+      month %in%  6:8 ~ "Summer (JJA)",
+      month %in%  9:11 ~ "Autumn (SON)",
+      month %in% c(12,1,2) ~ "Winter (DJF)"),
+    season = factor(season, 
+                    levels = c("Winter (DJF)", "Spring (MAM)",
+                               "Summer (JJA)","Autumn (SON)")),
+    year_month = sprintf("%.2f", year + month/100),
+  depth = cut(Ovre_dyp, breaks = c(0,5,10,20,50,100,200,500))
+  )
+
+if (FALSE){
+  hist(dat$Nedre_dyp)
+  xtabs(~cruise, dat)
+  xtabs(~station, dat)
+  xtabs(~year_month + station, dat)
+  xtabs(~season + depth + station, dat)
+  # xtabs(~paste(Ovre_dyp, Nedre_dyp) + Vannlokalitetsnavn, dat)
+}
+
+
+mod <- lm(Verdi ~ station + year_f + season*depth, data = dat)  
+
+# check  
+plot_grid(
+  visreg(mod, "year_f"),
+  visreg(mod, "season", "depth") + easy_rotate_x_labels(-15), 
+  visreg(mod, "station") + easy_rotate_x_labels(-15), 
+  ncol = 1)
+
+emm <- emmeans(mod, ~ depth, weights = "equal")
+est_skagerrak_shallow_coastal_d <- summary(emm)
+
+# Refit model with only the existing depths
+sel <- is.na(summary(emm)$emmean)
+sel_depths <- summary(emm)$depth[!sel]
+dat2 <- dat |> filter(depth %in% sel_depths)
+if (length(sel_depths)>1){ mod <- lm(Verdi ~ station + year_f + season*depth, data = dat2)  } else { mod <- lm(Verdi ~ station + year_f + season, data = dat2)   }  
+
+emm <- emmeans(mod, ~ 1, weights = "equal")
+est_skagerrak_shallow_coastal <- summary(emm)
+
+```
+
+## Final results  
+
+Combine 
+
+```{r}
+
+est_overall_region <- bind_rows(
+  est_barents_deep_oceanic |> mutate(region = "barents_deep_oceanic"),
+  est_barents_deep_coastal |> mutate(region = "barents_deep_coastal"),
+  est_barents_shallow_oceanic |> mutate(region = "barents_shallow_oceanic"),
+  est_barents_shallow_coastal |> mutate(region = "barents_shallow_coastal"),
+  est_norskehavet_deep_oceanic |> mutate(region = "norskehavet_deep_oceanic"),
+  est_norskehavet_deep_coastal |> mutate(region = "norskehavet_deep_coastal"),
+  est_norskehavet_shallow_oceanic |> mutate(region = "norskehavet_shallow_oceanic"),
+  est_norskehavet_shallow_coastal |> mutate(region = "norskehavet_shallow_coastal"),
+  est_skagerrak_deep_oceanic |> mutate(region = "skagerrak_deep_oceanic"),
+  est_skagerrak_deep_coastal |> mutate(region = "skagerrak_deep_coastal"),
+  est_skagerrak_shallow_oceanic |> mutate(region = "skagerrak_shallow_oceanic"),
+  est_skagerrak_shallow_coastal |> mutate(region = "skagerrak_shallow_coastal")
+  )
+
+est_overall_region
+
+```
+
+### Plot
+
+```{r}
+
+ggplot(est_overall_region, aes(region, emmean)) +
+  geom_pointrange(aes(ymin = lower.CL, ymax = upper.CL)) +
+  easy_rotate_x_labels(-45)
+
+```
+
+### Overall mean
+
+```{r}
+
+apply(est_overall_region[c("emmean","SE")], 2, mean)
+#      emmean          SE 
+# 8.035323890 0.004764212 
+
+mod <- lm(emmean ~ 1, data = est_overall_region) 
+summary(mod)$coef
+
+#             Estimate Std. Error  t value     Pr(>|t|)
+# (Intercept) 8.035324 0.01330987 603.7115 3.234862e-26
+
+```
+
+
+## APPENDIX 1 - explore data from particular areas / transects   
+
+### Norwegian Sea deep, oceanic
+
+```{r}
+
+dat <- dat_all2 |> 
+  filter(region %in% "Norskehavet",
+         Parameter_id %in% "PHT",
+         Ovre_dyp >= 100)
+
+dat <- dat |> 
+  mutate(
+    Betegnelse = as.numeric(Betegnelse),
+    cruise = substr(Vannlokalitetsnavn, 1, 12),
+    station = paste0(cruise, 
+                     ifelse(is.na(Betegnelse), "", sprintf("%02.0f", Betegnelse))
+                     ),
+    year = year(Tid_provetak),
+    year_f = factor(year),
+    month = month(Tid_provetak),
+    season = case_when(
+      month %in%  3:5 ~ "Spring (MAM)",
+      month %in%  6:8 ~ "Summer (JJA)",
+      month %in%  9:11 ~ "Autumn (SON)",
+      month %in% c(12,1,2) ~ "Winter (DJF)"),
+    season = factor(season, 
+                    levels = c("Winter (DJF)", "Spring (MAM)",
+                               "Summer (JJA)","Autumn (SON)")),
+    year_month = sprintf("%.2f", year + month/100),
+  depth = cut(Ovre_dyp, breaks = c(0,5,10,20,50,100,200,500))
+  )
+
+if (FALSE){
+  hist(dat$Nedre_dyp)
+  xtabs(~cruise, dat)
+  xtabs(~station, dat)
+  xtabs(~year_month + station, dat)
+  xtabs(~season + depth + station, dat)
+  # xtabs(~paste(Ovre_dyp, Nedre_dyp) + Vannlokalitetsnavn, dat)
+}
+
+
+mod <- lm(Verdi ~ station + year_f + season*depth, data = dat)  
+# mod <- lm(Verdi ~ year_f + season*depth, data = dat)  
+
+# check  
+plot_grid(
+  visreg(mod, "year_f"),
+  visreg(mod, "season", "depth"), 
+  visreg(mod, "station") + easy_rotate_x_labels(-15), ncol = 1) 
+
+emm <- emmeans(mod, ~ depth, weights = "equal")
+# summary(emm)
+
+est_barents_shallow <- summary(emm)
+
+```
+
+### Barentshavet shallow
+
+```{r}
+
+dat <- dat_all2 |> 
+  filter(region %in% "Barentshavet",
+         Parameter_id %in% "PHT",
+         Ovre_dyp <= 20)
+
+dat <- dat |> 
+  mutate(
+    Betegnelse = as.numeric(Betegnelse),
+    cruise = substr(Vannlokalitetsnavn, 1, 12),
+    station = paste0(cruise, sprintf("%02.0f", Betegnelse)),
+    year = year(Tid_provetak),
+    year_f = factor(year),
+    month = month(Tid_provetak),
+    season = case_when(
+      month %in%  3:5 ~ "Spring (MAM)",
+      month %in%  6:8 ~ "Summer (JJA)",
+      month %in%  9:11 ~ "Autumn (SON)",
+      month %in% c(12,1,2) ~ "Winter (DJF)"),
+    season = factor(season, 
+                    levels = c("Winter (DJF)", "Spring (MAM)",
+                               "Summer (JJA)","Autumn (SON)")),
+    year_month = sprintf("%.2f", year + month/100),
+  depth = cut(Ovre_dyp, breaks = c(0,5,10,20,50,100,200,500))
+  )
+
+if (FALSE){
+  hist(dat$Nedre_dyp)
+  xtabs(~cruise, dat)
+  xtabs(~station, dat)
+  xtabs(~year_month + station, dat)
+  xtabs(~season + depth + station, dat)
+  # xtabs(~paste(Ovre_dyp, Nedre_dyp) + Vannlokalitetsnavn, dat)
+}
+
+
+mod <- lm(Verdi ~ station + year_f + season*depth, data = dat)  
+# mod <- lm(Verdi ~ year_f + season*depth, data = dat)  
+
+# check  
+plot_grid(
+  visreg(mod, "year_f"),
+  visreg(mod, "season", "depth"), 
+  visreg(mod, "station"), ncol = 1)
+
+emm <- emmeans(mod, ~ depth, weights = "equal")
+# summary(emm)
+
+est_barents_shallow <- summary(emm)
+
+```
+
+### Barents Sea: Fugløya - Bjørnøya
+
+```{r}
+
+dat <- dat_all |> 
+  filter(grepl("Fugløya", Vannlokalitetsnavn),
+         Parameter_id %in% "PHT") |> 
+  mutate(
+    Betegnelse = as.numeric(Betegnelse),
+    station = paste0("Fugløya-Bjørnøya-", sprintf("%02.0f", Betegnelse)),
+    year = year(Tid_provetak),
+    year_f = factor(year),
+    month = month(Tid_provetak),
+    season = case_when(
+      month %in%  3:5 ~ "Spring (MAM)",
+      month %in%  6:8 ~ "Summer (JJA)",
+      month %in%  9:11 ~ "Autumn (SON)",
+      month %in% c(12,1,2) ~ "Winter (DJF)"),
+    season = factor(season, 
+                    levels = c("Winter (DJF)", "Spring (MAM)","Summer (JJA)","Autumn (SON)")),
+    year_month = sprintf("%.2f", year + month/100),
+  depth = cut(Ovre_dyp, breaks = c(0,20,50,100,200,500))
+  )
+if (FALSE){
+  hist(dat$Nedre_dyp)
+  xtabs(~year_month + station, dat)
+  xtabs(~season + depth + station, dat)
+  # xtabs(~paste(Ovre_dyp, Nedre_dyp) + Vannlokalitetsnavn, dat)
+}
+
+mod <- lm(Verdi ~ station + year_f + season*depth, data = dat)  
+# mod <- lm(Verdi ~ year_f + season*depth, data = dat)  
+summary(mod)  
+
+emm <- emmeans(mod, ~ depth)
+
+emm <- emmeans(mod, ~ depth)
+est_fugloy <- summary(emm)
+est_fugloy
+
+```
+
+### Ytre Hardangerfjord, Vestlandsfjorder (694)
+
+```{r}
+
+dat <- dat_all |> 
+  filter(grepl("Vestlandsfjorder", Vannlokalitetsnavn),
+         Parameter_id %in% "PHT") |> 
+  mutate(
+    station = case_when(
+      grepl("Korsfjorden", Vannlokalitetsnavn) ~ "Korsfjorden",
+      grepl("Ytre Hardangerfjord", Vannlokalitetsnavn) ~ "Ytre Hardangerfjord"),
+    year = year(Tid_provetak),
+    year_f = factor(year),
+    month = month(Tid_provetak),
+    season = case_when(
+      month %in%  3:5 ~ "Spring (MAM)",
+      month %in%  6:8 ~ "Summer (JJA)",
+      month %in%  9:11 ~ "Autumn (SON)",
+      month %in% c(12,1,2) ~ "Winter (DJF)"),
+    season = factor(season, 
+                    levels = c("Winter (DJF)", "Spring (MAM)","Summer (JJA)","Autumn (SON)")),
+    year_month = sprintf("%.2f", year + month/100),
+  depth = cut(Ovre_dyp, breaks = c(0,20,50,100,200,500))
+  )
+if (FALSE){
+  xtabs(~year_month + station, dat)
+  xtabs(~season + depth + station, dat)
+  # xtabs(~paste(Ovre_dyp, Nedre_dyp) + Vannlokalitetsnavn, dat)
+}
+
+mod <- lm(Verdi ~ station + year_f + season*depth, data = dat)  
+# summary(mod)  
+
+emm <- emmeans(mod, ~ depth)
+est_hardanger <- summary(emm)
+est_hardanger
+
+```
+
+## APPENDIX 2: testing mixed models
+
+```{r}
+
+if (FALSE){
+  library(lme4)
+  
+  # cruise fixed, station random
+  mod <- lmer(
+    Verdi ~ cruise + season + depth + year_f +
+      (1 | cruise:station),
+    data = dat
+  )
+  
+  # cruise and station fixed
+  mod <- lm(
+    Verdi ~ cruise/station + season + depth + year_f,
+    data = dat
+  )
+  
+  summary(mod)
+  
+}
+
+```
+
+## APPENDIX 3 - Leaflet map  
+
+```{r}
+
+if (FALSE){
+  
+  library(leaflet)
+  library(sf)
+  
+  df_stations <- dat_all |> 
+    count(Vannlokalitetsnavn, Betegnelse, `UTM33 Ost (X)`, `UTM33 Nord (Y)`)
+  df_stations_coord <- df_stations |> 
+    st_as_sf(coords = c("UTM33 Ost (X)", "UTM33 Nord (Y)"),
+             crs = 25833) |> 
+    st_transform(4326) |> 
+    st_coordinates()
+  str(df_stations_coord)
+  df_stations$x <- df_stations_coord[,1]
+  df_stations$y <- df_stations_coord[,2]
+  
+  df_stations |> 
+    filter(grepl("Barentshav", Vannlokalitetsnavn)) |> 
+    # filter(grepl("Straumsfjorden", Vannlokalitetsnavn)) |> 
+    # filter(grepl("Barentshav ", Vannlokalitetsnavn),
+    #        as.numeric(Betegnelse) %in% 7:17) |> 
+    leaflet() |> 
+    addTiles() |> 
+    addMarkers(~x, ~y, popup = ~Vannlokalitetsnavn)
+}
+
+```
+
+## APPENDIX 4 - reading all files from MDir data tool
+
+```{r}
+
+if (FALSE){
+  
+  # data not added to github
+  
+  data_dir <- "data_pH"  
+  fn_all <- dir(data_dir, recursive = TRUE)
+  fn_mdir <- grep("mdir", fn_all, value = TRUE)
+  fn_full <- paste0(data_dir, "/", fn_mdir)
+  
+  # test
+  test <- read_excel(fn_full[1], skip = 1)
+  
+  # read all
+  dat <- map(fn_mdir, read_excel, skip = 1)
+  names(dat) <- fn_mdir  
+  
+  
+}
+  
+  
+```
+
+
