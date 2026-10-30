@@ -1,0 +1,42 @@
+eksport;api;nytt
+Vannlokalitet ID;Result.WaterLocationID;lokid
+Vannlokalitetskode;Result.WaterLocationCode;lokkod
+Vannlokalitetsnavn;Result.Name;loknam
+n04;Result.ActivityID;n04
+Betegnelse;Result.Betegnelse;n05
+Beskrivelse;Result.Description;n06
+Objekttype;Result.FeatureType;n07
+Midlertidig;Result.Classify;n08
+Dato opprettet;Result.CreateDate;n09
+n10;Result.LastModifiedDate;n10
+Innsjonr;n11;sjonr
+Vannforekomst ID;Result.WaterBodyID;id
+Vannkategori;Result.WaterCategory;kat
+Klassifiseres;n14;n14
+UTM33 Ost (X);Result.CoordY;Y
+UTM33 Nord (Y);Result.CoordX;X
+Breddegrad;Result.CoordY_dg;n02
+Lengdegrad;Result.CoordX_dg;n01
+Knytt til påvirkning;n19;n19
+Lokalitetsnr/AnleggsID;n20;n20
+Referansestasjon;n21;n21
+Produksjonsområde;n22;n22
+n23;Result.Elevation;n23
+n24;Result.WaterType;n24
+n25;Result.HasWaterRegistrations;n25
+n26;Result.CreatedByUsername;n26
+n27;Result.SourceID;n27
+n28;Result.HasArchiveElements;n28
+n29;Result.FylkeID;n29
+n30;Result.Fylke;n30
+n31;Result.KommuneID;n31
+n32;Result.Kommune;n32
+n33;Result.VassdragsomradeID;n33
+n34;Result.Vassdragsomrade;n34
+n35;Result.VannomradeID;n35
+n36;Result.Vannomrade;n36
+n37;Result.VannregionID;n37
+n38;Result.Vannregion;n38
+n39;Result.WaterBody;n39
+n40;Result.LastDataimportDate;n40
+n41;ResultCount;n41
