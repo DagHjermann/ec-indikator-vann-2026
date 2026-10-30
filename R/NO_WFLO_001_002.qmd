@@ -1,8 +1,9 @@
 ---
 title: "Change in river water flow due to hydropower"
 subtitle: |
-  [NO_WFLO_001] (flood water flow) \
-  [NO_WFLO_002] (winter water flow)  
+  possible codes (decision on code pending): \
+  NO_WFLO_001 (flood water flow) \
+  NO_WFLO_002 (winter water flow)  
 # delete the line with the second indicatorID (line 5) 
 # if it's not relevant for you.
 # In the parentheses you can add a word to distinguish multiple indicators 
@@ -125,6 +126,8 @@ knitr::opts_chunk$set(echo = TRUE)
 <!--# Load functions specific to this indicator -->
 
 ```{r custom_functions_and_additional_packages}
+#| include: false
+#| cache: false
 
 library(cowplot)     # plot_grid()
 library(visreg)      # visreg() 
@@ -151,7 +154,8 @@ source(here::here("_common.R"))
 #| echo: false
 #| results: asis
 
-if (!is.null(yaml_data$codeReviewers)) {
+# if (!is.null(yaml_data$codeReviewers)) {
+if (FALSE) {
   reviewers <- purrr::map_chr(yaml_data$codeReviewers, "name")
   
   htmltools::HTML(paste0(

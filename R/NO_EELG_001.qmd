@@ -1,7 +1,7 @@
 ---
 title: "Eelgrass ecological status"
 subtitle: |
-  possible code: NO_EELG_001 (decision on code pending)  
+  possible code (decision on code pending): NO_EELG_001   
 # delete the line with the second indicatorID (line 5) 
 # if it's not relevant for you.
 # In the parentheses you can add a word to distinguish multiple indicators 
