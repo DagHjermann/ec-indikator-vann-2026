@@ -1,0 +1,120 @@
+Vannlokalitet_kode,station_code,Vannlokalitetsnavn,station_name_report,programme,water_body_code,water_body,water_type_veileder,water_type_vannnett,ecoregion,water_body_source,match_basis
+04.24-98583,HR100,Brasneset,Brasneset,OEKK,,Neidenfjorden,,B1,Barentshavet,OkoKyst station overview 2026-2030,station code matches Betegnelse
+04.24-98574,HR101,"Oterneset, Neidenfjorden",Oterneset,OEKK,,Neidenfjorden,,B1,Barentshavet,OkoKyst station overview 2026-2030,station code matches Betegnelse
+01.21-43189,HR104,Prestholmen,Prestholmen,OEKK,,Grimstad ytre,,S6,Skagerrak,OkoKyst station overview 2026-2030,station code matches Betegnelse
+01.21-62432,HR105,Homborøya,Aua (Homborøy),OEKK,,Grimstad ytre,,S4,Skagerrak,OkoKyst station overview 2026-2030,station code matches Betegnelse
+01.21-62431,HR106,Lille Tvillingholmen,Tvillingholmen,OEKK,,Groosfjorden-indre,3,,,OkoKyst station overview 2026-2030,station code matches Betegnelse
+03.21-63215,HR112,Herfjord,Herfjord,OEKK,,Linesfjorden,,H1,Norskehavet sør,OkoKyst station overview 2026-2030,station code matches Betegnelse
+03.21-63216,HR115,Tårneset,Tårneset,OEKK,,Skråfjorden,,H1,Norskehavet sør,OkoKyst station overview 2026-2030,station code matches Betegnelse
+02.61-63412,HR120,Børnestangen,Bjørnestangen,OEKK,,Korsfjorden,,M4,Nordsjøen nord,OkoKyst station overview 2026-2030,station code matches Betegnelse
+02.42-88037,HR121,Nessaviga,Nesavik,OEKK,,Årdalsfjord-indre,,N2,Nordsjøen sør,OkoKyst station overview 2026-2030,station code matches Betegnelse
+04.02-87348,HR142,Målsneset,Målsneset,OEKK,,Målselvfjorden,,G2,Norskehavet nord,OkoKyst station overview 2026-2030,station code matches Betegnelse
+01.31-62435,HR15,Eigebrekk,Tregde,OEKK,,Buøysund ytre,,S4,Skagerrak,OkoKyst station overview 2026-2030,station code matches Betegnelse
+02.42-84124,HR153,Skibaviga,Skibaviga,OEKK,,Hjelmelandsfjorden,,N1,Nordsjøen sør,OkoKyst station overview 2026-2030,station code matches Betegnelse
+03.01-86886,HR154,Kvitneset,Kvitneset,OEKK,,Geirangerfjorden,,H2,Norskehavet sør,OkoKyst station overview 2026-2030,station code matches Betegnelse
+03.01-86887,HR155,Syltavika,Syltavika,OEKK,,Geirangerfjorden,,H2,Norskehavet sør,OkoKyst station overview 2026-2030,station code matches Betegnelse
+03.41-87209,HR156,Broemsneset,Broemsneset,OEKK,,Namsfjorden,,H2,Norskehavet sør,OkoKyst station overview 2026-2030,station code matches Betegnelse
+03.41-87210,HR157,Yttergåsøya,Yttergåsøya,OEKK,,Namsfjorden,,H2,Norskehavet sør,OkoKyst station overview 2026-2030,station code matches Betegnelse
+03.41-87211,HR158,Ledangholman,Ledangholmen,OEKK,,Namsfjorden,,H1,Norskehavet sør,OkoKyst station overview 2026-2030,station code matches Betegnelse
+04.03-92951,HR159,Innerklubben,Innerklubben,OEKK,,Kvænangen,,B4,Barentshavet,OkoKyst station overview 2026-2030,station code matches Betegnelse
+04.03-92952,HR160,Nyheim,Nyheim,OEKK,,Reisafjorden ytre,,B4,Barentshavet,OkoKyst station overview 2026-2030,station code matches Betegnelse
+04.03-92953,HR161,Vindneset,Vindneset,OEKK,,Reisafjorden indre,,B1,Barentshavet,OkoKyst station overview 2026-2030,station code matches Betegnelse
+04.03-92954,HR162,Nakkebukta,Nakkebukta,OEKK,,Ullsfjorden/Fugløyfjorden,,G4,Norskehavet nord,OkoKyst station overview 2026-2030,station code matches Betegnelse
+04.03-92955,HR163,Gropalandet,Gropalandet,OEKK,,Ullsfjorden/Fugløyfjorden,,G4,Norskehavet nord,OkoKyst station overview 2026-2030,station code matches Betegnelse
+04.03-92956,HR164,Davvisiidineset,Davisitneset,OEKK,,Ullsfjorden/Fugløyfjorden,,G1,Norskehavet nord,OkoKyst station overview 2026-2030,station code matches Betegnelse
+04.03-92957,HR165,Kjosen,Kjosen,OEKK,,Kjosen,,G1,Norskehavet nord,OkoKyst station overview 2026-2030,station code matches Betegnelse
+04.03-92958,HR166,Lille Haukøya,Haukøya,OEKK,,Kvænangen,,B4,Barentshavet,OkoKyst station overview 2026-2030,station code matches Betegnelse
+04.03-92961,HR169,Rødmannsneset,Rødmannsneset,OEKK,,Reisafjorden indre,,B6,Barentshavet,OkoKyst station overview 2026-2030,station code matches Betegnelse
+04.03-92962,HR170,Kvitbergan,Kvitbergan,OEKK,,Ullsfjorden,,G4,Norskehavet nord,OkoKyst station overview 2026-2030,station code matches Betegnelse
+04.03-92963,HR171,Kvalshausen,Kvalshausen,OEKK,,Fugløyfjorden,,G6,Norskehavet nord,OkoKyst station overview 2026-2030,station code matches Betegnelse
+04.03-92964,HR172,Heimerneset,Heimerneset,OEKK,,Ullsfjorden/fugløyfjorden,,G4,Norskehavet nord,OkoKyst station overview 2026-2030,station code matches Betegnelse
+04.03-92966,HR175,Okseneset,Okseneset,OEKK,,Kjosen,,G2,Norskehavet nord,OkoKyst station overview 2026-2030,station code matches Betegnelse
+02.61-43174,HR176,Årebrot,Årebrot,OEKK,,Marsteinsålen- Svartskjerosen,,N6,Nordsjøen sør,OkoKyst station overview 2026-2030,station code matches Betegnelse
+02.42-79218,HR19,Skolbuholmen,Skolbuholmen,OEKK,,Boknaflæet,,N1,Nordsjøen sør,OkoKyst station overview 2026-2030,station code matches Betegnelse
+02.60-84114,HR26,Eikelandsfjorden,Eikelandsfjorden,OEKK,,Eikelandsfjorden,,N1,Nordsjøen sør,OkoKyst station overview 2026-2030,station code matches Betegnelse
+03.01-84119,HR46,Vikane,Vikane,OEKK,,Herøyfjorden - Røyrasundet,,H6,Norskehavet sør,OkoKyst station overview 2026-2030,station code matches Betegnelse
+03.01-84120,HR49,Dimnaneset,Dimnanes,OEKK,,Steinsfjorden,,H4,Norskehavet sør,OkoKyst station overview 2026-2030,station code matches Betegnelse
+03.61-79215,HR60,Slåttøya,Slåttøya,OEKK,,Flovær,,H6,Norskehavet sør,OkoKyst station overview 2026-2030,station code matches Betegnelse
+03.61-79213,HR61,Arenholmen,Arenholmen,OEKK,,Flovær,,H6,Norskehavet sør,OkoKyst station overview 2026-2030,station code matches Betegnelse
+04.02-87357,HR70,Aursfjorden,Aursfjorden,OEKK,,Aursfjorden,,G1,Norskehavet nord,OkoKyst station overview 2026-2030,station code matches Betegnelse
+04.02-87349,HR71,Rossfjordneset,Målneset,OEKK,,Malangen-rossfjorden,,G1,Norskehavet nord,OkoKyst station overview 2026-2030,station code matches Betegnelse
+04.02-87350,HR72,Sennavika,Sennavika,OEKK,,Malangen - indre,,G1,Norskehavet nord,OkoKyst station overview 2026-2030,station code matches Betegnelse
+04.02-87351,HR73,Trettevika,Trettevika,OEKK,,Malangen-indre,,G1,Norskehavet nord,OkoKyst station overview 2026-2030,station code matches Betegnelse
+04.03-92967,HR75,"Straumfjorden, Sandnes",Sandnes,OEKK,,Reisafjorden indre,,B1,Barentshavet,OkoKyst station overview 2026-2030,station code matches Betegnelse
+04.03-92968,HR76,Offeren,Oteren,OEKK,,Reisafjorden ytre,,B1,Barentshavet,OkoKyst station overview 2026-2030,station code matches Betegnelse
+04.03-84992,HR79,Spildra (Guiveluokta),Spilderbukta,OEKK,,Kvænangen,,B4,Barentshavet,OkoKyst station overview 2026-2030,station code matches Betegnelse
+04.23-79151,HR90,Værneset,Værneset,OEKK,,Hopsfjorden,,B1,Barentshavet,OkoKyst station overview 2026-2030,station code matches Betegnelse
+04.23-79152,HR91,Øyenden,Øyenden,OEKK,,Langfjorden,,B1,Barentshavet,OkoKyst station overview 2026-2030,station code matches Betegnelse
+04.23-79153,HR92,Dego (Deaigu),Dego (Deaigu),OEKK,,Tanafjorden ytre,,B6,Barentshavet,OkoKyst station overview 2026-2030,station code matches Betegnelse
+04.23-79154,HR93,Krøkebærneset (Muorjegárnjárga),Krøkeberneset,OEKK,,Tanafjorden ytre,,B6,Barentshavet,OkoKyst station overview 2026-2030,station code matches Betegnelse
+04.23-98580,HR95,Tana,Tana,OEKK,,Vardnesodden - Kjølnes,,B4,Barentshavet,OkoKyst station overview 2026-2030,station code matches Betegnelse
+04.24-98581,HR96,"Varangerfjorden indre, Pelsneset",Pelsneset,OEKK,,Varangerfjorden-indre Finnmark,,B1,Barentshavet,OkoKyst station overview 2026-2030,station code matches Betegnelse
+04.24-98572,HR97,"Varangerfjorden indre, Kalevatn",Kalevatn,OEKK,,Varangerfjorden-indre Finnmark,,B1,Barentshavet,OkoKyst station overview 2026-2030,station code matches Betegnelse
+04.24-98573,HR98,"Varangerfjorden indre, Sjåholmen",Sjåholmen,OEKK,,Karlebotn/Stuorravuonna,,B1,Barentshavet,OkoKyst station overview 2026-2030,station code matches Betegnelse
+04.24-98582,HR99,"Varangerfjorden, Svinøy",Svinøy,OEKK,,Varangerfjorden-indre Norsk-Finsk,,B4,Barentshavet,OkoKyst station overview 2026-2030,station code matches Betegnelse
+04.24-98576,HT103,Lille Karpbukta,Lille Karpbukta,OEKK,,Jarfjorden,,B1,Barentshavet,OkoKyst station overview 2026-2030,station code matches Betegnelse
+04.24-98584,HT104,Holmengrå,Holmengrå,OEKK,,Holmengråfjorden,,B2,Barentshavet,OkoKyst station overview 2026-2030,station code matches Betegnelse
+04.24-98575,HT105,Styggbukta,Styggbukta,OEKK,,Holmengråfjorden,,B2,Barentshavet,OkoKyst station overview 2026-2030,station code matches Betegnelse
+04.24-98577,HT107,Skjærgardsneset,Skjærgårdneset,OEKK,,Varangerfjorden ytre - Norsk Fins,,B6,Barentshavet,OkoKyst station overview 2026-2030,station code matches Betegnelse
+01.20-43186,HT113,Tromøy nord,Tromøya N,OEKK,,Hasteinsundet,,S4,Skagerrak,OkoKyst station overview 2026-2030,station code matches Betegnelse
+03.64-87354,HT139,Aspevik,Aspevik,OEKK,,Trongskjomen-indre,,G2,Norskehavet nord,OkoKyst station overview 2026-2030,station code matches Betegnelse
+03.64-87355,HT140,Holmen,Holmen,OEKK,,Rombaken,,G1,Norskehavet nord,OkoKyst station overview 2026-2030,station code matches Betegnelse
+02.80-84128,HT168,So3-Kjekeneset,So3-Kjekeneset,OEKK,,Sognefjorden,,M2,Nordsjøen nord,OkoKyst station overview 2026-2030,station code matches Betegnelse
+02.80-87371,HT169,So2-Kyrkjebø,So2-Kyrkjebø,OEKK,,Sognefjorden,,M2,Nordsjøen nord,OkoKyst station overview 2026-2030,station code matches Betegnelse
+01.30-62434,HT175,Gleodden,Gleodden,OEKK,,Topdalsfjorden ytre,2,,,OkoKyst station overview 2026-2030,station code matches Betegnelse
+01.01-62428,HT176,Brattholmen,Brattholmen,OEKK,,Singlefjorden,,S2,Skagerrak,OkoKyst station overview 2026-2030,station code matches Betegnelse
+01.10-62429,HT177,Store Arøya,Store Arøya,OEKK,,Helgeroafjorden,,S5,Skagerrak,OkoKyst station overview 2026-2030,station code matches Betegnelse
+01.10-79550,HT178,Risøyodden,Risøyodden,OEKK,,Langesundsfjorden,,,,OkoKyst station overview 2026-2030,station code matches Betegnelse
+01.20-62430,HT179,Robersvik,Robbesvik,OEKK,,Østerfjorden,,,,OkoKyst station overview 2026-2030,station code matches Betegnelse
+01.30-62433,HT180,Korsvikfjorden,Korsvikfjord,OEKK,,Østergapet indre,,,,OkoKyst station overview 2026-2030,station code matches Betegnelse
+04.24-98578,HT181,Avalhjoka,Avalhjoka,OEKK,,Langfjorden ytre,,B1,Barentshavet,OkoKyst station overview 2026-2030,station code matches Betegnelse
+04.24-98579,HT182,Langnes,Langnes,OEKK,,Bøkfjorden - indre,,B2,Barentshavet,OkoKyst station overview 2026-2030,station code matches Betegnelse
+02.80-84131,HT183,Sula,Sula,OEKK,,Sognesjøen,,M6,Nordsjøen nord,OkoKyst station overview 2026-2030,station code matches Betegnelse
+02.80-84130,HT184,Kuøyna,Kuøyna,OEKK,,Sognesjøen,,M4,Nordsjøen nord,OkoKyst station overview 2026-2030,station code matches Betegnelse
+02.80-84129,HT185,Søre Dingeneset,Søre Dingeneset,OEKK,,Nyhammarsunde,,M4,Nordsjøen nord,OkoKyst station overview 2026-2030,station code matches Betegnelse
+02.80-87373,HT186,Undredal,Undredal,OEKK,,Aurlandsfjorden,,M2,Nordsjøen nord,OkoKyst station overview 2026-2030,station code matches Betegnelse
+02.80-87370,HT187,Skjerdal,Skjerdal,OEKK,,Aurlandsfjorden,,M2,Nordsjøen nord,OkoKyst station overview 2026-2030,station code matches Betegnelse
+03.63-87339,HT188,Skomakerodden,Skomakerodden,OEKK,,Skjærstadfjorden,,G1,Norskehavet nord,OkoKyst station overview 2026-2030,station code matches Betegnelse
+03.63-87340,HT189,Alvnestangen,Alvnestangen,OEKK,,Skjærstadfjorden,,G1,Norskehavet nord,OkoKyst station overview 2026-2030,station code matches Betegnelse
+03.63-87341,HT190,Stamnesskjeret,Stamnesskjeret,OEKK,,Saltdalsfjorden,,G1,Norskehavet nord,OkoKyst station overview 2026-2030,station code matches Betegnelse
+03.63-87342,HT191,Stornesodden,Stornesodden,OEKK,,Saltdalsfjorden,,G1,Norskehavet nord,OkoKyst station overview 2026-2030,station code matches Betegnelse
+01.01-43181,HT192,Lyngholmene,Lyngholmene,OEKK,,Svenner - Rauer,,S6,Skagerrak,OkoKyst station overview 2026-2030,station code matches Betegnelse
+02.01-43167,HT193,"Rossøy,",Rossøy,OEKK,,Flekkefjord-ytre,,N6,Nordsjøen sør,OkoKyst station overview 2026-2030,station code matches Betegnelse
+01.01-89845,HT194,Gullholmen,Gullholmen,OEKK,,Breiangen - Øst,,S5,Skagerrak,OkoKyst station overview 2026-2030,station code matches Betegnelse
+02.42-62437,HT27,Rossholmen,Rossholmen,OEKK,,Mastrafjorden,,N1,Nordsjøen sør,OkoKyst station overview 2026-2030,station code matches Betegnelse
+02.42-62436,HT28,Tingholmen,Tingsholmen,OEKK,,Stavangerfjorden ytre,,N1,Nordsjøen sør,OkoKyst station overview 2026-2030,station code matches Betegnelse
+01.01-62427,HT3,Veslekalven,Veslekalven,OEKK,,Ytre Oslofjord- Øst,,S4,Skagerrak,OkoKyst station overview 2026-2030,station code matches Betegnelse
+02.60-63413,HT37,Raudbergtåa,Raudbergtåa,OEKK,,Selbjørnsfjorden,,M6,Nordsjøen nord,OkoKyst station overview 2026-2030,station code matches Betegnelse
+01.01-43180,HT4,Færder fyr,Færder,OEKK,,Færder,,S6,Skagerrak,OkoKyst station overview 2026-2030,station code matches Betegnelse
+02.60-84116,HT41,Maurangsfjorden,Maurangsfjorden,OEKK,,Maurangerfjorden,,N2,Nordsjøen sør,OkoKyst station overview 2026-2030,station code matches Betegnelse
+01.01-84192,HT5,Akerøy,Åkerø,OEKK,,Torbjørnskjæ,,S4,Skagerrak,OkoKyst station overview 2026-2030,station code matches Betegnelse
+03.20-63217,HT57,Skomakaren,Skomakaren,OEKK,,Trondheimsfjorden - Levanger,,H1,Norskehavet sør,OkoKyst station overview 2026-2030,station code matches Betegnelse
+03.20-63218,HT58,Folafoten,Folafoten,OEKK,,Trondheimsfjorden - Trondheim,,H1,Norskehavet sør,OkoKyst station overview 2026-2030,station code matches Betegnelse
+03.61-79214,HT69,Jønnesholmen,Jønnesholmen,OEKK,,Husværfjorden,,H4,Norskehavet sør,OkoKyst station overview 2026-2030,station code matches Betegnelse
+03.61-79216,HT70,Ørnøy,Ørnøy,OEKK,,Søråsværfjorden,,H4,Norskehavet sør,OkoKyst station overview 2026-2030,station code matches Betegnelse
+03.64-87352,HT73,Karvenes,Kavernes,OEKK,,Trongskjomen-indre,,G1,Norskehavet nord,OkoKyst station overview 2026-2030,station code matches Betegnelse
+03.64-87353,HT75,Skredneset,Skredneset,OEKK,,Ofotfjorden,,G1,Norskehavet nord,OkoKyst station overview 2026-2030,station code matches Betegnelse
+03.64-87356,HT76,Spira,Spira,OEKK,,Ofotfjorden,,G4,Norskehavet nord,OkoKyst station overview 2026-2030,station code matches Betegnelse
+03.64-63425,HT77,Våtvikneset,Hemreviken,OEKK,,Ofoten,,G4,Norskehavet nord,OkoKyst station overview 2026-2030,station code matches Betegnelse
+03.64-63424,HT78,Fuglbergøya,Fuglbergøya,OEKK,,Vestfjorden - indre,,G6,Norskehavet nord,OkoKyst station overview 2026-2030,station code matches Betegnelse
+03.20-108478,ZR9,Sundsbukta,Sundsbukta,OEKK,,Trondheimsfjorden,,H1,Norskehavet sør,OkoKyst station overview 2026-2030,station code matches Betegnelse
+03.20-108479,ZT29,Leksvik,Leksvik,OEKK,,Trondheimsfjorden,,H1,Norskehavet sør,OkoKyst station overview 2026-2030,station code matches Betegnelse
+02.80-108482,ZT34,Midttunvågen,Midttunvågen,OEKK,,Gulafjorden,,M1,Nordsjøen nord,OkoKyst station overview 2026-2030,station code matches Betegnelse
+02.42-108481,ZT39,Torsteinvika,Torsteinvika,OEKK,,Mastrafjorden,,N4,Nordsjøen sør,OkoKyst station overview 2026-2030,station code matches Betegnelse
+01.01-43178,A92,Kongsholmen,Kongsholmen,YOFJ,0101030400-C,Årøysund - Hvasser,2,,Skagerrak,"Ytre Oslofjord station table, vann-nett January 2025",station code matches Betegnelse
+01.01-89842,G14,Bevøya syd,Bevøya syd,YOFJ,0101020300-2-C,Breiangen-øst,2,,Skagerrak,"Ytre Oslofjord station table, vann-nett January 2025",name identical (Bevoya syd)
+01.01-89843,G23,Store Kråka,Kråka,YOFJ,0101010408-C,Løperen,3,,Skagerrak,"Ytre Oslofjord station table, vann-nett January 2025",name variant: Kraka / Store Kraka
+01.01-89844,G29,Småskjæret,Småskjær,YOFJ,0101020200-2-C,Midtre Oslofjord - Vest,2,,Skagerrak,"Ytre Oslofjord station table, vann-nett January 2025",name variant: Smaskjaer / Smaskjaeret
+01.01-89839,G5,Torgersøya,Torgersøy,YOFJ,0101020101-1-C,Ytre Oslofjord - Vest,2,,Skagerrak,"Ytre Oslofjord station table, vann-nett January 2025",name variant: Torgersoy / Torgersoya
+01.01-89840,G6,Ravnø,Ravnøy,YOFJ,0101030101-6-C,Vestfjorden-søndre,3,,Skagerrak,"Ytre Oslofjord station table, vann-nett January 2025",name variant: Ravnoy / Ravno
+01.01-89841,G8,Hellsøya,Hellesøy,YOFJ,0101040200-2-C,Sandefjordsfjorden-ytre,3,,Skagerrak,"Ytre Oslofjord station table, vann-nett January 2025",NEEDS CHECK: name variant Hellesoy / Hellsoya
+01.01-122838,NG11,Singelbukta,Singelbukta,YOFJ,0101021000-2-C,Langøya,3,,Skagerrak,"Ytre Oslofjord station table, vann-nett January 2025",station code matches Betegnelse
+01.01-122839,NG12,Hvasser,Hvasser,YOFJ,0100000030-2-C,Færder,1,,Skagerrak,"Ytre Oslofjord station table, vann-nett January 2025",station code matches Betegnelse
+01.10-122840,NG13,Rognsfjorden,Rognsfjorden,YOFJ,0110000300-C,Rognsfjorden,2,,Skagerrak,"Ytre Oslofjord station table, vann-nett January 2025",station code matches Betegnelse
+01.01-101545,NG2,"Tønsbergfjord, Stiger syd",Stiger syd,YOFJ,0101030102-2-C,Tønsbergfjorden-ytre,2,,Skagerrak,"Ytre Oslofjord station table, vann-nett January 2025","name variant: Stiger syd / Tonsbergfjord, Stiger syd"
+01.01-101546,NG3,Hønstangen,"Vrengen, Hønsetangen",YOFJ,0101030700-C,Vrengen,3,,Skagerrak,"Ytre Oslofjord station table, vann-nett January 2025","NEEDS CHECK: name variant Vrengen, Honsetangen / Honstangen"
+01.01-101547,NG4,Langøyholmen,Langøyholmen,YOFJ,0101040400-4-C,Viksfjorden,3,,Skagerrak,"Ytre Oslofjord station table, vann-nett January 2025",name identical (Langoyholmen)
+01.01-43183,NG5,Oskjær,Oskjær,YOFJ,0100000031-C,Svenner - Rauer,1,,Skagerrak,"Ytre Oslofjord station table, vann-nett January 2025","NEEDS CHECK: name Oskjaer, but Betegnelse in Vannmiljo is A05 not NG5"
+01.01-101548,NG6,Hvittingen,Hvittingen,YOFJ,0100000031-C,Svenner - Rauer,1,,Skagerrak,"Ytre Oslofjord station table, vann-nett January 2025",name identical (Hvittingen)
+01.10-101550,NG8,Arøy,Arøy,YOFJ,0110000036-C,Jomfrulandsrenna,3,,Skagerrak,"Ytre Oslofjord station table, vann-nett January 2025",name identical (Aroy)
+01.01-89838,St52,Vestre Damholmen,Vestre Damholmen,YOFJ,0101010401-C,Ramsøflaket - Østerelva,3,,Skagerrak,"Ytre Oslofjord station table, vann-nett January 2025",name identical (Vestre Damholmen)

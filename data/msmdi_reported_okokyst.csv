@@ -1,0 +1,59 @@
+Vannlokalitet_kode,station_code,Vannlokalitetsnavn,station_name_report,ecoregion,water_type,year,msmdi_report,msmdi_vannmiljo,value_diff,in_vannmiljo,source,source_image,supplied_by,supplied_date
+01.21-43189,HR104,Prestholmen,Prestholmen,Skagerrak,1,2021,0.83,0.91,-0.08,TRUE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.21-43189,HR104,Prestholmen,Prestholmen,Skagerrak,1,2022,0.78,0.78,0,TRUE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.21-43189,HR104,Prestholmen,Prestholmen,Skagerrak,1,2023,0.63,,,FALSE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.21-43189,HR104,Prestholmen,Prestholmen,Skagerrak,1,2024,0.5,0.67,-0.17,TRUE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.21-62432,HR105,Homborøya,Homborøy,Skagerrak,1,2021,0.85,0.85,0,TRUE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.21-62432,HR105,Homborøya,Homborøy,Skagerrak,1,2022,0.65,0.87,-0.22,TRUE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.21-62432,HR105,Homborøya,Homborøy,Skagerrak,1,2023,0.8,,,FALSE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.21-62432,HR105,Homborøya,Homborøy,Skagerrak,1,2024,0.63,0.77,-0.14,TRUE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.21-62431,HR106,Lille Tvillingholmen,Tvillingholmen,Skagerrak,3,2021,0.65,,,FALSE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.21-62431,HR106,Lille Tvillingholmen,Tvillingholmen,Skagerrak,3,2022,0.9,,,FALSE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.21-62431,HR106,Lille Tvillingholmen,Tvillingholmen,Skagerrak,3,2024,0.73,,,FALSE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.31-62435,HR15,Eigebrekk,Eigebrekk,Skagerrak,3,2021,0.8,0.9,-0.1,TRUE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.31-62435,HR15,Eigebrekk,Eigebrekk,Skagerrak,3,2022,0.9,0.85,0.05,TRUE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.31-62435,HR15,Eigebrekk,Eigebrekk,Skagerrak,3,2024,0.45,0.8,-0.35,TRUE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.20-43186,HT113,Tromøy nord,Tromøy,Skagerrak,3,2021,0.8,0.91,-0.11,TRUE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.20-43186,HT113,Tromøy nord,Tromøy,Skagerrak,3,2022,0.8,0.89,-0.09,TRUE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.20-43186,HT113,Tromøy nord,Tromøy,Skagerrak,3,2023,0.83,,,FALSE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.20-43186,HT113,Tromøy nord,Tromøy,Skagerrak,3,2024,0.78,0.97,-0.19,TRUE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.30-62434,HT175,Gleodden,Gleodden,Skagerrak,2,2021,0.55,,,FALSE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.30-62434,HT175,Gleodden,Gleodden,Skagerrak,2,2022,0.93,,,FALSE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.30-62434,HT175,Gleodden,Gleodden,Skagerrak,2,2024,0.7,,,FALSE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.01-62428,HT176,Brattholmen,Brattholmen,Skagerrak,3,2021,0.74,0.83,-0.09,TRUE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.01-62428,HT176,Brattholmen,Brattholmen,Skagerrak,3,2022,0.71,0.71,0,TRUE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.01-62428,HT176,Brattholmen,Brattholmen,Skagerrak,3,2023,0.71,,,FALSE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.01-62428,HT176,Brattholmen,Brattholmen,Skagerrak,3,2024,0.6,0.73,-0.13,TRUE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.10-62429,HT177,Store Arøya,Store Arøya,Skagerrak,2,2021,0.68,0.9,-0.22,TRUE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.10-62429,HT177,Store Arøya,Store Arøya,Skagerrak,2,2022,0.83,0.82,0.01,TRUE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.10-62429,HT177,Store Arøya,Store Arøya,Skagerrak,2,2023,0.78,,,FALSE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.10-62429,HT177,Store Arøya,Store Arøya,Skagerrak,2,2024,0.75,0.85,-0.1,TRUE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.10-79550,HT178,Risøyodden,Risøyodden,Skagerrak,3,2021,0.48,0.63,-0.15,TRUE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.10-79550,HT178,Risøyodden,Risøyodden,Skagerrak,3,2022,0.7,0.83,-0.13,TRUE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.10-79550,HT178,Risøyodden,Risøyodden,Skagerrak,3,2024,0.65,0.75,-0.1,TRUE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.20-62430,HT179,Robersvik,Robersvik,Skagerrak,2,2021,0.71,0.8,-0.09,TRUE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.20-62430,HT179,Robersvik,Robersvik,Skagerrak,2,2022,0.83,1,-0.17,TRUE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.20-62430,HT179,Robersvik,Robersvik,Skagerrak,2,2024,0.73,0.82,-0.09,TRUE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.30-62433,HT180,Korsvikfjorden,Korsvikfjorden,Skagerrak,2,2021,0.63,0.89,-0.26,TRUE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.30-62433,HT180,Korsvikfjorden,Korsvikfjorden,Skagerrak,2,2022,0.88,0.85,0.03,TRUE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.30-62433,HT180,Korsvikfjorden,Korsvikfjorden,Skagerrak,2,2024,0.65,0.91,-0.26,TRUE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.01-43181,HT192,Lyngholmene,Lyngholmene,Skagerrak,1,2021,0.69,0.89,-0.2,TRUE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.01-43181,HT192,Lyngholmene,Lyngholmene,Skagerrak,1,2022,0.71,0.88,-0.17,TRUE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.01-43181,HT192,Lyngholmene,Lyngholmene,Skagerrak,1,2023,0.91,,,FALSE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.01-43181,HT192,Lyngholmene,Lyngholmene,Skagerrak,1,2024,0.49,0.68,-0.19,TRUE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.01-89845,HT194,Gullholmen,Gullholmen,Skagerrak,2,2021,0.49,0.67,-0.18,TRUE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.01-89845,HT194,Gullholmen,Gullholmen,Skagerrak,2,2022,0.51,0.63,-0.12,TRUE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.01-89845,HT194,Gullholmen,Gullholmen,Skagerrak,2,2023,0.57,,,FALSE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.01-89845,HT194,Gullholmen,Gullholmen,Skagerrak,2,2024,0.57,0.63,-0.06,TRUE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.01-62427,HT3,Veslekalven,Veslekalven,Skagerrak,2,2021,0.83,0.98,-0.15,TRUE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.01-62427,HT3,Veslekalven,Veslekalven,Skagerrak,2,2022,0.75,0.86,-0.11,TRUE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.01-62427,HT3,Veslekalven,Veslekalven,Skagerrak,2,2023,0.78,,,FALSE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.01-62427,HT3,Veslekalven,Veslekalven,Skagerrak,2,2024,0.6,0.8,-0.2,TRUE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.01-43180,HT4,Færder fyr,Færder,Skagerrak,1,2021,0.7,0.83,-0.13,TRUE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.01-43180,HT4,Færder fyr,Færder,Skagerrak,1,2022,0.63,0.62,0.01,TRUE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.01-43180,HT4,Færder fyr,Færder,Skagerrak,1,2023,0.55,,,FALSE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.01-43180,HT4,Færder fyr,Færder,Skagerrak,1,2024,0.35,0.66,-0.31,TRUE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.01-84192,HT5,Akerøy,Akerø,Skagerrak,1,2021,0.68,0.7,-0.02,TRUE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.01-84192,HT5,Akerøy,Akerø,Skagerrak,1,2022,0.68,0.68,0,TRUE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.01-84192,HT5,Akerøy,Akerø,Skagerrak,1,2023,0.58,,,FALSE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16
+01.01-84192,HT5,Akerøy,Akerø,Skagerrak,1,2024,0.5,0.66,-0.16,TRUE,"OkoKyst Skagerrak 2024 report, Tabell 5",skagerrak_report_msmdi_timeseries.png,Dag Hjermann,2026-09-16

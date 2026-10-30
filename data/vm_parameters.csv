@@ -1,0 +1,32 @@
+Parameter_id,Parameter_navn,Enhet
+AFANHAB,Andre fjæretyper: Andre habitattyper,<ubenevnt>
+AFDYPPYT,Andre fjæretyper: Dype fjærepytter (50 % > 100 cm),<ubenevnt>
+AFGRUNPYT,Andre fjæretyper: Brede grunne fjærepytter (> 3 m bred og < 50 cm dyp),<ubenevnt>
+AFMINPYT,Andre fjæretyper: Mindre fjærepytter,<ubenevnt>
+AFOVHENG,Andre fjæretyper: Større overheng og vertikalt fjell,<ubenevnt>
+AFSTORHUL,Andre fjæretyper: Store huler,<ubenevnt>
+AFSTORPYT,Andre fjæretyper: Store fjærepytter (> 6 m lang),<ubenevnt>
+BFISKUR,Beskrivelse av fjæra: Isskuring?,<ubenevnt>
+BFSSKUR,Beskrivelse av fjæra: Sandskuring?,<ubenevnt>
+BFTURB,Beskrivelse av fjæra: Turbid vann? (ikke-antropogent),<ubenevnt>
+DFGRUS,Dominerende fjæretype: Singel/grus,<ubenevnt>
+DFKAMPST,"Dominerende fjæretype: Små, middels og store kampestein",<ubenevnt>
+DFOPPSFJ,Dominerende fjæretype: Oppsprukket fjell,<ubenevnt>
+DFSTEIN,Dominerende fjæretype: Små og store steiner,<ubenevnt>
+DFSTOPFJ,Dominerende fjæretype: Små kløfter/sterkt oppsprukket fjell/overheng/plattformer,<ubenevnt>
+DFUSUB,Dominerende fjæretype: Uspesifisert hardt substrat/glatt fjell,<ubenevnt>
+DFVERTFJ,Dominerende fjæretype: Bratt/vertikalt fjell,<ubenevnt>
+MAAFOR,Forekomst av arter/taksa makroalger,<ubenevnt>
+MADEKNSK,Dekningsgrad makroalger (skala),<ubenevnt>
+MANVGR,Nedre voksegrense makroalger (takson),m
+MARFORSK,Relativ forekomst makroalger (skala),<ubenevnt>
+MHAFOR,Forekomst av arter/taksa marin hardbunnfauna,<ubenevnt>
+MHDEKNSK,Dekningsgrad marin hardbunnsfauna (skala),<ubenevnt>
+MHRFORSK,Relativ forekomst marin hardbunnsfauna (skala),<ubenevnt>
+MSMDI1,"Maksdypindeks makroalger, åpen eksponert kyst (MSMDI1)",<ubenevnt>
+MSMDI2,"Maksdypindeks makroalger, moderat eksponert kyst/fjord (MSMDI2)",<ubenevnt>
+MSMDI3,"Maksdypindeks makroalger, beskyttet kyst/fjord (MSMDI3)",<ubenevnt>
+RSL4,"Multimetrisk indeks fjæresamfunn, ferskvannspåvirket beskyttet fjord (RSL4)",<ubenevnt>
+RSLA1,"Multimetrisk indeks fjæresamfunn, åpen eksponert kyst (RSLA1)",<ubenevnt>
+RSLA2,"Multimetrisk indeks fjæresamfunn, moderat eksponert kyst/fjord (RSLA2)",<ubenevnt>
+RSLA3,"Multimetrisk indeks fjæresamfunn, beskyttet kyst/fjord (RSLA3)",<ubenevnt>
