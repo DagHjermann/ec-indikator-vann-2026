@@ -1,0 +1,67 @@
+---
+title: "Condition index for oxygen / soft bottom fauna"  
+format: html
+editor: visual
+---
+
+```{r setup}
+#| include: false
+#| cache: false
+#| 
+library(knitr)
+library(tidyverse)
+library(kableExtra)
+library(here)
+library(anybadger)
+library(yaml)
+library(tibble)
+library(conflicted)
+
+knitr::opts_chunk$set(echo = TRUE)
+
+# for this specific report
+library(emmeans)
+
+
+```
+
+## Data 
+
+
+### Read data file  
+
+The index values were taken directly from tables in ØKOKYST reports 2022-2024.   
+
+```{r}
+softbottom_okokyst <- readxl::read_excel("../data/Oksygen softbottom 2022-2024.xlsx")
+softbottom_okokyst <- softbottom_okokyst |> 
+  mutate(year = factor(year))
+```
+
+## Analysis  
+
+### Estimate marginal means for each ecoregion  
+
+The estimates are given by *emmean*, with standard error given by *SE*.  
+
+```{r}
+
+# mod <- lm(nEQR ~ year + ecoregion + station, data = softbottom_okokyst)
+mod <- lm(nEQR ~ year + ecoregion, data = softbottom_okokyst)
+emmeans(mod, ~ecoregion, weights = "equal")
+
+```
+
+## Estimate national marginal mean for the index  
+
+The estimate is given by *emmean*, with standard error given by *SE*.  
+
+```{r}
+emmeans(mod, ~1, weights = "equal")
+
+```
+
+
+:::
+
+
