@@ -31,10 +31,9 @@ library(visreg)
 
 ```
 
+## Data from Vannmiljø
 
-## Data from Vannmiljø    
-
-We use data extracted from Vannmiljø, filtered by program (Ocean Acidification) and years (2023-2024)  
+We use data extracted from Vannmiljø, filtered by program (Ocean Acidification) and years (2023-2024)
 
 ```{r}
 
@@ -47,13 +46,11 @@ if (FALSE){
 
 ```
 
-
-
 ## One model per region
 
-### Define regions   
+### Define regions
 
-This table links stations to regions. For the longer transects, we have hand-picked a few stations that by location and data consistency appears to be most representative for the region. Stations with 'NA' in the Region column are not included in the analysis.  
+This table links stations to regions. For the longer transects, we have hand-picked a few stations that by location and data consistency appears to be most representative for the region. Stations with 'NA' in the Region column are not included in the analysis.
 
 ```{r}
 
@@ -109,7 +106,7 @@ lookup_region <- tibble::tribble(
      )
 ```
 
-### Add the 'region' column to the data  
+### Add the 'region' column to the data
 
 ```{r}
 
@@ -123,17 +120,16 @@ dat_all2 <- dat_all |>
 
 ## Analysis per region
 
-For each region, we estimate the marginal mean pH based on the following linear model:   
-```
+For each region, we estimate the marginal mean pH based on the following linear model:
+
+```         
 pH ~ station + year_f + season*depth
 ```
-Factors: 
-- station: station name (categorical)
-- year_f: year (categorical)
-- season: the four meteorological seasons (categorical)  
-- depth: sample depth (continuous)  
 
-By taking the marginal mean, we avoid biased estimates due to imbalanced sampling, e.g. imbalance among seasons   
+Factors: - station: station name (categorical) - year_f: year (categorical) - season: the four meteorological seasons (categorical)\
+- depth: sample depth (continuous)
+
+By taking the marginal mean, we avoid biased estimates due to imbalanced sampling, e.g. imbalance among seasons
 
 ### Function for checking map
 
@@ -985,9 +981,9 @@ est_skagerrak_shallow_coastal <- summary(emm)
 
 ```
 
-## Final results  
+## Final results
 
-Combine 
+Combine
 
 ```{r}
 
@@ -1036,8 +1032,7 @@ summary(mod)$coef
 
 ```
 
-
-## APPENDIX 1 - explore data from particular areas / transects   
+## APPENDIX 1 - explore data from particular areas / transects
 
 ### Norwegian Sea deep, oceanic
 
@@ -1258,7 +1253,7 @@ if (FALSE){
 
 ```
 
-## APPENDIX 3 - Leaflet map  
+## APPENDIX 3 - Leaflet map
 
 ```{r}
 
@@ -1315,5 +1310,3 @@ if (FALSE){
   
   
 ```
-
-
