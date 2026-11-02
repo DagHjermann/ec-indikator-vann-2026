@@ -6,7 +6,7 @@ R/*_cache/*
 R/*_files/*
 R/*.html
 data/*.html
-data/Data for KLFA SECCI and summer NTOT PTOT/VF.gdb/*
-data/Data for KLFA SECCI and summer NTOT PTOT/WFD2ECA/*
+data/Code for Secchi, NitroSommer and FosforSommer/VF.gdb/*
+data/Code for Secchi, NitroSommer and FosforSommer/WFD2ECA/*
 R/NO_EELG_001.tex
-R/Code for KLFA SECCI and summer NTOT PTOT/NVE.RData
+R/Code for Secchi, NitroSommer and FosforSommer/NVE.RData
