@@ -15,65 +15,53 @@ Kort beskrivelse av formål og innhold i repoet.
 
 ## 1. Bidragsytere / Kontakt
 
-- **Navn**: [Navn på bidragsyter(e)]
-- **Organisasjon**: [Navn]
-- **Epost**: [e-post]
-- **Eventuelle eksterne samarbeidspartnere:**
+- **Navn**: Elianne Egge, Nicolas Dupont, Roar Brænden, Dag Ø. Hjermann  
+- **Organisasjon**: Norsk Institutt for Vannforskning STI (NIVA)
+- **Epost**: dag.hjermann@niva,no; Elianne.Egge@niva.no; Nicolas.Dupont@niva.no; roar.branden@niva.no
+- **Eventuelle eksterne samarbeidspartnere:** Ingen  
 
 ## 2. Formål / Bakgrunn
 
-- Kort om overvåkingsprogrammet
-- Hvilke metoder som brukes
-- Relevante referanser
+Norge skal etablere et forvaltningsnyttig nasjonalt naturregnskap i 2026 i tråd med internasjonale standarder. Regnskapet skal gi et helhetlig bilde 
+av økosystemenes utbredelse, tilstand og tjenester, og skal brukes til å følge utviklingen over tid. I Pilot for nasjonalt tilstandsregnskap 
+(Nybø m.fl. 2025, heretter kalt piloten) er det utviklet en rekke indikatorer for de to klassene Elver, bekker og kanaler og Innsjøer og vannmagasiner. 
+Disse indikatorene er i hovedsak basert på data fra Vannmiljø og Naturindeks. Formålet med dette prosjekter var å forbedre indikatorsettene og samtidig 
+få mer kunnskap om mulige datakilder for disse klassene. Denne levearansen i github er en stor del av to av delene av prosjektet:
+1) Utvikle en indikator på hydrologiske endringer i vassdrag grunnet vannkraft., 2)  Utvikle nye indikatorer for kystvann basert på relevante eksisterende 
+indikatorer for vassdragsklassene.  
+
+Metodene som er brukt er basert på åpne data, beregningsverktøy (NEVINA) og rapporter. I noen tilfeller er indikatorene basert på verdier hentet rett fra 
+resultattabeller i tilgjengelige rapporter, i andre tilfeller er det trukket ut rådata (fra spesielt Vannmiljø) og beregninger er utført på basis av 
+disse. 
+
+Referanse:
+Nybø, S. Kolstad. A., Czúcz, B., Framstad, E., Sandvik, H., Töpper, J., Bjørkvoll, B., Clappe, S., Halbritter, A.H., Storaunet, K.O., Dramstad, W., Grainger, M., 
+Haande, S., Pedersen, C., Schartau, A.K. & Vandvik, V. (2025). Nasjonal pilot for økologisk tilstandsregnskap. NINA Rapport 2668. Norsk institutt for 
+naturforskning. https://www.miljodirektoratet.no/publikasjoner/2025/desember-2025/nasjonal-pilot-forokologisk-tilstandsregnskap/
 
 ## 3. Forutsetninger / Dependencies
 
 _Dokumenter alle forutsetninger som kreves for å kjøre analysen og gjenskape resultatene._
 
 - **Hardware**:
-  - **OS:** [name, version/build]
-  - **Memory (RAM):** [total GB, speed]
-  - **CPU:** [model, total cores/threads]
-  - **GPU:** [model, VRAM, driver/CUDA]
-  - **Storage:** [type, size]
-  - **Ytelse:** _Gjerne spesifiser forventet kjøretid eller benchmarktester for analysene._
+  - **OS:** Windows 11  
+  - **Memory (RAM):** Ingen spesielle krav
+  - **CPU:** Ingen spesielle krav
+  - **GPU:** Ikke brukt
+  - **Storage:** Ingen spesielle krav
+  - **Ytelse:** De fleste indikatorene tar noen få minutter på en moderne laptop  
 - **Kjøringsmiljø:**
-  - **Container:** _Dockerfile, docker compose, andre relevante konfigfiler._
-  - **Lokal PC:** _OS og version/build, viktige systemavhengigheter (f.eks. GDAL) og eventuelle andre avhengigheter som kreves av Python-/R-pakker._
-  - **Databricks:** _Databricks Runtime-versjon, eventuelle cluster init-scripts eller policykrav._
-  - **Andre kjøringsmiljø:** _Beskriv relevante konfigurasjoner og systemkrav._
-- **Programvare:**
-  - [Programvare (versjon ≥ x.x)]
-  - _Dokumenter alle nødvendige programvareavhengigheter og versjoner (QGIS, ArcGIS Pro, E-cognition, FME, osv.)_
+  - **Container:** Leveransen er ikke containerifisert. R-pakker som er brukt er dokumentert av utskrift av sessionInfo i slutten av mange av scriptene. Vi anser de aller
+  fleste av beregningene å være robuste i forhold til oppdtering av pakker.  
+  - **Lokal PC:** Alle script er laget og kjørt i Windows 11-miljø. Det er kun benyttet R, og scriptene krever ikke annet enn pakker som kan lastes ned direkte i R.  
+  - **Databricks:** Ikke aktuelt
+  - **Andre kjøringsmiljø:** Ikke aktuelt
 - **KI-verktøy:**
-  - [KI-verktøy (modell + versjon ≥ x.x)]
-  - _Dokumenter alle KI-verktøy og versjoner som brukes (ChatGPT, Claude, osv.)_
-  - _Alle relevante instruksjonsfiler (f.eks `AGENTS.md` eller `CLAUDE.md`) legges ved i repoet._
-  - _Beskriv kort hvordan KI-verktøyene er brukt (f.esk. dokumentasjon, analyse, generering av kode)._
+  - Microsoft Copilot (GPT-5) og Claude Code 2.1.278 med Opus 5 og Sonnet 5)   
+  - Vi har ikke brukt noen KI-instruksjonsfiler er brukt for vedlagte leveranse  
+  - KI er brukt til en viss grad for genrerering av kode, mest i chat-modus  
 - **Programmeringsspråk:**
-  - [Programmeringsspråk (versjon ≥ x.x)]
-  - _Dokumenter alle programmeringsspråk og versjoner som brukes (Python, R, SQL, osv.)_
-- **Definisjon av analysemiljø:**
-  - Alle nødvendige pakker, avhengigheter og versjoner skal spesifiseres i en miljøfil som er lagret i repoet.
-  - Miljøfilen skal være tilstrekkelig til at analysemiljøet kan gjenskapes uten manuell installasjon eller spesifikasjon av pakker og versjoner.
-  - `renv.lock` (_anbefalt for R_), `pyproject.toml` (_anbefalt for Python_), `environment.yml`, `pixi.toml` eller `requirements.txt`.
-
-  **R-miljø:**
-  - Vi anbefaler å bruke `renv` for å håndtere pakker og avhengigheter.
-  - Eventuelle systemavhengigheter som kreves for å bygge eller kjøre pakker (f.eks. GDAL, PROJ og GEOS for geospatiale pakker), skal dokumenteres.
-  - Dersom installasjon av systemavhengigheter krever egne kommandoer, anbefaler vi å legge ved et skript (f.eks. `.sh`) som dokumenterer installasjonstrinnene.
-  - R versjon skal være >4.4
-
-  **Python-miljø:**
-  - Vi anbefaler å bruke `uv` som pakkebehandler og definere miljøet i `pyproject.toml`.
-  - Dersom conda-støtte er nødvendig, anbefaler vi å bruke `pixi`.
-  - Se [uv-demo](https://github.com/miljodirektoratet/uv-demo)-repoet for anbefalt praksis for Python-utvikling og reproducerbare miljøer.
-  - Python versjon skal være >3.11
-
-  **ArcPy-miljø:**
-  - For analyser som bruker ArcPy, anbefales ArcGIS Pro sitt conda-miljø.
-  - Miljøet bør eksporteres til en `environment.yml`-fil som lagres i repoet.
-  - Se [gis-utils-public](https://github.com/miljodirektoratet/gis-utils-public) for anbefalt praksis for ArcPy-utvikling og reproducerbare miljøer.
+  - R 4.5.3; pakker er oppgitt i de enkelte script    
 
 ## 4. Struktur
 
@@ -86,7 +74,9 @@ Dette repoet følger en standard mappestruktur for å gjøre det enkelt å navig
 - _/docs_ - Metodikk, rapporter, dokumentasjon
 - _/outputs_ - Resultater (figurer, tabeller, rapporter)
 
-Oppdragstaker kan opprette andre nødvendige filer (som feks. .gitignore etc.) selv.
+Oppdragstaker kan opprette andre nødvendige filer (som feks. .gitignore etc.) selv.  
+
+De flesr
 
 ## 5. Input / Output
 
