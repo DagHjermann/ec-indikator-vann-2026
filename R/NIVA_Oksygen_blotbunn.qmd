@@ -25,12 +25,11 @@ library(emmeans)
 
 ```
 
-## Data 
+## Data
 
+### Read data file
 
-### Read data file  
-
-The index values were taken directly from tables in ØKOKYST reports 2022-2024.   
+The index values were taken directly from tables in ØKOKYST reports 2022-2024.
 
 ```{r}
 softbottom_okokyst <- readxl::read_excel("../data/Oksygen softbottom 2022-2024.xlsx")
@@ -38,11 +37,11 @@ softbottom_okokyst <- softbottom_okokyst |>
   mutate(year = factor(year))
 ```
 
-## Analysis  
+## Analysis
 
-### Estimate marginal means for each ecoregion  
+### Estimate marginal means for each ecoregion
 
-The estimates are given by *emmean*, with standard error given by *SE*.  
+The estimates are given by *emmean*, with standard error given by *SE*.
 
 ```{r}
 
@@ -52,16 +51,13 @@ emmeans(mod, ~ecoregion, weights = "equal")
 
 ```
 
-## Estimate national marginal mean for the index  
+## Estimate national marginal mean for the index
 
-The estimate is given by *emmean*, with standard error given by *SE*.  
+The estimate is given by *emmean*, with standard error given by *SE*.
 
 ```{r}
 emmeans(mod, ~1, weights = "equal")
 
 ```
 
-
-:::
-
-
+\:::

@@ -1,19 +1,16 @@
 ---
 title: "Macroalgae condition on marine hard bottom"
 subtitle: |
-  Possible codes (decision on codes pending):\
-  HARD_001 (lower growth limit, Skagerrak) \
-  HARD_002 (combined index, Nordsjøen–Barentshavet)
+  NIVA_Hardbunn (lower growth limit, Skagerrak)
 indicatorID:
-  - HARD_001
-  - HARD_002
+  - NIVA_Hardbunn
 indicatorName:
   - Macroalgae lower growth limit
   - Macroalgae combined littoral and sublittoral index
 verbatimName:
   - Nedre voksegrenseindeks for makroalger (MSMDI)
   - Komboindeksen for makroalger
-folderName: HARD_001-002 # Leave to be filled out by ecRxiv during typesetting (name of the folder under 'indicators/').
+folderName:  # Leave to be filled out by ecRxiv during typesetting (name of the folder under 'indicators/').
 country: Norway
 continent: Europe
 ECT: B2 - Structural state characteristics

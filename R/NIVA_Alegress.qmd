@@ -1,7 +1,7 @@
 ---
 title: "Eelgrass ecological status"
 subtitle: |
-  possible code (decision on code pending): NO_EELG_001   
+  NIVA_Alegress   
 # delete the line with the second indicatorID (line 5) 
 # if it's not relevant for you.
 # In the parentheses you can add a word to distinguish multiple indicators 
@@ -104,7 +104,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # for this parcticular script:  
 library(emmeans)
-source("NO_EELG_001_functions.R")    # self-defined functions
+source("NIVA_Alegress_functions.R")    # self-defined functions
 
 ```
 

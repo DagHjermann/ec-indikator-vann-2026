@@ -1,15 +1,13 @@
 ---
 title: "Total phosphorous concentration in the surface during the summer and winter season in coastal water" 
 subtitle: |
-  [NO_WTPX_003]
-  [NO_WTPX_004] 
+  NIVA_Fosforvinter
 # delete the line with the second indicatorID (line 5) 
 # if it's not relevant for you.
 # In the parentheses you can add a word to distinguish multiple indicators 
 # from each other, for example the ecosystem type that they cover
 indicatorID: 
-  - NO_WTPX_003
-  - NO_WTPX_004
+  - NIVA_Fosforvinter
 # If you are presenting multiple indicators, and have multiple 
 # indicator IDs, then add them as a list here, and make sure you add
 # the same number of list entries, 
@@ -121,7 +119,7 @@ pull<-dplyr::pull
 
 knitr::opts_chunk$set(echo = TRUE)
 
-source("NO_EELG_001_functions.R")    # self-defined functions
+source("NIVA_NitroVinter_Fosforvinter_functions.R")    # self-defined functions
 
 ```
 
@@ -442,7 +440,7 @@ However, the variation in the mean is defined by the spatial variation only, and
 # read data in Vannmiljø format  
 
 ptot_raw <-
-  read_xlsx("../data/NO_WTNX_WTPX/P-TOT vannmiljø saltvann des2021-nov2024.xlsx", guess_max = 50000) %>%
+  read_xlsx("../data/NIVA_NitroVinter_Fosforvinter/P-TOT vannmiljø saltvann des2021-nov2024.xlsx", guess_max = 50000) %>%
   mutate(
     year = lubridate::year(Tid_provetak))
 
@@ -457,10 +455,10 @@ ptot_raw <-
 # Station metadata ----
 # . # . # . # . # . # . # . # . # . # . # . # . # . # . # . # . # . 
 
-vannlok_vannmiljø <- read_csv("../data/NO_WTNX_WTPX/vannlokaliteter_kyst_2024.csv")
-vf_vannmiljø <- read_csv("../data/NO_WTNX_WTPX/vannforekomster_kyst_2024.csv")
-class_limits_sum <- read_xlsx("../data/NO_WTNX_WTPX/klassegrenser_TOTP_sommer.xlsx")
-class_limits_win <- read_xlsx("../data/NO_WTNX_WTPX/klassegrenser_TOTP_vinter.xlsx")
+vannlok_vannmiljø <- read_csv("../data/NIVA_NitroVinter_Fosforvinter/vannlokaliteter_kyst_2024.csv")
+vf_vannmiljø <- read_csv("../data/NIVA_NitroVinter_Fosforvinter/vannforekomster_kyst_2024.csv")
+class_limits_sum <- read_xlsx("../data/NIVA_NitroVinter_Fosforvinter/klassegrenser_TOTP_sommer.xlsx")
+class_limits_win <- read_xlsx("../data/NIVA_NitroVinter_Fosforvinter/klassegrenser_TOTP_vinter.xlsx")
 
 station_lookup <- ptot_raw %>% dplyr::select(Vannlokalitet_kode, Vannlokalitetsnavn) %>% distinct()
 

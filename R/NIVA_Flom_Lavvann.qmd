@@ -1,16 +1,15 @@
 ---
 title: "Change in river water flow due to hydropower"
 subtitle: |
-  possible codes (decision on code pending): \
-  NO_WFLO_001 (flood water flow) \
-  NO_WFLO_002 (winter water flow)  
+  NIVA_Flom (flood water flow) \
+  NIVA_Lavvann (winter water flow)  
 # delete the line with the second indicatorID (line 5) 
 # if it's not relevant for you.
 # In the parentheses you can add a word to distinguish multiple indicators 
 # from each other, for example the ecosystem type that they cover
 indicatorID: 
-  - NO_WFLO_001
-  - NO_WFLO_002 # delete whole line if not needed
+  - NIVA_Flom
+  - NIVA_Lavvann # delete whole line if not needed
 # If you are presenting multiple indicators, and have multiple 
 # indicator IDs, then add them as a list here, and make sure you add
 # the same number of list entries, 
@@ -133,7 +132,7 @@ library(cowplot)     # plot_grid()
 library(visreg)      # visreg() 
 library(MuMIn)       # dredge()
 library(sf)          # read_
-source("NO_WFLO_001_002_functions.R")
+source("NIVA_Flom_Lavvann_functions.R")
 
 # handling Norwegian letters 
 Sys.setlocale("LC_CTYPE", "Norwegian_Norway.utf8")
