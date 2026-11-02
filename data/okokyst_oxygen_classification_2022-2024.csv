@@ -1,0 +1,46 @@
+region,period,station,waterbody,watertype,oxygen_ml_l,oxygen_pct_sat,oxygen_nEQR,status
+Barentshavet,2022-2024,VR4,Kvænangen,B2,  5.2,78.5,0.96,Svært god
+Barentshavet,2022-2024,VR55,Kvænangen,B2,5.0,75.0,0.92,Svært god
+Barentshavet,2022-2024,VR24,Tanafjorden ytre,B2,5.6,85.5,1.05,Svært god
+Barentshavet,2022-2024,VR7,Langfjorden,B3,5.8,86.8,1.07,Svært god
+Barentshavet,2022-2024,VR21,Varangerfjorden ytre Norsk-Finsk,B1,5.7,81.3,1.03,Svært god
+Norskehavet Nord,2022-2024,VT82 Setså,Saltdalsfjorden,G3,5.2,76.2,0.94,Svært god
+Norskehavet Nord,2022-2024,VT81 Alvenes,Skjerstadfjorden,G3,5.3,77.1,0.96,Svært god
+Norskehavet Nord,2022-2024,VT43 Kongsbakkneset,Trongskjomen indre,G4,4.7,70.4,0.86,Svært god
+Norskehavet Nord,2022-2024,VT28 Tjukkeneset,Ofotfjorden,G3,4.4,65.8,0.79,God
+Norskehavet Nord,2022-2024,VT29 Skrova,Vestfjorden indre,G1,4.3,80.4,0.88,Svært god
+Norskehavet Nord,2022-2024,VR54 Straumsfjorden,Malangen indre,G3,5.5,83.8,1.03,Svært god
+Norskehavet Nord,2022-2024,VR58 Ullsfjorden,Ullsfjorden,G2,4.4,65.0,0.79,God
+Norskehavet Sør,2022-2024,VR51 Korsen,Geirangerfjorden,NA,3.54,53.6,NA,God
+Norskehavet Sør,2022-2024,VT71 Skinnbrokleia,Steinsfjorden,NA,2.97,44.9,NA,Moderat
+Norskehavet Sør,2022-2024,VR61 Frohavet Sør,Frohavet Sør,NA,4.56,69.8,NA,Svært god
+Norskehavet Sør,2022-2024,VR52 Broemsneset,Namsfjorden,NA,4.93,74.9,NA,Svært god
+Norskehavet Sør,2022-2024,VR31 Tilremsfjorden,Vegafjorden-Ylvingen,NA,5.55,80.2,NA,Svært god
+Nordsjøen,2022-2024,VT70 Bjørnafjorden,Bjørnafjorden,NA,4.51,66.73,0.90,Svært god
+Nordsjøen,2022-2024,VT79 Nærnes,Aurlandsfjorden,NA,3.98,59.71,0.70,God
+Nordsjøen,2022-2024,VT16 Kyrkjebø,Sognefjorden,NA,3.85,58.12,0.70,God
+Nordsjøen,2022-2024,VT74 Maurangerfjorden,Maurangerfjorden,NA,3.48,51.93,0.60,Moderat
+Nordsjøen,2022-2024,VT53 Tveitneset,Samlafjorden,NA,2.68,40.00,0.50,Moderat
+Nordsjøen,2022-2024,VT83 Hjelmelandsfjorden,Hjelmelandsfjorden,NA,4.00,61.21,0.70,God
+Nordsjøen,2022-2024,VT8 Hidlefjorden,Hidlefjorden,NA,2.17,32.41,0.30,Dårlig
+Nordsjøen,2022-2024,VR49 Jøsenfjorden Ytre,Jøsenfjorden,NA,0.37,5.46,0.10,Svært dårlig
+Skagerrak,2022-2024,VT10,Breiangen,NA,3.8,55.0,0.70,God
+Skagerrak,2022-2024,VT2,Bastø,NA,5.1,75.0,0.90,Svært god
+Skagerrak,2022-2024,VT65,Missingen,NA,5.0,74.0,0.90,Svært god
+Skagerrak,2022-2024,VT3,Torbjørnskjær,NA,5.0,76.0,0.90,Svært god
+Skagerrak,2022-2024,VT84,Færder,NA,4.9,76.0,0.90,Svært god
+Skagerrak,2022-2024,VT67,Breviksfjorden,NA,4.0,60.0,0.70,God
+Skagerrak,2022-2024,VT49,Nordfjorden,NA,-0.1,4.7,0.10,Svært dårlig
+Skagerrak,2022-2024,VT5,Arendal,NA,4.9,80.6,0.90,Svært god
+Indre Oslofjord,2022-2024,Im2,Elle,NA,4.8,71.0,0.82,Svært god
+Indre Oslofjord,2022-2024,Gk1,Gråøyrenna,NA,2.8,42.0,0.48,Moderat
+Indre Oslofjord,2022-2024,Fl1,Søndre Langåra,NA,2.9,43.0,0.50,Moderat
+Indre Oslofjord,2022-2024,Cj1,Holmenfjorden,NA,2.3,35.0,0.38,Dårlig
+Indre Oslofjord,2022-2024,Dk1,Steilene,NA,2.5,37.0,0.42,Moderat
+Indre Oslofjord,2022-2024,Bl4,Bærumsbassenget,NA,0.0,1.0,0.01,Svært dårlig
+Indre Oslofjord,2022-2024,Bn1,Lysakerfjorden,NA,1.3,20.0,0.19,Svært dårlig
+Indre Oslofjord,2022-2024,Ap2,Kavringen,NA,2.4,37.0,0.41,Moderat
+Indre Oslofjord,2022-2024,Aq3,Bjørvika,NA,2.6,28.0,0.37,Dårlig
+Indre Oslofjord,2022-2024,Cq1,Bekkelagsbassenget,NA,0.7,10.0,0.10,Svært dårlig
+Indre Oslofjord,2022-2024,Ep1,Bunnefjorden,NA,0.1,1.0,0.01,Svært dårlig
+Indre Oslofjord,2022-2024,Gp2,Bunnebotten,NA,2.6,38.0,0.43,Moderat
