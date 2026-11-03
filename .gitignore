@@ -6,6 +6,7 @@ R/*_cache/*
 R/*_files/*
 R/*.html
 R/*.tex
+r/NIVA_Oksygen_internal.qmd
 data/*.html
 data/data_Secchi_NitroSommer_FosforSommer/VF.gdb/*
 data/code_Secchi_NitroSommer_FosforSommer/WFD2ECA/*
