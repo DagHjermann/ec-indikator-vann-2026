@@ -5,8 +5,9 @@
 R/*_cache/*
 R/*_files/*
 R/*.html
+R/*.tex
 data/*.html
-data/Code for Secchi, NitroSommer and FosforSommer/VF.gdb/*
-data/Code for Secchi, NitroSommer and FosforSommer/WFD2ECA/*
-R/NO_EELG_001.tex
-R/Code for Secchi, NitroSommer and FosforSommer/NVE.RData
+data/data_Secchi_NitroSommer_FosforSommer/VF.gdb/*
+data/code_Secchi_NitroSommer_FosforSommer/WFD2ECA/*
+R/code_Secchi_NitroSommer_FosforSommer/NVE.RData
+fix_filenames_etc.R
