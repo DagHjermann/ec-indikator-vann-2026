@@ -2,16 +2,16 @@
 
 ## By script in `/R` 
 
-### NO_WFLO_001_002.qmd    
+### NIVA_Flom_Lavvann.qmd    
 geo_points.gpkg  
 seriedata.zip  
 seriestasjoner.csv     
 seriestasjoner_meta.csv  
 
-## NO_EELG_001.qmd  
+## NIVA_alegras.qmd  
 VM_export_eelgrass_station-based-search_2026-09-13.csv  
 
-## NO_HARD_001_002
+## NIVA_hardbunn
 vm_macroalgae.csv
 vm_stations.csv
 vm_parameters.csv

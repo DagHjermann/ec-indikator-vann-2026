@@ -1,4 +1,4 @@
-# [Prosjektnavn]-[Årstall]
+# Indikatorutvikling for vassdrag og kystvann i 2026
 
 _Vennligst fyll ut denne README.md-malen i henhold til instruksjonene. Gjør prosjektspesifikke tilpasninger der det er nødvendig. Fjern alle instruksjoner og kommentarer når du er ferdig._
 
