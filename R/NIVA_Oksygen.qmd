@@ -14,9 +14,8 @@ editor_options:
 
 
 
-## Packages
 
-```{r}
+```{r packages}
 #| include: false
 #| cache: false
 
@@ -30,237 +29,47 @@ library(cowplot)
 library(readr)      # read_csv()
 library(readxl)     # read_excel()
 library(emmeans)    # emmeans()
-library(visreg)
 
 getwd()
 # setwd()
 ```
 
-## Raw data   
-* Vannmiljø data   
-
-### dat_1: Original data  
+## Read main data (dat_1) 
+* Need only 2024 reports, since they report summary numbers based on the yeasr 2022-2024 - which fits well here    
+* Extracted using MS Copilot  
+* After that, several corrections done for Inner Oslofjord categorization   
+   - Dk1 changed from "god" to "moderat", several others changed to "dårlig"/"meget dårlig"  
 
 ```{r}
 
-# raw data
-dat_1 <- read_excel("../data/vm_okokyst_oxygen_2022-2024.xlsx", guess_max = 60000)  
-
-# station metadata
-dat_station_metadata <- read_excel("../data/vm_okokyst_ctd_stations.xlsx") |>  
-  rename(Vannforekomst_id = `Vannforekomst ID`)
-
-```
-
-### dat_2: Add water body ID and time   
-```{r}
-
-dat_2 <- dat_1 |> 
-  left_join(
-    dat_station_metadata |>  select(Vannlokalitetskode, Vannforekomst_id, Klassifiseres), 
-    by = join_by(Vannlokalitet_kode==Vannlokalitetskode), relationship = "many-to-one"
-    ) |> 
+Sys.setlocale("LC_CTYPE", "Norwegian_Norway.utf8")
+dat_1 <- read_csv("../data/okokyst_oxygen_classification_2022-2024.csv",
+                  show_col_types = FALSE) |> 
   mutate(
-    time = ymd_hms(Tid_provetak),
-    year = year(time),
-    month = month(time)
+    Betegnelse = stringr::str_extract(station, "([^[[:blank:]]]+)"),
+    Betegnelse = case_when(
+      Betegnelse %in% "Dk1" ~ "DK1",
+      Betegnelse %in% "VT74" ~ "BT132/VT74",
+      region %in% "Indre Oslofjord" ~ paste(substr(Betegnelse,1,2),
+                                            substr(Betegnelse,3,3)),
+      TRUE ~ Betegnelse)
   )
 
 ```
 
-### Data on station level  
-* defines 'Vannlokalitet_kode_sel' using in filtering below (dat_3)
-```{r}
-
-dat_stations_1 <- dat_2 |>
-  group_by(Vannlokalitet_kode, Vannlokalitetsnavn) |> 
-  summarise(
-    n = n(),
-    n_years = length(unique(year)),
-    n_times = length(unique(time)),
-    max_depth_station = max(Nedre_dyp))
-
-dat_stations <- dat_stations_1 |> 
-  left_join(
-    dat_station_metadata |>  select(Vannlokalitetskode, Vannforekomst_id, Klassifiseres), 
-    by = join_by(Vannlokalitet_kode==Vannlokalitetskode), relationship = "one-to-one"
-    ) 
-
-table(dat_stations$n_years)
-# table(dat_stations$max_depth_station)
-
-dat_stations_sel <- dat_stations |> 
-  filter(n_years >= 3 & max_depth_station >= 50)
-
-# Useddin later filtering  
-Vannlokalitet_kode_sel <- pull(dat_stations_sel, Vannlokalitet_kode)
-
-```
-
-### Data on water body level  
-```{r}
-
-dat_vannforekomst <- dat_stations_sel |> 
-  group_by(Vannforekomst_id) |> 
-  summarize(
-    n_stations = n(),
-    Vannlokalitetsnavn = paste(Vannlokalitetsnavn, collapse = "; "))
-
-table(dat_vannforekomst$n_stations)
-
-```
 
 
-### dat_3: Filter data by station   
-* Station should have 3 years of data and not be a ferrybox station (>4 meter depth)   
-```{r}
 
-dat_3 <- dat_2 |> 
-  filter(Vannlokalitet_kode %in% Vannlokalitet_kode_sel) |> 
-  mutate(
-    region = substr(Vannforekomst_id, 1, 2)
-  )
+## Add correct Norskehavet Nord data        
 
-xtabs(~paste(Vannlokalitet_kode, Vannlokalitetsnavn) + region, dat_3 )
-
-```
-
-### Sample metadata  
-```{r}
-
-dat_sample <- dat_3 |>
-  group_by(Vannlokalitet_kode, year, time) |> 
-  summarise(
-    n_depths = length(unique(Nedre_dyp)),
-    max_depth = max(Nedre_dyp), 
-    min_oxygen = min(Verdi), 
-    .groups = "drop"
-    ) |> 
-  group_by(Vannlokalitet_kode) |> 
-  mutate(
-    sample_i = 1:length(time),
-    max_depth_st = max(max_depth), 
-    .groups = "drop"
-  ) |> 
-  group_by(Vannlokalitet_kode, year) |> 
-  mutate(
-    sample_iy = 1:length(time), 
-    .groups = "drop"
-  ) |> 
-  mutate(
-    max_depth_relative = max_depth/max_depth_st
-  )
-  
-```
-
-### Sample metadata: plots 1  
-* X axis = sample occasion  
-```{r}
-
-# max depth  
-ggplot(dat_sample, aes(sample_i, Vannlokalitet_kode, fill = max_depth)) +
-  geom_tile() +
-  scale_fill_viridis_c(option = "turbo") +
-  labs(title = "Maximum depth")
-
-# relative max depth (as fraction of max depth per station)  
-ggplot(dat_sample, aes(sample_i, Vannlokalitet_kode, fill = max_depth_relative)) +
-  geom_tile() +
-  scale_fill_viridis_c(option = "turbo") +
-  labs(title = "Relative maximum depth (as fraction of max. station depth)")  
-
-# minimum oxygen
-ggplot(dat_sample, aes(sample_i, Vannlokalitet_kode, fill = min_oxygen)) +
-  geom_tile() +
-  scale_fill_viridis_c(option = "turbo") +
-  labs(title = "Minimum oxygen")
-
-```
-
-### Sample metadata: plots 2  
-* X axis = time
-
-```{r}
-
-ggplot(dat_sample, aes(time, Vannlokalitet_kode, fill = min_oxygen)) +
-  geom_point(shape = 21, size = 3) +
-  scale_fill_viridis_c(option = "turbo", direction = -1)
-
-```
-
-### dat_4: Add sample metadata to data  
-
-```{r}
-
-dat_4 <- dat_3 |> 
-  left_join(
-    dat_sample, by = join_by(Vannlokalitet_kode, time, year))
-
-```
-
-### Annual deep water oxygen minima  
-```{r}
-
-rel_depth_threshold <- 0.8
-
-dat_ox_annual <- dat_4 |> 
-  filter(
-    max_depth_relative >= rel_depth_threshold) %>% # xtabs(~Vannlokalitetsnavn, .)
-  group_by(
-    Vannlokalitetsnavn, year) |>
-  summarise(
-    min_ox_annual = min(Verdi)
-    )
-
-```
-## Norskehavet Nord - find correct data        
-* Problem: table 14 in the 2024 report gives means over much more than 3 years (2013-2024 for one station)  
-* Below, we try recalculated values from raw data, but these appear to high  
-* Then we try t digitize figure 19 in report  
-
-### From raw data          
-* Compare with figure 19 in 2024 report  
-* Seems to be too high compared to the graph  
-```{r}
-
-# dat_stations |> 
-#   arrange(Vannlokalitet_kode) |> 
-#   pull(Vannlokalitetsnavn) |> dput()
-
-stations_sel <- c("Alvenes", "Setså", 
-                  "Skrova", "Tjukkeneset", "Kongsbakkneset",
-                  "Straumsfjorden, Bakkland", "Ullsfjorden")
-
-dat_nnord <- dat_ox_annual |> 
-  filter(Vannlokalitetsnavn %in% stations_sel) |> 
-  mutate(
-    Vannlokalitetsnavn = factor(Vannlokalitetsnavn, levels = stations_sel),
-    graph_group = case_when(
-      Vannlokalitetsnavn %in% stations_sel[1:2] ~ 1,
-      Vannlokalitetsnavn %in% stations_sel[3:5] ~ 2,
-      Vannlokalitetsnavn %in% stations_sel[6:7] ~ 3)
-  ) 
-dat_nnord_mean <- dat_nnord |> 
-  group_by(Vannlokalitetsnavn, graph_group) |> 
-  summarise(min_ox_mean = mean(min_ox_annual))
-
-```
-
-### Test plot  
-```{r}
-ggplot(dat_nnord, aes(year, min_ox_annual, color = Vannlokalitetsnavn)) +
-  geom_line() + 
-  geom_point() +
-  geom_hline(data = dat_nnord_mean, 
-             aes(yintercept = min_ox_mean, color = Vannlokalitetsnavn),
-             linetype = "dashed") +
-  geom_hline(yintercept = c(1.5,2.5,3.5,4.5), linetype = "dashed") +
-  facet_wrap(vars(graph_group), ncol = 1, scales = "free_x")
-```
+* Problem: the data from table 14 in the 2024 report gives means over much more than 3 years (2013-2024 in one case)    
+* We replace this by finding annual means based on data digitized from figure 19 in report  
+* We then calculate 2022-2024 means from this  
 
 ### Digitized from graph 
 * Figure 19 in report  
 ```{r}
+
 nnord_lookup_stations <- tribble(
   ~station_graph, ~Vannlokalitetsnavn, ~station, 
   "VT81 - Alvenes", "Alvenes", "VT81 Alvenes",
@@ -272,16 +81,21 @@ nnord_lookup_stations <- tribble(
   "VR58 - Ullsfjorden", "Ullsfjorden", "VR58 Ullsfjorden"
 )
 
+stations_sel <- pull(nnord_lookup_stations, Vannlokalitetsnavn)
+
 dat_nnord_from_graph <-read_csv(
-  "../data/okokyst_oxygen_norskehavet_nord_digitized.csv") |> 
+  "../data/okokyst_oxygen_norskehavet_nord_digitized.csv",
+  show_col_types = FALSE) |> 
   rename(
     station_graph = station) |> 
+  # add columns Vannlokalitetsnavn and station  
   left_join(
-    nnord_lookup_stations) |> # str()
+    nnord_lookup_stations, by = join_by(station_graph)) |> # str()
   rename(
     min_ox_annual = oxygen_ml_l) |> 
   mutate(
     Vannlokalitetsnavn = factor(Vannlokalitetsnavn, levels = stations_sel),
+    # Used to remake Figure 19
     graph_group = case_when(
       Vannlokalitetsnavn %in% stations_sel[1:2] ~ 1,
       Vannlokalitetsnavn %in% stations_sel[3:5] ~ 2,
@@ -290,9 +104,8 @@ dat_nnord_from_graph <-read_csv(
 
 ```
 
-
 ### Test plot  
-* Looks good  
+* In order to check the similarity to the original figure    
 ```{r}
 ggplot(dat_nnord_from_graph, aes(year, min_ox_annual, color = Vannlokalitetsnavn)) +
   geom_line() + 
@@ -302,20 +115,9 @@ ggplot(dat_nnord_from_graph, aes(year, min_ox_annual, color = Vannlokalitetsnavn
 
 ```
 
-### Test plot, values from raw data added   
-* raw data = starts ofr years 2022-2024  
-```{r}
-ggplot(dat_nnord_from_graph, aes(year, min_ox_annual, color = Vannlokalitetsnavn)) +
-  geom_line() + 
-  geom_point() +
-  geom_point(data = dat_nnord, shape = 8) +
-  geom_hline(yintercept = c(1.5,2.5,3.5,4.5), linetype = "dashed") +
-  facet_wrap(vars(graph_group), ncol = 1, scales = "free_x")
 
-```
+### Calculate station means over the years 2022-2024  
 
-### Mean values 2022-2024  
-* 
 ```{r}
 dat_nnord_from_graph_mean <- dat_nnord_from_graph |> 
   filter(
@@ -327,47 +129,22 @@ dat_nnord_from_graph_mean <- dat_nnord_from_graph |>
   )
 ```
 
-
-## Summary data from report tables  
-
-### Data (dat_rapp_1) 
-* Need only 2024 reports, since they report summary numbers based on the yeasr 2022-2024 - which fits well here    
-* Extracted using MS Copilot  
-* After that, several corrections done for Inner Oslofjord categorization   
-   - Dk1 changed from "god" to "moderat" several others changed to "dårlig"/"meget dårlig"  
-* Note: except for 
-
+### Add Norskehavet nord to main data  (dat_2, dat_3)  
 ```{r}
 
-Sys.setlocale("LC_CTYPE", "Norwegian_Norway.utf8")
-dat_rapp_1 <- read_csv("../data/okokyst_oxygen_classification_2022-2024.csv") |> 
-  mutate(
-    oxygen_nEQR = case_when(
-      region %in% c("Barentshavet","Indre Oslofjord") ~ oxygen_nEQR,
-      TRUE ~ NA)
-  )
+# dat_2 |> head(12) |> tail(7)
 
-```
-
-### Fix for Norskehavet nord (dat_rapp_2)  
-```{r}
-
-# dat_rapp_2 |> head(12) |> tail(7)
-
-dat_rapp_2 <- dat_rapp_1 |> 
+# Add column 'oxygen_ml_l_new'  
+dat_2 <- dat_1 |> 
   left_join(dat_nnord_from_graph_mean, by = join_by(station))
 
-# for check
-dat_rapp_2 |>
+# for checking  
+check <- dat_2 |>
   filter(region %in% "Norskehavet Nord") |> 
   select(station, oxygen_ml_l, oxygen_ml_l_new)
 
-```
-
-### Fix for Norskehavet nord (dat_rapp_3)  
-
-```{r}
-dat_rapp_3 <- dat_rapp_2 |>
+# Update column 'oxygen_ml_l'  
+dat_3 <- dat_2 |>
   mutate(
     # set oxygen_ml_l to oxygen_ml_l_new for rows with new station values
     oxygen_ml_l = case_when(
@@ -379,26 +156,123 @@ dat_rapp_3 <- dat_rapp_2 |>
 
 ```
 
-### Plot oxygen concentration  
+
+## Add Outer Oslofjord data   
+
+- For Outer Oslofjord, there were no acceptable oxygen data in 2024 due to instrument problems   
+- We use 2022-2024 data instead (from NIVA's archives)
+
+### Read data
 ```{r}
 
-dat_rapp_3 |> 
+dat_yo <- read_csv("../data/okokyst_oxygen_ytreoslofjord_2021-2023.csv",
+                   show_col_types = FALSE) |> 
+  mutate(
+    region = "Ytre Oslofjord",
+    period = "2021-2023",
+    Betegnelse = case_when(
+      Stasjon %in% "SF-1/SF-3" ~ "SF-3",
+      TRUE ~ Stasjon)
+  ) |> 
+  rename(
+    station = Stasjon,
+    watertype = Vanntype,
+    oxygen_pct_sat = oxygen_sat,
+  ) |> 
+  select(
+    -Salinitet, -Vannlokalitetsnavn
+  )
+
+```
+
+### Add to main data  
+```{r}
+
+dat_4 <- bind_rows(dat_3, dat_yo)
+
+
+# Set order for "region" variable  
+region_order <- c(
+  "Barentshavet", "Norskehavet Nord", "Norskehavet Sør", "Nordsjøen", 
+  "Skagerrak", "Ytre Oslofjord", "Indre Oslofjord")
+
+dat_4 <- dat_4 |> 
+  mutate(region = factor(region, levels = region_order))
+    
+```
+
+
+### Test plot for final oxygen concentration data   
+
+```{r}
+#| fig-height: 7
+#| fig-width: 7
+dat_4 |> 
   arrange(oxygen_ml_l) |> 
   mutate(
     x = paste(region, station),
     x = fct_inorder(x)
   ) |> 
-  ggplot(aes(x, oxygen_ml_l, fill = status)) +
+  ggplot(aes(x, oxygen_ml_l, fill = region)) +
   geom_col() +
   geom_hline(yintercept = c(1.5,2.5,3.5,4.5)) +
   coord_flip()
 
 ```
 
-### Plot nEQR  
+## Add station metadata  
+
+### Station metadata  
 ```{r}
 
-ggplot(dat_rapp_3, aes(paste(region, station), oxygen_nEQR, fill = status)) +
+# station metadata  
+dat_station_metadata1 <- read_excel("../data/vm_okokyst_ctd_stations.xlsx")
+dat_station_metadata2 <- read_excel("../data/vm_indreoslo_ctd_stations.xlsx")  
+
+dat_station_metadata <- bind_rows(dat_station_metadata1,
+                                  dat_station_metadata2) |>  
+  rename(
+    Vannlokalitet_id = `Vannlokalitet ID`,
+    Vannforekomst_id = `Vannforekomst ID`) |> 
+  mutate(
+    Betegnelse = case_when(
+      Vannlokalitetsnavn %in% "Indre Oslofjord, Bunnebotten" ~ "Gp 2",
+      Vannlokalitetsnavn %in% "Østerelva, Kallera" ~ "I-4",
+      Vannlokalitetsnavn %in% "Skjebergkilen ved Sildevika" ~ "SKJ-1",
+      Vannlokalitetsnavn %in% "Sponvika" ~ "SP-1",
+      Vannlokalitetsnavn %in% "Bolærne" ~ "BO-1",
+      Vannlokalitetsnavn %in% "Ringdalsfjorden, Isebakke" ~ "R-5",
+      Vannlokalitetsnavn %in% "Krokstadfjorden" ~ "KF-1",
+      Vannlokalitetsnavn %in% "Bolærne" ~ "BO-1",
+      TRUE ~ Betegnelse)
+  )
+
+```
+
+### Add metadata to data (dat_5)
+```{r}
+dat_5 <- dat_4 |> 
+  left_join(
+    dat_station_metadata |> 
+      select(Betegnelse, Vannlokalitet_id, ,
+             Vannforekomst_id,
+             Breddegrad, Lengdegrad),
+    by = join_by(Betegnelse)
+  )
+
+```
+
+
+
+## Add nEQR  
+
+* Where nEQR is given in the report, we use it (Indre Oslofjord, Barentshavet)  
+* If not, it is calculated from oxygen concentration  
+
+### Plot nEQR from reports   
+```{r}
+
+ggplot(dat_5, aes(paste(region, station), oxygen_nEQR, fill = region)) +
   geom_col() +
   geom_hline(yintercept = c(0,1)) +
   geom_hline(yintercept = c(0.2,0.4,0.6,0.8), linetype = "dashed") +
@@ -406,24 +280,29 @@ ggplot(dat_rapp_3, aes(paste(region, station), oxygen_nEQR, fill = status)) +
 
 ```
 
-### Plot nEQR vs concentration   
+### Plot nEQR vs concentration, from reports   
 ```{r}
 
-ggplot(dat_rapp_3, aes(oxygen_ml_l, oxygen_nEQR, color = status)) +
+ggplot(dat_5, aes(oxygen_ml_l, oxygen_nEQR, color = region)) +
   geom_point() +
+  # status limits  
   geom_vline(xintercept = c(1.5,2.5,3.5,4.5)) +
+  # expected line nEQR ~ oxygen concentration (two parts); 
   geom_hline(yintercept = c(0,1)) +
   geom_hline(yintercept = c(0.2,0.4,0.6,0.8), linetype = "dashed") +
-  # geom_abline(intercept = -0.1, slope = 0.2, color = "brown")
   geom_segment(x = 0, y = 0, xend = 1.5, yend = 0.2) +
   geom_segment(x = 1.5, y = 0.2, xend = 5.5, yend = 1)
 
 ```
 
-## dat_rapp: Calculate missing nEQR  
+### Calculate missing nEQR values (dat)   
+* for oxygen_ml_l between 0 and 1.5: nEQR = 0.133*oxygen_ml_l   
+* for oxygen_ml_l between 1.5 and 5.5: nEQR = -0.5 + 0.2*oxygen_ml_l   
 ```{r}
 
-dat_rapp <- dat_rapp_3 |> 
+# two different regression lines (for oxygen_ml_l below / above 1.5)  
+# in addition, oxygen_nEQR should not be >1 or <0  
+dat <- dat_5 |> 
   mutate(
     oxygen_nEQR = case_when(
       !is.na(oxygen_nEQR) ~ oxygen_nEQR,
@@ -434,10 +313,10 @@ dat_rapp <- dat_rapp_3 |>
   )
 ```
 
-### Plot nEQR vs concentration   
+### Plot nEQR vs concentration, final     
 ```{r}
 
-ggplot(dat_rapp, aes(oxygen_ml_l, oxygen_nEQR, color = status)) +
+ggplot(dat, aes(oxygen_ml_l, oxygen_nEQR, color = region)) +
   geom_point() +
   geom_vline(xintercept = c(1.5,2.5,3.5,4.5)) +
   geom_hline(yintercept = c(0,1)) +
@@ -448,30 +327,49 @@ ggplot(dat_rapp, aes(oxygen_ml_l, oxygen_nEQR, color = status)) +
 
 ```
 
-## Find national mean  
 
-### Raw mean (equal weight to each station)  
-* Inner Oslo fjord has more than two times the weight of Barentshavet  
 
-```{r}
-# raw mean
-mod1 <- lm(oxygen_nEQR ~ 1, data = dat_rapp)
-summary(mod1)$coef
+## Find mean values  
 
-table(dat_rapp$region)  
 
-```
 
-### Marginal mean - equal weight to each ecoregion    
-* Inner Oslo fjord and Barentshavet have equal weight
+### Means by region 
+* Using marginal mean - equal weight to each water body (Vannforekomst)           
 ```{r}
 
-# mean putting equal weight on ecoregions
-mod2 <- lm(oxygen_nEQR ~ region, data = dat_rapp)
-emmeans(mod2, ~1)
-
-
+# mean putting equal weight on water body
+mod <- lm(oxygen_nEQR ~ region + Vannforekomst_id,data = dat)
+means_region <- emmeans(mod, ~region)  
+means_region_s <- summary(means_region) |> as.data.frame()
+str(means_region_s)
+means_region
 ```
 
+### Plot regional means    
+```{r}
+ggplot(means_region_s, aes(emmean, fct_rev(region))) +
+  geom_col(fill = "lightblue") +
+  geom_errorbarh(aes(xmin = lower.CL, xmax = upper.CL), width = 0.2) +
+  labs(
+    x = "mean nEQR",
+    y = "Ecoregion"
+  )
+```
+
+
+
+### National mean     
+* Each region have equal weight (independent of number of stations)  
+```{r}
+
+# mean putting equal weight on regions
+means_national <- emmeans(mod, ~1)
+means_national_s <- summary(means_national)
+means_national
+```
+
+## Final result  
+
+The national nEQR mean (giving equal weight to regions) is `r round(means_national_s$emmean, 3)` with a standard error of `r round(means_national_s$SE, 3).  
 
 
