@@ -12,7 +12,128 @@ editor_options:
 ---
 
 
+## 1. Summary
 
+- **Background and rationale**: Dissolved oxygen concentration in bottom waters is a key indicator of the ecological condition of coastal marine ecosystems. Oxygen is essential for the survival of benthic fauna and fish and for the functioning of biogeochemical processes in sediments. Reduced oxygen concentrations may occur naturally in deep or poorly ventilated water bodies, but anthropogenic nutrient enrichment (eutrophication) can exacerbate oxygen depletion through increased organic matter production and decomposition. Severe oxygen depletion may lead to habitat loss, altered species composition, reduced biodiversity, and, in extreme cases, total loss of all organisms except anaerobic microrganisms.
+
+- **Methods**: Dissolved oxygen is one of the indicators that is measured and reported in connection with the *Water Framework Directive* (hereafter **WFD**). In Norway, the WFD is implemented through *Vannforskriften*, and the ecological classification of oxygen conditions follows national guidelines (DGVF 2026). Measurements of oxygen concentration from coastal bottom waters are archived in the *Vannmiljø* database. Estimation follows a dataflow that has been described and documented earlier and consists of the following steps:
+
+  - Selection of representative measurement stations  
+  - Measuring oxygen concentrations (and calculating oxygen saturation) in the entire water column including the bottom-water   
+  - Extracting minimum oxygen concentration for each station during the year  
+  - Scaling and transforming measurements to “normalized Ecological Quality Ratios” (nEQR) according to the normative definitions of ecological status categories provided by the WFD  
+  - Aggregating estimates geographically  
+
+- **Interpretation**: An indicator value above 0.8 indicates oxygen conditions with insignificant human impact. Under pristine conditions, we expect the indicator to be approximately 1 unless the water body has low water exchange. An indicator value of zero corresponds to zero dissolved oxygen and total loss of higher life forms.   
+
+## 2. About the underlying data
+
+### 2.1 Spatial and temporal resolution and extent
+
+*Spatial resolution*: The spatial base unit of WFD oxygen indicators is the water body. Oxygen measurements are collected from coastal water bodies throughout Norway and archived in Vannmiljø. The indicator is based on oxygen conditions in bottom waters (deep water), reflecting the suitability of benthic habitats and the degree of oxygen depletion.
+
+*Temporal* resolution: The nEQR is is normally based on measurements aggregated over a period of at least three consecutive years. 
+  
+
+### 2.2 Sampling design
+
+Dissolved oxygen concentration is measured using calibrated oxygen sensors or by chemical analysis of water samples collected near the seabed.
+
+The indicator is intended to capture the period and location where oxygen concentrations are lowest and ecological effects are most likely to occur. Consequently, the assessment is generally based on the lowest relevant oxygen values observed during the assessment period.
+
+Water bodies and stations have been hand-picked with the goal to be as representative as possible for the general conditions in the area. The number of monitored water bodies is low (<3 %) compared to the number of Norwegian coastal water bodies. Most water bodies have only one station. Some locations are monitored specifically because oxygen depletion is suspected or known to occur, whereas others are selected because they are considered reference sites.
+
+### 2.3 Original units
+
+Dissolved oxygen has been measured in millilitres per litre (ml L⁻¹) or percent saturation (%). In the WFD assessment framework, values are converted to normalized Ecological Quality Ratios (nEQRs) between 0 and 1, which constitute the ecosystem-condition indicator. For the purpose of this analysis, we use the nEQR sacle except that we do not truncate the indicator too the 0-1 range. As a result, if the miniumum oxygen concentration is above 5.5, the index will be slightly above 1, while the nEQR should be 1. 
+
+### 2.4 Instructions for citing, using and accessing data
+
+WFD monitoring data are publicly available through *Vannmiljø*. Information on water bodies and water-body typologies can be obtained from *Vann-Nett* and associated geospatial datasets distributed by the Norwegian Environment Agency.
+
+## 3. Indicator properties
+
+The indicator **NIVA_Oksygen** represents ecological condition based on oxygen availability in coastal bottom waters. The indicator value corresponds to the WFD-derived nEQR for oxygen, bit is not truncated at 0 and 1.  
+
+### 3.1 Ecosystem Condition Typology Class (ECT)
+
+The ECT of bottom-water oxygen is **A2 (chemical state)** because it characterizes the chemical condition of the water column, although it affects ecosystem functioning through its influence on species composition, habitat suitability, and benthic ecosystem processes.
+
+#### 3.1.1 Other condition typologies
+
+In the Norwegian classification of ecological characteristics (*økologiske egenskaper*), oxygen concentration is most closely associated with **abiotic factors**, as it describes a physicochemical property of the aquatic environment.
+
+Within the WFD classification system, oxygen belongs to the **supporting physicochemical quality elements** used in the assessment of ecological status.
+
+### 3.2 Ecosystem condition characteristic
+
+Intact coastal ecosystems are characterized by oxygen concentrations that support naturally occurring benthic and pelagic communities. High oxygen concentrations indicate good exchange between water masses and balanced ecosystem functioning. Reduced oxygen concentrations may indicate excessive organic loading, eutrophication, restricted water exchange, or altered hydrographic conditions.  
+
+### 3.3 Impact factors
+
+Bottom-water oxygen conditions may be affected by:
+
+- Increased primary production and sedimentation of organic matter, due to anthropogentic nutrient enrichment and eutrophication  
+- Reduced water exchange caused by local hydrodynamic conditions.
+- Climate-driven increases in water temperature, which reduce oxygen solubility.
+- Changes in freshwater discharge and stratification.
+
+### 3.4 Spatial aggregation
+
+We estimate marginal means per region as well as nationally, using a statistical model with water body as a random effect. This puts equal weight to each water body (Vannforekomst) irrespective of the number of stations in the water body. As we treat water body as a random effect )as opposed to a fixed effect), we take into account that the measured water bodies are just a sample of the existing water bodies. This yields a more conservative estimate, i.e. higher SE and wider confidence intervals. The R package emmeans was used for estimating marginal means.  
+
+## 4. Reference condition and levels
+
+### 4.1 Reference condition
+
+The WFD defines the reference condition as the bottom-water oxygen levels expected under little or no anthropogenic influence, i.e. as expected under natural hydrographic conditions and without significant anthropogenic eutrophication or organic loading.
+
+For coastal water bodies, the Norwegian classification system defines high ecological status as oxygen concentrations exceeding 4.5 ml O₂ l⁻¹ or oxygen saturation exceeding 65% in bottom waters. These thresholds are regarded as representing conditions where oxygen availability is sufficient to sustain naturally occurring benthic communities with little or no evidence of human-induced degradation. 
+
+### 4.2 Reference levels
+
+Ecological status is classified using threshold values corresponding to the status classes bad, poor, moderate, good, and high. These thresholds are defined in the national classification guidance and vary among water-body types because oxygen conditions depend on hydrography, salinity, depth, and natural stratification patterns.
+
+The indicator is expressed as a normalized Ecological Quality Ratio (nEQR), where:
+
+| Ecological status | Oxygen (ml O₂ l⁻¹) | Oxygen saturation (%) |
+|-------------------|--------------------|-----------------------|
+| High              | > 4.5              | > 65                  |
+| Good              | 4.5-3.5            | 65-50                 |
+| Moderate          | 3.5-2.5            | 50-35                 |
+| Poor              | 2.5-1.5            | 35-20                 |
+| Bad               | < 1.5              | < 20                  |
+
+nEQR intervals are given as follows:  
+
+| Ecological status | nEQR interval |
+|-------------------|--------------|
+| High              | 0.8-1.0      |
+| Good              | 0.6-0.8      |
+| Moderate          | 0.4-0.6      |
+| Poor              | 0.2-0.4      |
+| Bad               | 0.0-0.2      |
+
+
+
+#### 4.2.1 Spatial resolution and validity
+
+Reference values are defined at the water-body level and vary among coastal water-body types. Only <3% of water bodies are monitored. On the other hand, waater-bodeis have been picked by experts in order to be representive of general conditions in the area.
+
+## 5. Uncertainties
+
+### 5.1 General uncertainties
+
+The principal source of uncertainty is sampling error because only a subset of Norwegian coastal water bodies is monitored. Additional uncertainty arises from:
+
+- Temporal (betyween-year) variability in oxygen conditions. Infrequent events such as water mass renewal over fjord sills often have a large impact on oxygen conditions.  
+- Spatial variability within water bodies.  
+- Sensor calibration and measurement error. Sensors are routinely tested and calibrated under controlled conditions.   
+- The extrapolation of conditions to water bodies lacking measurements.  
+
+### 5.2 Reported uncertainties
+
+Reported uncertainties are inferential and reflect uncertainty around the estimated indicator values, using water body as the sample unit (see 3.4). 
 
 
 ```{r packages}
@@ -21,18 +142,21 @@ editor_options:
 
 library(dplyr)
 library(purrr)      # map()
-library(forcats)  
+library(forcats)    # fct_inorder
 library(lubridate)  # year(), month()
 library(ggplot2)
 library(ggeasy)
-library(cowplot)
 library(readr)      # read_csv()
 library(readxl)     # read_excel()
 library(emmeans)    # emmeans()
+library(lme4)       # lmer()
+library(huxtable)   # as_hux, set_number_format, set_bold, set_bottom_border
 
 getwd()
 # setwd()
 ```
+
+## 6. Code for data assembly and analysis  
 
 ## Read main data (dat_1) 
 * Need only 2024 reports, since they report summary numbers based on the yeasr 2022-2024 - which fits well here    
