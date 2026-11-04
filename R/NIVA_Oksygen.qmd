@@ -111,12 +111,15 @@ ggplot(dat_nnord_from_graph, aes(year, min_ox_annual, color = Vannlokalitetsnavn
   geom_line() + 
   geom_point() +
   geom_hline(yintercept = c(1.5,2.5,3.5,4.5), linetype = "dashed") +
-  facet_wrap(vars(graph_group), ncol = 1, scales = "free_x")
+  facet_wrap(vars(graph_group), ncol = 1, scales = "free_x") + 
+  theme_bw()
 
 ```
 
 
-### Calculate station means over the years 2022-2024  
+### Calculate minimum oxygen value over the years 2022-2024   
+
+* Calculated on per-station basis  
 
 ```{r}
 dat_nnord_from_graph_mean <- dat_nnord_from_graph |> 
@@ -125,7 +128,7 @@ dat_nnord_from_graph_mean <- dat_nnord_from_graph |>
   group_by(
     station) |> 
   summarise(
-    oxygen_ml_l_new = mean(min_ox_annual)
+    oxygen_ml_l_new = min(min_ox_annual)
   )
 ```
 
@@ -202,7 +205,7 @@ dat_4 <- dat_4 |>
 ```
 
 
-### Test plot for final oxygen concentration data   
+### Test plot for oxygen concentration data   
 
 ```{r}
 #| fig-height: 7
@@ -216,7 +219,8 @@ dat_4 |>
   ggplot(aes(x, oxygen_ml_l, fill = region)) +
   geom_col() +
   geom_hline(yintercept = c(1.5,2.5,3.5,4.5)) +
-  coord_flip()
+  coord_flip() + 
+  theme_bw()
 
 ```
 
@@ -266,7 +270,7 @@ dat_5 <- dat_4 |>
 
 ## Add nEQR  
 
-* Where nEQR is given in the report, we use it (Indre Oslofjord, Barentshavet)  
+* Where nEQR is given in the report (Indre Oslofjord, Barentshavet)  
 * If not, it is calculated from oxygen concentration  
 
 ### Plot nEQR from reports   
@@ -276,7 +280,8 @@ ggplot(dat_5, aes(paste(region, station), oxygen_nEQR, fill = region)) +
   geom_col() +
   geom_hline(yintercept = c(0,1)) +
   geom_hline(yintercept = c(0.2,0.4,0.6,0.8), linetype = "dashed") +
-  coord_flip()
+  coord_flip() + 
+  theme_bw()
 
 ```
 
@@ -291,39 +296,41 @@ ggplot(dat_5, aes(oxygen_ml_l, oxygen_nEQR, color = region)) +
   geom_hline(yintercept = c(0,1)) +
   geom_hline(yintercept = c(0.2,0.4,0.6,0.8), linetype = "dashed") +
   geom_segment(x = 0, y = 0, xend = 1.5, yend = 0.2) +
-  geom_segment(x = 1.5, y = 0.2, xend = 5.5, yend = 1)
+  geom_segment(x = 1.5, y = 0.2, xend = 5.5, yend = 1) + 
+  theme_bw()
 
 ```
 
-### Calculate missing nEQR values (dat)   
+### Calculate oxygen index missing nEQR values (dat)   
+* the index is very similar to nEQR, except that for the purpose of making indicators for ecosystem condition, we choose to not truncate the index to the interval 0-1 (oxygen conecntrations above 5.5 will get index > 1, but nEQR will be = 1)   
 * for oxygen_ml_l between 0 and 1.5: nEQR = 0.133*oxygen_ml_l   
 * for oxygen_ml_l between 1.5 and 5.5: nEQR = -0.5 + 0.2*oxygen_ml_l   
 ```{r}
 
 # two different regression lines (for oxygen_ml_l below / above 1.5)  
-# in addition, oxygen_nEQR should not be >1 or <0  
+# oxygen_nEQR should normally not be >1 or <0  
+
 dat <- dat_5 |> 
   mutate(
-    oxygen_nEQR = case_when(
+    oxygen_index = case_when(
       !is.na(oxygen_nEQR) ~ oxygen_nEQR,
-      oxygen_ml_l >= 5.5 ~ 1,
       oxygen_ml_l >= 1.5 ~ -0.1 + 0.2*oxygen_ml_l,
-      oxygen_ml_l >= 0 ~ 0.2/1.5*oxygen_ml_l,
-      oxygen_ml_l < 0 ~ 0)
+      oxygen_ml_l < 1.5 ~ 0.2/1.5*oxygen_ml_l)
   )
 ```
 
-### Plot nEQR vs concentration, final     
+### Plot index vs concentration, final     
 ```{r}
 
-ggplot(dat, aes(oxygen_ml_l, oxygen_nEQR, color = region)) +
+ggplot(dat, aes(oxygen_ml_l, oxygen_index, color = region)) +
   geom_point() +
   geom_vline(xintercept = c(1.5,2.5,3.5,4.5)) +
   geom_hline(yintercept = c(0,1)) +
   geom_hline(yintercept = c(0.2,0.4,0.6,0.8), linetype = "dashed") +
   # geom_abline(intercept = -0.1, slope = 0.2, color = "brown")
   geom_segment(x = 0, y = 0, xend = 1.5, yend = 0.2) +
-  geom_segment(x = 1.5, y = 0.2, xend = 5.5, yend = 1)
+  geom_segment(x = 1.5, y = 0.2, xend = 5.5, yend = 1) + 
+  theme_bw()
 
 ```
 
@@ -331,45 +338,87 @@ ggplot(dat, aes(oxygen_ml_l, oxygen_nEQR, color = region)) +
 
 ## Find mean values  
 
-
-
 ### Means by region 
-* Using marginal mean - equal weight to each water body (Vannforekomst)           
-```{r}
+* We estimate marginal means per region (using R package emmeans)  
+* This puts equal weight to each water body (Vannforekomst) irrespective of the number of stations in the water body  
+* Also, we treat water body as a random effect, i.e. we take into account that the large majority of water bodies are not sampled    
 
-# mean putting equal weight on water body
-mod <- lm(oxygen_nEQR ~ region + Vannforekomst_id,data = dat)
+```{r}
+# start table  
+tab_region <- dat |> 
+  count(region, period, Vannforekomst_id) |> 
+  group_by(region, period) |> 
+  summarise(
+    n_stations = sum(n),
+    n_waterbodies = n()
+  )
+# tab_regions
+
+# estimate means per region, using water body as main unit
+# treating water body as a random effect (this to some extent taking into 
+# account that the large majority of water bodies are not covered)
+
+# statistical model
+mod <- lmer(
+  oxygen_index ~ region + (1 | Vannforekomst_id),
+  data = dat
+)
+# estimate marginal means  
 means_region <- emmeans(mod, ~region)  
 means_region_s <- summary(means_region) |> as.data.frame()
-str(means_region_s)
-means_region
+
+# add to table
+tab_region$index_mean <- means_region_s$emmean
+tab_region$index_SE <- means_region_s$SE
+tab_region$CI95_lo <- means_region_s$asymp.LCL
+tab_region$CI95_up <- means_region_s$asymp.UCL
+
+tab_region <- tab_region |>
+  select(region, period, index_mean, index_SE, CI95_lo, CI95_up, n_waterbodies, n_stations)
+  
+tab_region |> 
+  as_hux() |> 
+  set_number_format(row = -1, col = 3:6, value = 3) |> 
+  set_bold(row = 1, col = everywhere) 
+
+
 ```
-
-### Plot regional means    
-```{r}
-ggplot(means_region_s, aes(emmean, fct_rev(region))) +
-  geom_col(fill = "lightblue") +
-  geom_errorbarh(aes(xmin = lower.CL, xmax = upper.CL), width = 0.2) +
-  labs(
-    x = "mean nEQR",
-    y = "Ecoregion"
-  )
-```
-
-
 
 ### National mean     
 * Each region have equal weight (independent of number of stations)  
 ```{r}
+tab_national <- dat |> 
+  mutate(region = "Norway") |>
+  count(region, Vannforekomst_id) |> 
+  group_by(region) |> 
+  summarise(
+    n_stations = sum(n),
+    n_waterbodies = n()
+  )
 
 # mean putting equal weight on regions
 means_national <- emmeans(mod, ~1)
 means_national_s <- summary(means_national)
-means_national
+
+# 
+tab_national$index_mean <- means_national_s$emmean
+tab_national$index_SE <- means_national_s$SE
+tab_national$CI95_lo <- means_national_s$asymp.LCL
+tab_national$CI95_up <- means_national_s$asymp.UCL
+
+tab_national <- tab_national |>
+  select(region, index_mean, index_SE, CI95_lo, CI95_up, n_waterbodies, n_stations)
+  
+tab_national |> 
+  as_hux() |> 
+  set_number_format(col = 2:5, value = 3) |> 
+  set_bold(row = 1, col = everywhere) 
+
+
 ```
 
 ## Final result  
 
-The national nEQR mean (giving equal weight to regions) is `r round(means_national_s$emmean, 3)` with a standard error of `r round(means_national_s$SE, 3).  
+The national nEQR mean (giving equal weight to regions) is `r round(means_national_s$emmean, 3)` with a standard error of `r round(means_national_s$SE, 3)`.  
 
 
