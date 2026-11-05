@@ -80,7 +80,7 @@ Bottom-water oxygen conditions may be affected by:
 
 ### 3.4 Spatial aggregation
 
-We estimate marginal means per region as well as nationally, using a statistical model with water body as a random effect. This puts equal weight to each water body (Vannforekomst) irrespective of the number of stations in the water body. As we treat water body as a random effect )as opposed to a fixed effect), we take into account that the measured water bodies are just a sample of the existing water bodies. This yields a more conservative estimate, i.e. higher SE and wider confidence intervals. The R package emmeans was used for estimating marginal means.  
+We estimate marginal means per region as well as nationally, using a statistical model with water body as a random effect. This puts equal weight to each water body (Vannforekomst) irrespective of the number of stations in the water body. As we treat water body as a random effect )as opposed to a fixed effect), we take into account that the measured water bodies are just a sample of the existing water bodies. This yields a more conservative estimate, i.e. higher SE and wider confidence intervals. The R package emmeans was used for estimating marginal means. We estimated the national mean both by giving equal weight to the 7 "report areas" (5 Økokyst areas + Inner Oslofjord + Outer Oslofjord), and also by making an area-weighted average (See details in the code part below).  
 
 ## 4. Reference condition and levels
 
