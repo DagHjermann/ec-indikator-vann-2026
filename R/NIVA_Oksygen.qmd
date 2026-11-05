@@ -690,3 +690,144 @@ tab_national_w |>
 Putting equal weight on the "report areas", the national nEQR mean (giving equal weight to regions) is `r round(means_national_s$emmean, 3)` with a standard error of `r round(means_national_s$SE, 3)`. Weighting the data by region area yields a national nEQR mean of `r round(means_national_s_w$estimate, 3)` with a standard error of `r round(means_national_s_w$SE, 3)`.
 
 
+
+
+```{r, code_appendix}
+
+if (FALSE){
+  
+  ## CODE APPENDIX: calculating areas of region2 ('lookup_region2_areas' above)
+  
+  library(dplyr)
+  library(sf)
+  library(datapasta)  # tribble_paste(), not strictly necesssary but handy
+  
+  #
+  # 1. Read geodata for marine ecoregions  
+  #
+  
+  # downloaded from GeoNoirge Kartlatalogen
+  # https://kartkatalog.geonorge.no/metadata/administrative-omraader-vanndirektivet-wms/50263c33-74bc-4ea8-b44e-a0c470e57904
+  
+  wb_orig <- read_sf("C:/Data/Mapdata/NVE_Water_framework_directive/NVEData/Vanndirektiv_OekoregionMarin.geojson")  
+  # wb_orig$arealKvadratkilometer
+  # wb_orig$oekoregionMarinnavn
+  
+  # transform to long. lat (for leaflet)  
+  wb <- wb_orig |> 
+    st_transform(4326)
+  
+  #
+  # 2. Split Skagerrak region in two: "Indre Oslofjord" and "Skagerrak/Ytre Oslofjord"
+  #
+  
+  wb_skag <- wb |> 
+    filter(oekoregionMarinnavn == "Skagerak")
+  plot(wb_skag["oekoregionMarinnavn"])  
+  
+  
+  # use leaflet to define a rectangle encompassing Indre Oslofjord  
+  # (by reading mouse coordinates from the screen)  
+  library(leaflet)
+  library(leafem)
+  
+  leaflet(wb_skag) |> 
+    addTiles() |> 
+    addPolygons() |> 
+    addMouseCoordinates()
+  # lower left corner: 10.453, 59.667
+  # upper right corner:10.90, 59.95
+  
+  # Rectangle coordinates (lon/lat)
+  rect_coords <- matrix(
+    c(
+      10.453, 59.667,  # lower left
+      10.900, 59.667,  # lower right
+      10.900, 59.950,  # upper right
+      10.453, 59.950,  # upper left
+      10.453, 59.667   # close polygon
+    ),
+    ncol = 2,
+    byrow = TRUE
+  )
+  
+  # Create geodata from rectangle coordinates
+  rect_sf <- st_sf(
+    geometry = st_sfc(
+      st_polygon(list(rect_coords)),
+      crs = 4326
+    )
+  )
+  
+  # Transform rectangle to same CRS as waterbody layer
+  rect_sf <- st_transform(rect_sf, st_crs(wb))
+  # plot(rect_sf)
+  
+  # Skagerak polygon
+  skag <- wb %>%
+    filter(oekoregionMarinnavn == "Skagerak")
+  
+  # find and repair geometry problem
+  st_is_valid(skag)
+  st_is_valid(rect_sf)
+  skag <- st_make_valid(skag)
+  
+  # Part inside rectangle
+  skag_rect <- st_intersection(skag, rect_sf)
+  
+  # Remaining part
+  skag_rest <- st_difference(skag, st_geometry(rect_sf))
+  
+  # Give distinct names
+  skag_rect$oekoregionMarinnavn <- "Indre Oslofjord"
+  skag_rest$oekoregionMarinnavn <- "Skagerrak/Ytre Oslofjord"
+  
+  #
+  # 3. Replace the old Skagerrak region with the two parts 
+  #
+  
+  # Replace original polygon with the two new ones
+  wb_new <- wb %>%
+    filter(oekoregionMarinnavn != "Skagerak") %>%
+    bind_rows(skag_rect, skag_rest)
+  
+  #
+  # 4. Add area column  
+  #
+  
+  # find and repair geometry problem
+  st_is_valid(wb_new)
+  wb_new <- st_make_valid(wb_new) 
+  
+  # add area column
+  wb_new$area_km2 <- as.numeric(
+    units::set_units(st_area(
+      wb_new), km^2) |> round(0)
+  ) 
+  
+  # Check all areas
+  plot(wb_new["oekoregionMarinnavn"])  
+  # Check the manipulated areas
+  check <- wb_new |> 
+    filter(oekoregionMarinnavn %in% c("Skagerrak/Ytre Oslofjord", "Indre Oslofjord"))
+  plot(check["oekoregionMarinnavn"])  
+  
+  # 
+  # 5. Get area data  
+  #
+  
+  # Get areas as data frame
+  dat_area1 <- wb_new |>
+    st_drop_geometry() |> 
+    datapasta::tribble_paste()
+  
+  
+  
+}
+
+
+
+```
+
+
+
