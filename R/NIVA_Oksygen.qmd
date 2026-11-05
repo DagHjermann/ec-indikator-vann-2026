@@ -8,7 +8,7 @@ format:
     toc-depth: 3
     smooth-scroll: true
 editor_options: 
-  chunk_output_type: console
+  chunk_output_type: console  
 ---
 
 
@@ -150,10 +150,22 @@ library(readr)      # read_csv()
 library(readxl)     # read_excel()
 library(emmeans)    # emmeans()
 library(lme4)       # lmer()
-library(huxtable)   # as_hux, set_number_format, set_bold, set_bottom_border
 
-getwd()
-# setwd()
+# not strictly necessary for essential results
+library(huxtable)   # as_hux, set_number_format, set_bold, set_bottom_border
+library(here)
+library(leaflet)    # leaflet mapping
+library(leafem)     # addMouseCoordinates()
+
+# for emmeans:
+emm_options(
+  lmer.df = "asymptotic"
+)
+
+if (interactive()){
+  here::here("R") |> setwd()
+}
+
 ```
 
 ## 6. Code for data assembly and analysis  
@@ -308,7 +320,9 @@ dat_yo <- read_csv("../data/okokyst_oxygen_ytreoslofjord_2021-2023.csv",
   ) |> 
   select(
     -Salinitet, -Vannlokalitetsnavn
-  )
+  ) |> 
+  filter(
+    station != "I-5")
 
 ```
 
@@ -458,6 +472,22 @@ ggplot(dat, aes(oxygen_ml_l, oxygen_index, color = region)) +
 
 ```
 
+## Map of regions    
+```{r}
+
+library(leaflet)
+library(leafem)
+
+# set colours
+cols <- c("black", "pink2", "brown", "green3", "purple", "blue", "red")
+factpal <- colorFactor(cols, dat$region)
+
+leaflet(dat) |> 
+  addTiles() |> 
+  addCircles(lng = ~Lengdegrad, lat = ~Breddegrad, color = ~factpal(region)) |> 
+  addMouseCoordinates()
+
+```
 
 
 ## Find mean values  
@@ -474,7 +504,7 @@ tab_region <- dat |>
   group_by(region, period) |> 
   summarise(
     n_stations = sum(n),
-    n_waterbodies = n()
+    n_waterbodies = n(), .groups = "drop"
   )
 # tab_regions
 
@@ -483,12 +513,12 @@ tab_region <- dat |>
 # account that the large majority of water bodies are not covered)
 
 # statistical model
-mod <- lmer(
+mod1 <- lmer(
   oxygen_index ~ region + (1 | Vannforekomst_id),
   data = dat
 )
 # estimate marginal means  
-means_region <- emmeans(mod, ~region)  
+means_region <- emmeans(mod1, ~region)  
 means_region_s <- summary(means_region) |> as.data.frame()
 
 # add to table
@@ -508,7 +538,7 @@ tab_region |>
 
 ```
 
-### National mean     
+### National mean, without area weighting    
 * Each region have equal weight (independent of number of stations)  
 ```{r}
 tab_national <- dat |> 
@@ -521,7 +551,7 @@ tab_national <- dat |>
   )
 
 # mean putting equal weight on regions
-means_national <- emmeans(mod, ~1)
+means_national <- emmeans(mod1, ~1)
 means_national_s <- summary(means_national)
 
 # 
@@ -541,8 +571,122 @@ tab_national |>
 
 ```
 
+
+### Set region2  
+* We set region2 for the purpose of area-weighting of indices  
+* region2 is equal to ecoregions except that "Indre Oslofjord" is split off from "Skagerrak" and "Ytre Oslofjord"  
+* The rest of the Skagerrak area we call "Skagerrak/Ytre Oslofjord", as "Skagerrak" and "Ytre Oslofjord" overlap spatially  
+```{r}
+
+region2_order <- c(
+  "Barentshavet", "Norskehavet Nord", "Norskehavet Sør", "Nordsjøen", 
+  "Skagerrak/Ytre Oslofjord", "Indre Oslofjord")
+
+dat <- dat |> 
+  mutate(
+    region2 = case_when(
+      region %in% c("Skagerrak", "Ytre Oslofjord") ~ "Skagerrak/Ytre Oslofjord",
+      TRUE ~ region),
+    region2 = factor(region2, levels = region2_order)
+  ) 
+
+```
+
+### region2 areas  
+* Calculated elsewhere  
+```{r}
+# 6533 + 7136 = 13669
+lookup_region2_areas <- tibble::tribble(
+                  ~region2, ~area_km2,
+         "Norskehavet Sør",     33405,
+        "Norskehavet Nord",     29091,
+               "Nordsjøen",     13669,
+            "Barentshavet",     17337,
+         "Indre Oslofjord",       211,
+"Skagerrak/Ytre Oslofjord",      3856
+) 
+```
+
+### Means by region2   
+
+```{r}
+# start table  
+tab_region2 <- dat |> 
+  count(region2, Vannforekomst_id) |> 
+  group_by(region2) |> 
+  summarise(
+    n_stations = sum(n),
+    n_waterbodies = n()
+  ) |> 
+  left_join(
+    lookup_region2_areas, by = join_by(region2))
+# tab_region2
+
+# estimate means per region2, using water body as main unit
+# treating water body as a random effect (this to some extent taking into 
+# account that the large majority of water bodies are not covered)
+
+# statistical model
+mod2 <- lmer(
+  oxygen_index ~ region2 + (1 | Vannforekomst_id),
+  data = dat
+)
+# estimate marginal means  
+means_region2 <- emmeans(mod2, ~region2)  
+means_region2_s <- summary(means_region2) |> as.data.frame()
+
+# add to table
+tab_region2$index_mean <- means_region2_s$emmean
+tab_region2$index_SE <- means_region2_s$SE
+tab_region2$CI95_lo <- means_region2_s$asymp.LCL
+tab_region2$CI95_up <- means_region2_s$asymp.UCL
+
+tab_region2 <- tab_region2 |>
+  select(region2, area_km2, index_mean, index_SE, CI95_lo, CI95_up, n_waterbodies, n_stations)
+  
+tab_region2 |> 
+  as_hux() |> 
+  set_number_format(row = -1, col = 2, value = "%i") |> 
+  set_number_format(row = -1, col = 4:6, value = 3) |> 
+  set_bold(row = 1, col = everywhere) 
+
+
+```
+
+
+### National mean, with area weighting    
+* Each region have equal weight (independent of number of stations)  
+```{r}
+tab_national_w <- tab_national |> 
+  select(region, n_waterbodies, n_stations)
+
+w <- tab_region2$area_km2 / sum(tab_region2$area_km2)
+national <- contrast(
+  means_region2,
+  method = list(
+    "National mean" = w
+  )
+)
+means_national_s_w <- summary(national, infer = TRUE)
+
+# 
+tab_national_w$index_mean <- means_national_s_w$estimate
+tab_national_w$index_SE <- means_national_s_w$SE
+tab_national_w$CI95_lo <- means_national_s_w$asymp.LCL
+tab_national_w$CI95_up <- means_national_s_w$asymp.UCL
+
+tab_national_w <- tab_national_w |>
+  select(region, index_mean, index_SE, CI95_lo, CI95_up, n_waterbodies, n_stations)
+  
+tab_national_w |> 
+  as_hux() |> 
+  set_number_format(col = 2:5, value = 3) |> 
+  set_bold(row = 1, col = everywhere) 
+
+```
+
 ## Final result  
 
-The national nEQR mean (giving equal weight to regions) is `r round(means_national_s$emmean, 3)` with a standard error of `r round(means_national_s$SE, 3)`.  
+Putting equal weight on the "report areas", the national nEQR mean (giving equal weight to regions) is `r round(means_national_s$emmean, 3)` with a standard error of `r round(means_national_s$SE, 3)`. Weighting the data by region area yields a national nEQR mean of `r round(means_national_s_w$estimate, 3)` with a standard error of `r round(means_national_s_w$SE, 3)`.
 
 
