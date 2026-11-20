@@ -18,10 +18,10 @@ WFD2ECA_KLFA <- function(
   rapportaar = c(2012, 2015, 2018, 2021, 2024),
   rapportenhet = c("norge", "landsdel"),
   adminAar = 2010,
-  kommHist = "../data/knr.xlsx",
-  fylkHist = "../data/fnr.xlsx",
-  paramFil = "../data/VM-param.xlsx",
-  aktivFil = "../data/VM-aktiv.xlsx",
+  kommHist = datasti("knr.xlsx"),
+  fylkHist = datasti("fnr.xlsx"),
+  paramFil = datasti("VM-param.xlsx"),
+  aktivFil = datasti("VM-aktiv.xlsx"),
   rapportperiode = 3,
   vedMaalefeil = "dato",
   maksSkjevhet = 3,
@@ -395,9 +395,9 @@ WFD2ECA_KLFA <- function(
   if (OK & EQR %!=% FALSE) {
     # Lese inn klassegrenser for den angitte parameteren
     if (is.null(filKlasser)) {
-      filKlasser   <-  "../data/klassegrenser_" %+% parameter_season %+% ".xlsx" ## added paramater_season ND
+      filKlasser   <-  datasti("klassegrenser_" %+% parameter_season %+% ".xlsx") ## added paramater_season ND
       if (!file.exists(filKlasser)) {
-        filKlasser <- "klassegr/klassegrenser_" %+% parameter_season %+% ".xlsx" ## added paramater_season ND
+        filKlasser <- datasti("klassegr", "klassegrenser_" %+% parameter_season %+% ".xlsx") ## added paramater_season ND
       }
     }
     KlasseGrenser <- hentKlassegrenser(filKlasser)

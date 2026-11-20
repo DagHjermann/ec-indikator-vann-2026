@@ -8,7 +8,7 @@
 
 
 lesVannforekomster <- function(vannkategori = c("L", "R", "C"),
-                               filsti = "../data",
+                               filsti = datasti(),  ## ND/DHJ: var "../data"; settes av paths_ND.R
                                kolonnenavn = "navnVN.csv",
                                turbid = TRUE,
                                NVEnavn = c("SHAPE",

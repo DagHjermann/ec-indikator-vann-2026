@@ -23,6 +23,11 @@ library(raster)
 library(httr)
 library(jsonlite)
 library(stringr)
+library(here)
+
+## ND/DHJ: stier settes med here::here() i paths_ND.R, slik at skriptet
+## kan kjores uansett hvilken mappe som er working directory
+source(here::here("R", "Code_Secchi_NitroSommer_FosforSommer", "paths_ND.R"))
 
 
 ## ND
@@ -34,11 +39,11 @@ account_year <- 2024
 
 ## HS   ## ND in comments in order to not reinstall the whole package and klassegrenser for the indicator in lakes each time we run the script
 
-# if(!file.exists("../data/VF.RData")) {
+# if(!file.exists(datasti("VF.RData"))) {
 #   download.file("https://zenodo.org/records/17702361/files/NINAnor/WFD2ECA-v2.1.zip",
-#                 "../data/WFD2ECA.zip")
-#   folder <- "../data/WFD2ECA"
-#   unzip("../data/WFD2ECA.zip", exdir = folder)
+#                 datasti("WFD2ECA.zip"))
+#   folder <- datasti("WFD2ECA")
+#   unzip(datasti("WFD2ECA.zip"), exdir = folder)
 #   while (length(list.files(folder)) == 1) {
 #     folder <- paste0(folder, "/", list.files(folder))
 #   }
@@ -57,41 +62,42 @@ account_year <- 2024
 #     "VM-param.xlsx"
 #   )
 #   dummy <- file.copy(from = paste0(folder, "/data/", whichDataFile),
-#                      to   = "../data/",
+#                      to   = datasti(),
 #                      overwrite = FALSE)
 #   dummy <- file.copy(from = paste0(folder,
 #                                    "/klassegr/klassegrenser_",
 #                                    indikator, 
 #                                    ".xlsx"),
-#                      to   = "../data/",
+#                      to   = datasti(),
 #                      overwrite = FALSE)
 #   dummy <- file.copy(from = list.files(paste0(folder, "/R/"), full.names = TRUE),
-#                      to   = ".",
+#                      to   = kodesti(),
 #                      overwrite = FALSE)
-#   dummy <- file.remove("../data/WFD2ECA.zip")
-#   unlink("../data/WFD2ECA", recursive = TRUE)
+#   dummy <- file.remove(datasti("WFD2ECA.zip"))
+#   unlink(datasti("WFD2ECA"), recursive = TRUE)
 # }
 
 ## HS
 
-source("Funksjon.R")
-for (filnavn in list.files(".", full.names = TRUE)) {
-  if (substr(filnavn, nchar(filnavn), nchar(filnavn)) %=% "R") {
+source(kodesti("Funksjon.R"))
+masterskript <- c("KLFA.R", "SECCI.R", "NTOTs.R", "PTOTs.R", "paths_ND.R")
+for (filnavn in list.files(kodesti(), pattern = "\\.R$", full.names = TRUE)) {
+  if (!(basename(filnavn) %in% masterskript)) {
     source(filnavn)
   }
 }
 
 ## HS
 
-head(as.data.frame(read_xlsx("../data/klassegrenser_" %+% indikator_season %+% ".xlsx", col_types = "text")))
+head(as.data.frame(read_xlsx(datasti("klassegrenser_" %+% indikator_season %+% ".xlsx"), col_types = "text")))
 
 ## HS
 
-head(as.data.frame(read_xlsx("../data/VM-aktiv.xlsx", col_types = "text")))
+head(as.data.frame(read_xlsx(datasti("VM-aktiv.xlsx"), col_types = "text")))
 
 ## HS
 
-DATA <- lesMaalinger(indikator,medium="VS") #modified ND -> added medium="VS"
+DATA <- lesMaalinger(indikator, medium = "VS", filsti = datasti()) #modified ND -> added medium="VS"
 
 ## HS
 
@@ -105,8 +111,8 @@ DATA <- lesMaalinger(indikator,medium="VS") #modified ND -> added medium="VS"
 
 ## HS modified ND
 
-VL <- lesVannlokaliteter(vannkategori="C",API = TRUE) # modified ND -> added vannkategori="C"
-#VL <- readRDS("VL_C_save.rds") # added ND saved copy of VL 30.10.2026 for coastal water bodies
+VL <- lesVannlokaliteter(vannkategori = "C", API = TRUE, filsti = datasti()) # modified ND -> added vannkategori="C"
+#VL <- readRDS(datasti("VL_C_save.rds")) # added ND saved copy of VL 30.10.2026 for coastal water bodies
 
 ## HS
 
@@ -115,7 +121,7 @@ head(VL)
 
 ## HS
 
-V <- lesVannforekomster(vannkategori="C") # modified ND -> added vannkategori="C" 
+V <- lesVannforekomster(vannkategori = "C", filsti = datasti()) # modified ND -> added vannkategori="C" 
 # modified ND -> added a code line in lesVannforkomster to fix error in downloaded database 
 
 ## HS
@@ -159,7 +165,7 @@ head(V)
   ml$maaling <- sapply(sapply(ml$maaling, max, xlim[1]), min, xlim[2])
   ml <- ml[order(ml$maaling, decreasing = !snudd), ]
   
-  load("../data/Norge.map")
+  load(datasti("Norge.map"))
   par(mai = rep(0, 4))
   plot(Norge.kontur, xlim = c(3.5, 31.5), ylim = c(57.5, 71.5), 
        xaxs = "i", yaxs = "i", asp = 2, col = grey(0.84), border = NA)
@@ -185,7 +191,7 @@ head(V)
 
 ## HS MODIFIED ND
 
-klassegrenser <- hentKlassegrenser("../data/klassegrenser_" %+% indikator_season %+% ".xlsx")
+klassegrenser <- hentKlassegrenser(datasti("klassegrenser_" %+% indikator_season %+% ".xlsx"))
 
 if (nrow(klassegrenser) > 1) {
   m <- matrix(0, 8, 2, dimnames = list(
@@ -482,7 +488,7 @@ head(summary_mean)
 
 ################################################################################
 
-utmating <- WFD2ECA_ND(
+utmating <- WFD2ECA_KLFA(
   DATA = summary_mean,
   vannforekomster = V,
   vannlokaliteter = VL,

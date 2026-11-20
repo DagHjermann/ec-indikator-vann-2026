@@ -69,12 +69,12 @@ hentKlassegrenser <- function(filKlasser) {
                 hvilke <- kl
               } else {
                 if (!exists("gamleTyper")) {
-                  if (file.exists("R/vanntype.R")) {
-                    source("R/vanntype.R")
+                  if (file.exists(kodesti("vanntype.R"))) {
+                    source(kodesti("vanntype.R"))
                   } else {
                     filOK <- FALSE
                     skriv("Fila \"vanntype.R\" med variabelen \"gamleTyper\" ble",
-                          "ikke funnet! Fila forventes å ligge i mappa \"R\".",
+                          "ikke funnet! Fila forventes å ligge i kodemappa.",
                           pre = "FEIL: ", linjer.over = 1, linjer.under = 1)
                     gamleTyper <- list()
                   }

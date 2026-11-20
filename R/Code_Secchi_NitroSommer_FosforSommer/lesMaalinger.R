@@ -8,7 +8,7 @@
 
 
 lesMaalinger <- function(parameter,
-                         filsti = "../data",
+                         filsti = datasti(),  ## ND/DHJ: var "../data"; settes av paths_ND.R
                          kolonnenavn = "navnVM.csv",
                          medium = "VF",
                          ...) {

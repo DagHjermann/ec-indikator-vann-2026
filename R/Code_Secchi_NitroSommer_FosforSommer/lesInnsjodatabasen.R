@@ -8,7 +8,7 @@
 
 
 lesInnsjodatabasen <- function(filnavn = "Innsjo_Innsjo.dbf",
-                               filsti = "../data",
+                               filsti = datasti(),  ## ND/DHJ: var "../data"; settes av paths_ND.R
                                kolonnenavn = "navnNVEl.csv",
                                CACHE = NULL) {
   

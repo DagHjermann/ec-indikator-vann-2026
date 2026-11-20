@@ -16,23 +16,35 @@ https://github.com/NINAnor/WFD2ECA
 
 
 
-The codes are located in the "Code" folder
+The code is located in the folder `R/Code_Secchi_NitroSommer_FosforSommer`
 
 
 
-The Data ( .RData files .xlsx files .csv files .map files) are located in the "data" folder
+The data (.RData, .xlsx, .csv and .map files) are located in the folder `data/data_Secchi_NitroSommer_FosforSommer`
 
 
 
-Folder indicator
-
+```
+ec-indikator-vann-2026
 |
-
-|\_\_Code
-
+|__ R
+|   |__ Code_Secchi_NitroSommer_FosforSommer
 |
+|__ data
+    |__ data_Secchi_NitroSommer_FosforSommer
+```
 
-|\_\_data
+**Paths**
+
+All paths are built from the project root with `here::here()`, through the two helper
+functions defined in `paths_ND.R`:
+
+* `kodesti(...)` points into `R/Code_Secchi_NitroSommer_FosforSommer`
+* `datasti(...)` points into `data/data_Secchi_NitroSommer_FosforSommer`
+
+`paths_ND.R` is sourced at the top of each master script, so the scripts can be run
+from any working directory. The working directory no longer has to be set to the code
+folder, and no relative `"../data"` paths are used.
 
 
 
@@ -44,15 +56,15 @@ By running the first section of the code (KLFA.R, SECCI.R, NTOTs.R, PTOTs.R)
 
 
 
-\# if(!file.exists("../data/VF.RData")) {
+\# if(!file.exists(datasti("VF.RData"))) {
 
 \#   download.file("https://zenodo.org/records/17702361/files/NINAnor/WFD2ECA-v2.1.zip",
 
-\#                 "../data/WFD2ECA.zip")
+\#                 datasti("WFD2ECA.zip"))
 
-\#   folder <- "../data/WFD2ECA"
+\#   folder <- datasti("WFD2ECA")
 
-\#   unzip("../data/WFD2ECA.zip", exdir = folder)
+\#   unzip(datasti("WFD2ECA.zip"), exdir = folder)
 
 \#   while (length(list.files(folder)) == 1) {
 
@@ -90,7 +102,7 @@ By running the first section of the code (KLFA.R, SECCI.R, NTOTs.R, PTOTs.R)
 
 \#   dummy <- file.copy(from = paste0(folder, "/data/", whichDataFile),
 
-\#                      to   = "../data/",
+\#                      to   = datasti(),
 
 \#                      overwrite = FALSE)
 
@@ -102,25 +114,25 @@ By running the first section of the code (KLFA.R, SECCI.R, NTOTs.R, PTOTs.R)
 
 \#                                    ".xlsx"),
 
-\#                      to   = "../data/",
+\#                      to   = datasti(),
 
 \#                      overwrite = FALSE)
 
 \#   dummy <- file.copy(from = list.files(paste0(folder, "/R/"), full.names = TRUE),
 
-\#                      to   = ".",
+\#                      to   = kodesti(),
 
 \#                      overwrite = FALSE)
 
-\#   dummy <- file.remove("../data/WFD2ECA.zip")
+\#   dummy <- file.remove(datasti("WFD2ECA.zip"))
 
-\#   unlink("../data/WFD2ECA", recursive = TRUE)
+\#   unlink(datasti("WFD2ECA"), recursive = TRUE)
 
 \# }
 
 
 
-from the Code folder, the above code will download the R files and data files in the Sandsvik repository and save them respectively the Code in the data folders. 
+the above code will download the R files and data files from the Sandvik repository and save them in the code and data folders respectively. 
 
 
 
@@ -132,9 +144,12 @@ Some of the downloaded codes will need to be replaced by the given codes in this
 
 
 
-* WFD2ECA\_ND.R
+* WFD2ECA_ND.R
 * mEQR.R
 * lesVannforekomster.R
+* lesMaalinger.R, lesVannlokaliteter.R, lesInnsjodatabasen.R, hentKlassegrenser.R (only the file paths, see **Paths** above)
+
+Note that `paths_ND.R` is not part of the Sandvik package and must not be deleted.
 
 
 
@@ -156,6 +171,13 @@ If you want to run the script for another water type (river or coastal), you may
 \-- End of NOTE--
 
 
+
+**Master scripts**
+
+KLFA.R, SECCI.R, NTOTs.R and PTOTs.R are the four master scripts - one per indicator.
+Each one is run on its own (interactively, section by section) and loads all the other
+.R files in the code folder as function definitions. The other .R files are not meant to
+be run directly.
 
 You may now run the KLFA.R / SECCI.R / NTOTs.R and PTOTs.R codes
 
