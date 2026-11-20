@@ -482,7 +482,7 @@ library(leafem)
 cols <- c("black", "pink2", "brown", "green3", "purple", "blue", "red")
 factpal <- colorFactor(cols, dat$region)
 
-leaflet(dat) |> 
+lf <- leaflet(dat) |> 
   addTiles() |> 
   addCircles(lng = ~Lengdegrad, lat = ~Breddegrad, color = ~factpal(region)) |> 
   addMouseCoordinates()
