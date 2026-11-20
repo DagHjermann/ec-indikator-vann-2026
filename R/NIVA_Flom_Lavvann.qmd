@@ -1031,18 +1031,38 @@ summary(mod)$coef
 
 Thus, we create a flood indicator which should be 1 for the mean of rivers (within the chosen subset) with no dams in their catchment (reference condition), and 0 for rivers where the annual flood has been reduced to 20% of the origican flood size, which we take to be no flood in an ecological sense: 
 
+
 $$
-\text{Flood\_indicator}_i
-= \frac{Flood\_index_{\text{i}} - 0.2}
-           {Flood\_index_{\text{reference}} - 0.2}
+\text{Flood\_indicator}_i = \begin{cases} \dfrac{\text{Flood\_index}_i - 0.2} {\text{Flood\_index}_{\text{reference}} - 0.2}, & \text{if Flood\_index}_i \ge 0.2, \\[1ex] 0, & \text{if Flood\_index}_i < 0.2. \end{cases} 
 $$
+
 where $Flood\_index_{\text{reference}}$ is the mean flood index for rivers with no dams in their catchment.
+
 
 ```{r}
 
 # Reference level 1 = mean for rivers without dams  
 ref_1 <- mean(subset(dat_indekser2, dams == "no dams")$flood_index)
 ref_0 <- 0.20
+```
+
+$Flood\_index_{\text{reference}}$ was found to be `r ref_1`
+
+
+The relationship between the flood indicator and the flood index is shown below:  
+```{r}
+
+ggplot(data = data.frame(x=c(0,0.2,ref_1), y=c(0,0,1)), aes(x=x, y=y)) +
+  geom_segment(x = 0, y = 0, xend = ref_0, yend = 0, color = "red3", linewidth = 1.5) +
+  geom_segment(x = ref_0, y = 0, xend = ref_1, yend = 1, color = "red3", linewidth = 1.5) +
+  scale_x_continuous(breaks = seq(0,1,0.2)) +
+  geom_point(size = 2) +
+  theme_bw() +
+  labs(
+    x = "Flood index", y = "Flood indicator"
+  )
+  
+
 ```
 
 The $Flood\_index_{\text{reference}}$ was found to be `r ref_1`. 
@@ -1064,6 +1084,24 @@ dat_indekser2 <- dat_indekser2 |>
 # range(dat_indekser2$flood_indicator)  
 
 ```
+
+#### Plot  
+
+```{r}
+
+ggplot(dat_indekser2 |> filter(dams == "dams"), 
+       aes(x = flood_index, y = flood_indicator)) +
+  geom_segment(x = 0, y = 0, xend = 0.2, yend = 0, color = "red3", linewidth = 1.5) +
+  geom_segment(x = 0.2, y = 0, xend = ref_1, yend = 1, color = "red3", linewidth = 1.5) +
+  geom_point() +
+  scale_x_continuous(breaks = seq(0,1.8,0.2), limits = c(0,1.5)) +
+  theme_bw() +
+  labs(
+    x = "Flood index", y = "Flood indicator"
+  )
+
+```
+
 
 #### Check the low-water indicator  
 
