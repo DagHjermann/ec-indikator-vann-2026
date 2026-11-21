@@ -11,6 +11,17 @@ source(here("R/NIVA_Fjord_functions.R"))
 # read data
 dat <- read_csv(here("data/NIVA_fjord/regulerte_elver_kyst.csv"))
 
+ggplot(dat, aes(okoregion, andel_qnormal_prosent)) +
+  geom_jitter(width = 0.2) +
+  scale_y_log10() +
+  coord_flip()  
+
+ggplot(dat, aes(andel_qnormal_klasse, andel_qnormal_prosent)) +
+  geom_jitter(width = 0.2) +
+  scale_y_log10() +
+  coord_flip()  
+
+
 # for simplicity, we aggregate by waterbody first 
 # (instead of doing a proper statistical hierarchical approach, which would have given
 #  a slightly lower standard error)
@@ -25,7 +36,7 @@ by_vannforekomst <- dat %>%
 # We drop this (the corresponding marine watre body exists in the data):
 # by_vannforekomst |> filter(vannforekomstid == "0280020402-1-C")
 
-# remove the lake
+# remove the lake (only one)
 by_vannforekomst <- by_vannforekomst |> 
   filter(okoregion != "")
 
