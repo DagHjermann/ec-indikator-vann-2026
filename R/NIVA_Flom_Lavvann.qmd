@@ -653,8 +653,9 @@ plot_grid(gg1, gg2, ncol=1)
 
 dat_indekser <- dat_indekser_1 |> 
   left_join(geo_points, 
-            by = join_by(stasjonsnr), relationship = "many-to-one")  |> 
-  mutate(county = factor(county, levels = county_order))
+            by = join_by(stasjonsnr), relationship = "many-to-one")  |>
+  mutate(county = factor(county, levels = county_order)) |> 
+  st_as_sf(sf_column_name = "geom")
 
 ```
 
@@ -1021,6 +1022,7 @@ dat_indekser |>
 
 ```
 
+
 ### 9.7 Calculate flood indicator  
 
 We create the final flood indicator based on the flood index. Ideally, the flood index should be 1 for the mean of rivers (within the chosen subset) with no dams in their catchment (reference condition). However, it turns out to be signinficanly higher:
@@ -1102,6 +1104,48 @@ ggplot(dat_indekser2 |> filter(dams == "dams"),
 
 ```
 
+
+#### Figure:  flood index vs dams
+
+After selection of subset: flood index vs dams.   
+```{r}
+
+ggplot(dat_indekser2, aes(index_dams, flood_indicator)) +
+  geom_point() +
+  geom_smooth(
+    # data = flood_indicator |> filter(index_dams > 0),
+    method = "lm", linetype = "dashed", color = "red3") +
+  scale_y_log10() +
+  labs(x = "Index of hydropower dams", y = "Flood indicator") +
+  theme(plot.subtitle = element_text(size = 7)) +
+  theme_bw()
+
+```
+
+#### Map flood indicator    
+```{r}
+
+norway_orig <- read_sf("../data/Fylker_simple300.geojson")
+st_crs(norway_orig) <- 4326  
+
+indic_scale <- c(-0.05,0.2,0.4,0.6,0.8,3)
+# dat_indekser2 |> mutate(X = cut(flood_indicator, indic_scale)) |> View()
+                         
+ggplot(dat_indekser2) + 
+  geom_sf(data = norway_orig, aes(geometry = geometry), fill = "grey95") +
+  geom_sf(aes(geometry = geom, 
+              fill = cut(flood_indicator, indic_scale), size = normalQ_m3s), 
+          shape = 21, alpha = 0.4) +
+  scale_fill_brewer(palette = "RdYlBu", direction = 1, name = "Flomindikator") +
+  scale_size(name = "Vannføring") +
+    guides(
+    fill = guide_legend(
+      override.aes = list(size = 8, alpha = 1)
+    )
+  ) +
+  theme_bw()
+
+```
 
 #### Check the low-water indicator  
 
