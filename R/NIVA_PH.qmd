@@ -1003,6 +1003,9 @@ est_overall_region <- bind_rows(
   est_skagerrak_shallow_coastal |> mutate(region = "skagerrak_shallow_coastal")
   )
 
+# dir.create("NIVA_PH_results")
+# writexl::write_xlsx(est_overall_region, "NIVA_PH_results/est_overall_region.xlsx")
+
 est_overall_region
 
 ```
@@ -1013,6 +1016,8 @@ est_overall_region
 
 ggplot(est_overall_region, aes(region, emmean)) +
   geom_pointrange(aes(ymin = lower.CL, ymax = upper.CL)) +
+  labs(x = "Region", y = "pH") +
+  theme_bw() +
   easy_rotate_x_labels(-45)
 
 ```
