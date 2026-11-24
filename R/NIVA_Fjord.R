@@ -11,6 +11,8 @@ source(here("R/NIVA_Fjord_functions.R"))
 # read data
 dat <- read_csv(here("data/NIVA_fjord/regulerte_elver_kyst.csv"))
 
+cat("number of rivers", nrow(dat))
+
 ggplot(dat, aes(okoregion, andel_qnormal_prosent)) +
   geom_jitter(width = 0.2) +
   scale_y_log10() +
@@ -20,7 +22,6 @@ ggplot(dat, aes(andel_qnormal_klasse, andel_qnormal_prosent)) +
   geom_jitter(width = 0.2) +
   scale_y_log10() +
   coord_flip()  
-
 
 # for simplicity, we aggregate by waterbody first 
 # (instead of doing a proper statistical hierarchical approach, which would have given
@@ -40,9 +41,22 @@ by_vannforekomst <- dat %>%
 by_vannforekomst <- by_vannforekomst |> 
   filter(okoregion != "")
 
+cat("number of water bodies", nrow(by_vannforekomst))
+
 # plot
 ggplot(by_vannforekomst, aes(x = okoregion, y = andel_qnormal_klasse)) +
   geom_boxplot()
+
+ggplot(by_vannforekomst, aes(x = fct_rev(okoregion), y = andel_qnormal_klasse)) +
+  geom_jitter(width = 0.2) +
+  coord_flip() +
+  labs(
+    x = "Region", y = "Indikator NIVA_Fjord"
+  ) +
+  theme_bw()
+
+# dir.create("NIVA_Fjord_results")
+# writexl::write_xlsx(by_vannforekomst, "NIVA_Fjord_results/NIVA_Fjord_indikator.xlsx")
 
 # weights - use inverse weightin in order to give equal weight
 # to each ecoregion
