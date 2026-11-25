@@ -3,8 +3,8 @@
 .RData
 .Ruserdata
 R/*_cache/*
-R/*_files/*
-R/*.html
+# R/*.html
+# R/*_files/*
 R/*.tex
 r/NIVA_Oksygen_internal.qmd
 data/*.html
