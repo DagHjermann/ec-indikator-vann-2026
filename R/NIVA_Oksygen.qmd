@@ -690,6 +690,10 @@ tab_national_w |>
 Putting equal weight on the "report areas", the national nEQR mean (giving equal weight to regions) is `r round(means_national_s$emmean, 3)` with a standard error of `r round(means_national_s$SE, 3)`. Weighting the data by region area yields a national nEQR mean of `r round(means_national_s_w$estimate, 3)` with a standard error of `r round(means_national_s_w$SE, 3)`.
 
 
+## Session info  
+```{r}
+sessionInfo()
+```
 
 
 ```{r, code_appendix}

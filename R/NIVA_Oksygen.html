@@ -1,0 +1,1673 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>NIVA_Oksygen</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="NIVA_Oksygen_files/libs/clipboard/clipboard.min.js"></script>
+<script src="NIVA_Oksygen_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="NIVA_Oksygen_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="NIVA_Oksygen_files/libs/quarto-html/popper.min.js"></script>
+<script src="NIVA_Oksygen_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="NIVA_Oksygen_files/libs/quarto-html/anchor.min.js"></script>
+<link href="NIVA_Oksygen_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="NIVA_Oksygen_files/libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="NIVA_Oksygen_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="NIVA_Oksygen_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="NIVA_Oksygen_files/libs/bootstrap/bootstrap-215b371544c282197b31c8aa00ce3677.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<style>html{ scroll-behavior: smooth; }</style>
+<link href="NIVA_Oksygen_files/libs/huxtable-6.0.2/huxtable.css" rel="stylesheet">
+
+
+
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Contents</h2>
+   
+  <ul>
+  <li><a href="#summary" id="toc-summary" class="nav-link active" data-scroll-target="#summary">1. Summary</a></li>
+  <li><a href="#about-the-underlying-data" id="toc-about-the-underlying-data" class="nav-link" data-scroll-target="#about-the-underlying-data">2. About the underlying data</a>
+  <ul class="collapse">
+  <li><a href="#spatial-and-temporal-resolution-and-extent" id="toc-spatial-and-temporal-resolution-and-extent" class="nav-link" data-scroll-target="#spatial-and-temporal-resolution-and-extent">2.1 Spatial and temporal resolution and extent</a></li>
+  <li><a href="#sampling-design" id="toc-sampling-design" class="nav-link" data-scroll-target="#sampling-design">2.2 Sampling design</a></li>
+  <li><a href="#original-units" id="toc-original-units" class="nav-link" data-scroll-target="#original-units">2.3 Original units</a></li>
+  <li><a href="#instructions-for-citing-using-and-accessing-data" id="toc-instructions-for-citing-using-and-accessing-data" class="nav-link" data-scroll-target="#instructions-for-citing-using-and-accessing-data">2.4 Instructions for citing, using and accessing data</a></li>
+  </ul></li>
+  <li><a href="#indicator-properties" id="toc-indicator-properties" class="nav-link" data-scroll-target="#indicator-properties">3. Indicator properties</a>
+  <ul class="collapse">
+  <li><a href="#ecosystem-condition-typology-class-ect" id="toc-ecosystem-condition-typology-class-ect" class="nav-link" data-scroll-target="#ecosystem-condition-typology-class-ect">3.1 Ecosystem Condition Typology Class (ECT)</a></li>
+  <li><a href="#ecosystem-condition-characteristic" id="toc-ecosystem-condition-characteristic" class="nav-link" data-scroll-target="#ecosystem-condition-characteristic">3.2 Ecosystem condition characteristic</a></li>
+  <li><a href="#impact-factors" id="toc-impact-factors" class="nav-link" data-scroll-target="#impact-factors">3.3 Impact factors</a></li>
+  <li><a href="#spatial-aggregation" id="toc-spatial-aggregation" class="nav-link" data-scroll-target="#spatial-aggregation">3.4 Spatial aggregation</a></li>
+  </ul></li>
+  <li><a href="#reference-condition-and-levels" id="toc-reference-condition-and-levels" class="nav-link" data-scroll-target="#reference-condition-and-levels">4. Reference condition and levels</a>
+  <ul class="collapse">
+  <li><a href="#reference-condition" id="toc-reference-condition" class="nav-link" data-scroll-target="#reference-condition">4.1 Reference condition</a></li>
+  <li><a href="#reference-levels" id="toc-reference-levels" class="nav-link" data-scroll-target="#reference-levels">4.2 Reference levels</a></li>
+  </ul></li>
+  <li><a href="#uncertainties" id="toc-uncertainties" class="nav-link" data-scroll-target="#uncertainties">5. Uncertainties</a>
+  <ul class="collapse">
+  <li><a href="#general-uncertainties" id="toc-general-uncertainties" class="nav-link" data-scroll-target="#general-uncertainties">5.1 General uncertainties</a></li>
+  <li><a href="#reported-uncertainties" id="toc-reported-uncertainties" class="nav-link" data-scroll-target="#reported-uncertainties">5.2 Reported uncertainties</a></li>
+  </ul></li>
+  <li><a href="#code-for-data-assembly-and-analysis" id="toc-code-for-data-assembly-and-analysis" class="nav-link" data-scroll-target="#code-for-data-assembly-and-analysis">6. Code for data assembly and analysis</a></li>
+  <li><a href="#read-main-data-dat_1" id="toc-read-main-data-dat_1" class="nav-link" data-scroll-target="#read-main-data-dat_1">Read main data (dat_1)</a></li>
+  <li><a href="#add-correct-norskehavet-nord-data" id="toc-add-correct-norskehavet-nord-data" class="nav-link" data-scroll-target="#add-correct-norskehavet-nord-data">Add correct Norskehavet Nord data</a>
+  <ul class="collapse">
+  <li><a href="#digitized-from-graph" id="toc-digitized-from-graph" class="nav-link" data-scroll-target="#digitized-from-graph">Digitized from graph</a></li>
+  <li><a href="#test-plot" id="toc-test-plot" class="nav-link" data-scroll-target="#test-plot">Test plot</a></li>
+  <li><a href="#calculate-minimum-oxygen-value-over-the-years-2022-2024" id="toc-calculate-minimum-oxygen-value-over-the-years-2022-2024" class="nav-link" data-scroll-target="#calculate-minimum-oxygen-value-over-the-years-2022-2024">Calculate minimum oxygen value over the years 2022-2024</a></li>
+  <li><a href="#add-norskehavet-nord-to-main-data-dat_2-dat_3" id="toc-add-norskehavet-nord-to-main-data-dat_2-dat_3" class="nav-link" data-scroll-target="#add-norskehavet-nord-to-main-data-dat_2-dat_3">Add Norskehavet nord to main data (dat_2, dat_3)</a></li>
+  </ul></li>
+  <li><a href="#add-outer-oslofjord-data" id="toc-add-outer-oslofjord-data" class="nav-link" data-scroll-target="#add-outer-oslofjord-data">Add Outer Oslofjord data</a>
+  <ul class="collapse">
+  <li><a href="#read-data" id="toc-read-data" class="nav-link" data-scroll-target="#read-data">Read data</a></li>
+  <li><a href="#add-to-main-data" id="toc-add-to-main-data" class="nav-link" data-scroll-target="#add-to-main-data">Add to main data</a></li>
+  <li><a href="#test-plot-for-oxygen-concentration-data" id="toc-test-plot-for-oxygen-concentration-data" class="nav-link" data-scroll-target="#test-plot-for-oxygen-concentration-data">Test plot for oxygen concentration data</a></li>
+  </ul></li>
+  <li><a href="#add-station-metadata" id="toc-add-station-metadata" class="nav-link" data-scroll-target="#add-station-metadata">Add station metadata</a>
+  <ul class="collapse">
+  <li><a href="#station-metadata" id="toc-station-metadata" class="nav-link" data-scroll-target="#station-metadata">Station metadata</a></li>
+  <li><a href="#add-metadata-to-data-dat_5" id="toc-add-metadata-to-data-dat_5" class="nav-link" data-scroll-target="#add-metadata-to-data-dat_5">Add metadata to data (dat_5)</a></li>
+  </ul></li>
+  <li><a href="#add-neqr" id="toc-add-neqr" class="nav-link" data-scroll-target="#add-neqr">Add nEQR</a>
+  <ul class="collapse">
+  <li><a href="#plot-neqr-from-reports" id="toc-plot-neqr-from-reports" class="nav-link" data-scroll-target="#plot-neqr-from-reports">Plot nEQR from reports</a></li>
+  <li><a href="#plot-neqr-vs-concentration-from-reports" id="toc-plot-neqr-vs-concentration-from-reports" class="nav-link" data-scroll-target="#plot-neqr-vs-concentration-from-reports">Plot nEQR vs concentration, from reports</a></li>
+  <li><a href="#calculate-oxygen-index-missing-neqr-values-dat" id="toc-calculate-oxygen-index-missing-neqr-values-dat" class="nav-link" data-scroll-target="#calculate-oxygen-index-missing-neqr-values-dat">Calculate oxygen index missing nEQR values (dat)</a></li>
+  <li><a href="#plot-index-vs-concentration-final" id="toc-plot-index-vs-concentration-final" class="nav-link" data-scroll-target="#plot-index-vs-concentration-final">Plot index vs concentration, final</a></li>
+  </ul></li>
+  <li><a href="#map-of-regions" id="toc-map-of-regions" class="nav-link" data-scroll-target="#map-of-regions">Map of regions</a></li>
+  <li><a href="#find-mean-values" id="toc-find-mean-values" class="nav-link" data-scroll-target="#find-mean-values">Find mean values</a>
+  <ul class="collapse">
+  <li><a href="#means-by-region" id="toc-means-by-region" class="nav-link" data-scroll-target="#means-by-region">Means by region</a></li>
+  <li><a href="#national-mean-without-area-weighting" id="toc-national-mean-without-area-weighting" class="nav-link" data-scroll-target="#national-mean-without-area-weighting">National mean, without area weighting</a></li>
+  <li><a href="#set-region2" id="toc-set-region2" class="nav-link" data-scroll-target="#set-region2">Set region2</a></li>
+  <li><a href="#region2-areas" id="toc-region2-areas" class="nav-link" data-scroll-target="#region2-areas">region2 areas</a></li>
+  <li><a href="#means-by-region2" id="toc-means-by-region2" class="nav-link" data-scroll-target="#means-by-region2">Means by region2</a></li>
+  <li><a href="#national-mean-with-area-weighting" id="toc-national-mean-with-area-weighting" class="nav-link" data-scroll-target="#national-mean-with-area-weighting">National mean, with area weighting</a></li>
+  </ul></li>
+  <li><a href="#final-result" id="toc-final-result" class="nav-link" data-scroll-target="#final-result">Final result</a></li>
+  <li><a href="#session-info" id="toc-session-info" class="nav-link" data-scroll-target="#session-info">Session info</a></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">NIVA_Oksygen</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">1. Summary</h2>
+<ul>
+<li><p><strong>Background and rationale</strong>: Dissolved oxygen concentration in bottom waters is a key indicator of the ecological condition of coastal marine ecosystems. Oxygen is essential for the survival of benthic fauna and fish and for the functioning of biogeochemical processes in sediments. Reduced oxygen concentrations may occur naturally in deep or poorly ventilated water bodies, but anthropogenic nutrient enrichment (eutrophication) can exacerbate oxygen depletion through increased organic matter production and decomposition. Severe oxygen depletion may lead to habitat loss, altered species composition, reduced biodiversity, and, in extreme cases, total loss of all organisms except anaerobic microrganisms.</p></li>
+<li><p><strong>Methods</strong>: Dissolved oxygen is one of the indicators that is measured and reported in connection with the <em>Water Framework Directive</em> (hereafter <strong>WFD</strong>). In Norway, the WFD is implemented through <em>Vannforskriften</em>, and the ecological classification of oxygen conditions follows national guidelines (DGVF 2026). Measurements of oxygen concentration from coastal bottom waters are archived in the <em>Vannmiljø</em> database. Estimation follows a dataflow that has been described and documented earlier and consists of the following steps:</p>
+<ul>
+<li>Selection of representative measurement stations<br>
+</li>
+<li>Measuring oxygen concentrations (and calculating oxygen saturation) in the entire water column including the bottom-water<br>
+</li>
+<li>Extracting minimum oxygen concentration for each station during the year<br>
+</li>
+<li>Scaling and transforming measurements to “normalized Ecological Quality Ratios” (nEQR) according to the normative definitions of ecological status categories provided by the WFD<br>
+</li>
+<li>Aggregating estimates geographically</li>
+</ul></li>
+<li><p><strong>Interpretation</strong>: An indicator value above 0.8 indicates oxygen conditions with insignificant human impact. Under pristine conditions, we expect the indicator to be approximately 1 unless the water body has low water exchange. An indicator value of zero corresponds to zero dissolved oxygen and total loss of higher life forms.</p></li>
+</ul>
+</section>
+<section id="about-the-underlying-data" class="level2">
+<h2 class="anchored" data-anchor-id="about-the-underlying-data">2. About the underlying data</h2>
+<section id="spatial-and-temporal-resolution-and-extent" class="level3">
+<h3 class="anchored" data-anchor-id="spatial-and-temporal-resolution-and-extent">2.1 Spatial and temporal resolution and extent</h3>
+<p><em>Spatial resolution</em>: The spatial base unit of WFD oxygen indicators is the water body. Oxygen measurements are collected from coastal water bodies throughout Norway and archived in Vannmiljø. The indicator is based on oxygen conditions in bottom waters (deep water), reflecting the suitability of benthic habitats and the degree of oxygen depletion.</p>
+<p><em>Temporal</em> resolution: The nEQR is is normally based on measurements aggregated over a period of at least three consecutive years.</p>
+</section>
+<section id="sampling-design" class="level3">
+<h3 class="anchored" data-anchor-id="sampling-design">2.2 Sampling design</h3>
+<p>Dissolved oxygen concentration is measured using calibrated oxygen sensors or by chemical analysis of water samples collected near the seabed.</p>
+<p>The indicator is intended to capture the period and location where oxygen concentrations are lowest and ecological effects are most likely to occur. Consequently, the assessment is generally based on the lowest relevant oxygen values observed during the assessment period.</p>
+<p>Water bodies and stations have been hand-picked with the goal to be as representative as possible for the general conditions in the area. The number of monitored water bodies is low (&lt;3 %) compared to the number of Norwegian coastal water bodies. Most water bodies have only one station. Some locations are monitored specifically because oxygen depletion is suspected or known to occur, whereas others are selected because they are considered reference sites.</p>
+</section>
+<section id="original-units" class="level3">
+<h3 class="anchored" data-anchor-id="original-units">2.3 Original units</h3>
+<p>Dissolved oxygen has been measured in millilitres per litre (ml L⁻¹) or percent saturation (%). In the WFD assessment framework, values are converted to normalized Ecological Quality Ratios (nEQRs) between 0 and 1, which constitute the ecosystem-condition indicator. For the purpose of this analysis, we use the nEQR sacle except that we do not truncate the indicator too the 0-1 range. As a result, if the miniumum oxygen concentration is above 5.5, the index will be slightly above 1, while the nEQR should be 1.</p>
+</section>
+<section id="instructions-for-citing-using-and-accessing-data" class="level3">
+<h3 class="anchored" data-anchor-id="instructions-for-citing-using-and-accessing-data">2.4 Instructions for citing, using and accessing data</h3>
+<p>WFD monitoring data are publicly available through <em>Vannmiljø</em>. Information on water bodies and water-body typologies can be obtained from <em>Vann-Nett</em> and associated geospatial datasets distributed by the Norwegian Environment Agency.</p>
+</section>
+</section>
+<section id="indicator-properties" class="level2">
+<h2 class="anchored" data-anchor-id="indicator-properties">3. Indicator properties</h2>
+<p>The indicator <strong>NIVA_Oksygen</strong> represents ecological condition based on oxygen availability in coastal bottom waters. The indicator value corresponds to the WFD-derived nEQR for oxygen, bit is not truncated at 0 and 1.</p>
+<section id="ecosystem-condition-typology-class-ect" class="level3">
+<h3 class="anchored" data-anchor-id="ecosystem-condition-typology-class-ect">3.1 Ecosystem Condition Typology Class (ECT)</h3>
+<p>The ECT of bottom-water oxygen is <strong>A2 (chemical state)</strong> because it characterizes the chemical condition of the water column, although it affects ecosystem functioning through its influence on species composition, habitat suitability, and benthic ecosystem processes.</p>
+<section id="other-condition-typologies" class="level4">
+<h4 class="anchored" data-anchor-id="other-condition-typologies">3.1.1 Other condition typologies</h4>
+<p>In the Norwegian classification of ecological characteristics (<em>økologiske egenskaper</em>), oxygen concentration is most closely associated with <strong>abiotic factors</strong>, as it describes a physicochemical property of the aquatic environment.</p>
+<p>Within the WFD classification system, oxygen belongs to the <strong>supporting physicochemical quality elements</strong> used in the assessment of ecological status.</p>
+</section>
+</section>
+<section id="ecosystem-condition-characteristic" class="level3">
+<h3 class="anchored" data-anchor-id="ecosystem-condition-characteristic">3.2 Ecosystem condition characteristic</h3>
+<p>Intact coastal ecosystems are characterized by oxygen concentrations that support naturally occurring benthic and pelagic communities. High oxygen concentrations indicate good exchange between water masses and balanced ecosystem functioning. Reduced oxygen concentrations may indicate excessive organic loading, eutrophication, restricted water exchange, or altered hydrographic conditions.</p>
+</section>
+<section id="impact-factors" class="level3">
+<h3 class="anchored" data-anchor-id="impact-factors">3.3 Impact factors</h3>
+<p>Bottom-water oxygen conditions may be affected by:</p>
+<ul>
+<li>Increased primary production and sedimentation of organic matter, due to anthropogentic nutrient enrichment and eutrophication<br>
+</li>
+<li>Reduced water exchange caused by local hydrodynamic conditions.</li>
+<li>Climate-driven increases in water temperature, which reduce oxygen solubility.</li>
+<li>Changes in freshwater discharge and stratification.</li>
+</ul>
+</section>
+<section id="spatial-aggregation" class="level3">
+<h3 class="anchored" data-anchor-id="spatial-aggregation">3.4 Spatial aggregation</h3>
+<p>We estimate marginal means per region as well as nationally, using a statistical model with water body as a random effect. This puts equal weight to each water body (Vannforekomst) irrespective of the number of stations in the water body. As we treat water body as a random effect )as opposed to a fixed effect), we take into account that the measured water bodies are just a sample of the existing water bodies. This yields a more conservative estimate, i.e.&nbsp;higher SE and wider confidence intervals. The R package emmeans was used for estimating marginal means. We estimated the national mean both by giving equal weight to the 7 “report areas” (5 Økokyst areas + Inner Oslofjord + Outer Oslofjord), and also by making an area-weighted average (See details in the code part below).</p>
+</section>
+</section>
+<section id="reference-condition-and-levels" class="level2">
+<h2 class="anchored" data-anchor-id="reference-condition-and-levels">4. Reference condition and levels</h2>
+<section id="reference-condition" class="level3">
+<h3 class="anchored" data-anchor-id="reference-condition">4.1 Reference condition</h3>
+<p>The WFD defines the reference condition as the bottom-water oxygen levels expected under little or no anthropogenic influence, i.e.&nbsp;as expected under natural hydrographic conditions and without significant anthropogenic eutrophication or organic loading.</p>
+<p>For coastal water bodies, the Norwegian classification system defines high ecological status as oxygen concentrations exceeding 4.5 ml O₂ l⁻¹ or oxygen saturation exceeding 65% in bottom waters. These thresholds are regarded as representing conditions where oxygen availability is sufficient to sustain naturally occurring benthic communities with little or no evidence of human-induced degradation.</p>
+</section>
+<section id="reference-levels" class="level3">
+<h3 class="anchored" data-anchor-id="reference-levels">4.2 Reference levels</h3>
+<p>Ecological status is classified using threshold values corresponding to the status classes bad, poor, moderate, good, and high. These thresholds are defined in the national classification guidance and vary among water-body types because oxygen conditions depend on hydrography, salinity, depth, and natural stratification patterns.</p>
+<p>The indicator is expressed as a normalized Ecological Quality Ratio (nEQR), where:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Ecological status</th>
+<th>Oxygen (ml O₂ l⁻¹)</th>
+<th>Oxygen saturation (%)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>High</td>
+<td>&gt; 4.5</td>
+<td>&gt; 65</td>
+</tr>
+<tr class="even">
+<td>Good</td>
+<td>4.5-3.5</td>
+<td>65-50</td>
+</tr>
+<tr class="odd">
+<td>Moderate</td>
+<td>3.5-2.5</td>
+<td>50-35</td>
+</tr>
+<tr class="even">
+<td>Poor</td>
+<td>2.5-1.5</td>
+<td>35-20</td>
+</tr>
+<tr class="odd">
+<td>Bad</td>
+<td>&lt; 1.5</td>
+<td>&lt; 20</td>
+</tr>
+</tbody>
+</table>
+<p>nEQR intervals are given as follows:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Ecological status</th>
+<th>nEQR interval</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>High</td>
+<td>0.8-1.0</td>
+</tr>
+<tr class="even">
+<td>Good</td>
+<td>0.6-0.8</td>
+</tr>
+<tr class="odd">
+<td>Moderate</td>
+<td>0.4-0.6</td>
+</tr>
+<tr class="even">
+<td>Poor</td>
+<td>0.2-0.4</td>
+</tr>
+<tr class="odd">
+<td>Bad</td>
+<td>0.0-0.2</td>
+</tr>
+</tbody>
+</table>
+<section id="spatial-resolution-and-validity" class="level4">
+<h4 class="anchored" data-anchor-id="spatial-resolution-and-validity">4.2.1 Spatial resolution and validity</h4>
+<p>Reference values are defined at the water-body level and vary among coastal water-body types. Only &lt;3% of water bodies are monitored. On the other hand, waater-bodeis have been picked by experts in order to be representive of general conditions in the area.</p>
+</section>
+</section>
+</section>
+<section id="uncertainties" class="level2">
+<h2 class="anchored" data-anchor-id="uncertainties">5. Uncertainties</h2>
+<section id="general-uncertainties" class="level3">
+<h3 class="anchored" data-anchor-id="general-uncertainties">5.1 General uncertainties</h3>
+<p>The principal source of uncertainty is sampling error because only a subset of Norwegian coastal water bodies is monitored. Additional uncertainty arises from:</p>
+<ul>
+<li>Temporal (betyween-year) variability in oxygen conditions. Infrequent events such as water mass renewal over fjord sills often have a large impact on oxygen conditions.<br>
+</li>
+<li>Spatial variability within water bodies.<br>
+</li>
+<li>Sensor calibration and measurement error. Sensors are routinely tested and calibrated under controlled conditions.<br>
+</li>
+<li>The extrapolation of conditions to water bodies lacking measurements.</li>
+</ul>
+</section>
+<section id="reported-uncertainties" class="level3">
+<h3 class="anchored" data-anchor-id="reported-uncertainties">5.2 Reported uncertainties</h3>
+<p>Reported uncertainties are inferential and reflect uncertainty around the estimated indicator values, using water body as the sample unit (see 3.4).</p>
+</section>
+</section>
+<section id="code-for-data-assembly-and-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="code-for-data-assembly-and-analysis">6. Code for data assembly and analysis</h2>
+</section>
+<section id="read-main-data-dat_1" class="level2">
+<h2 class="anchored" data-anchor-id="read-main-data-dat_1">Read main data (dat_1)</h2>
+<ul>
+<li>Need only 2024 reports, since they report summary numbers based on the yeasr 2022-2024 - which fits well here<br>
+</li>
+<li>Extracted using MS Copilot<br>
+</li>
+<li>After that, several corrections done for Inner Oslofjord categorization
+<ul>
+<li>Dk1 changed from “god” to “moderat”, several others changed to “dårlig”/“meget dårlig”</li>
+</ul></li>
+</ul>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Sys.setlocale</span>(<span class="st">"LC_CTYPE"</span>, <span class="st">"Norwegian_Norway.utf8"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Norwegian_Norway.utf8"</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>dat_1 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"../data/okokyst_oxygen_classification_2022-2024.csv"</span>,</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">Betegnelse =</span> stringr<span class="sc">::</span><span class="fu">str_extract</span>(station, <span class="st">"([^[[:blank:]]]+)"</span>),</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Betegnelse =</span> <span class="fu">case_when</span>(</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>      Betegnelse <span class="sc">%in%</span> <span class="st">"Dk1"</span> <span class="sc">~</span> <span class="st">"DK1"</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>      Betegnelse <span class="sc">%in%</span> <span class="st">"VT74"</span> <span class="sc">~</span> <span class="st">"BT132/VT74"</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>      region <span class="sc">%in%</span> <span class="st">"Indre Oslofjord"</span> <span class="sc">~</span> <span class="fu">paste</span>(<span class="fu">substr</span>(Betegnelse,<span class="dv">1</span>,<span class="dv">2</span>),</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>                                            <span class="fu">substr</span>(Betegnelse,<span class="dv">3</span>,<span class="dv">3</span>)),</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> Betegnelse)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="add-correct-norskehavet-nord-data" class="level2">
+<h2 class="anchored" data-anchor-id="add-correct-norskehavet-nord-data">Add correct Norskehavet Nord data</h2>
+<ul>
+<li>Problem: the data from table 14 in the 2024 report gives means over much more than 3 years (2013-2024 in one case)<br>
+</li>
+<li>We replace this by finding annual means based on data digitized from figure 19 in report<br>
+</li>
+<li>We then calculate 2022-2024 means from this</li>
+</ul>
+<section id="digitized-from-graph" class="level3">
+<h3 class="anchored" data-anchor-id="digitized-from-graph">Digitized from graph</h3>
+<ul>
+<li>Figure 19 in report</li>
+</ul>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>nnord_lookup_stations <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>station_graph, <span class="sc">~</span>Vannlokalitetsnavn, <span class="sc">~</span>station, </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"VT81 - Alvenes"</span>, <span class="st">"Alvenes"</span>, <span class="st">"VT81 Alvenes"</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"VT82 - Setså"</span>, <span class="st">"Setså"</span>, <span class="st">"VT82 Setså"</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"VT29 - Skrova"</span>, <span class="st">"Skrova"</span>, <span class="st">"VT29 Skrova"</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"VT28 - Tjukeneset"</span>, <span class="st">"Tjukkeneset"</span>, <span class="st">"VT28 Tjukkeneset"</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"VT43 - Kongsbakkeneset"</span>, <span class="st">"Kongsbakkneset"</span>, <span class="st">"VT43 Kongsbakkneset"</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"VR54 - Straumsfjorden"</span>, <span class="st">"Straumsfjorden, Bakkland"</span>, <span class="st">"VR54 Straumsfjorden"</span>,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"VR58 - Ullsfjorden"</span>, <span class="st">"Ullsfjorden"</span>, <span class="st">"VR58 Ullsfjorden"</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>stations_sel <span class="ot">&lt;-</span> <span class="fu">pull</span>(nnord_lookup_stations, Vannlokalitetsnavn)</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>dat_nnord_from_graph <span class="ot">&lt;-</span><span class="fu">read_csv</span>(</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="st">"../data/okokyst_oxygen_norskehavet_nord_digitized.csv"</span>,</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">station_graph =</span> station) <span class="sc">|&gt;</span> </span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add columns Vannlokalitetsnavn and station  </span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    nnord_lookup_stations, <span class="at">by =</span> <span class="fu">join_by</span>(station_graph)) <span class="sc">|&gt;</span> <span class="co"># str()</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">min_ox_annual =</span> oxygen_ml_l) <span class="sc">|&gt;</span> </span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">Vannlokalitetsnavn =</span> <span class="fu">factor</span>(Vannlokalitetsnavn, <span class="at">levels =</span> stations_sel),</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Used to remake Figure 19</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">graph_group =</span> <span class="fu">case_when</span>(</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>      Vannlokalitetsnavn <span class="sc">%in%</span> stations_sel[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>] <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>      Vannlokalitetsnavn <span class="sc">%in%</span> stations_sel[<span class="dv">3</span><span class="sc">:</span><span class="dv">5</span>] <span class="sc">~</span> <span class="dv">2</span>,</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>      Vannlokalitetsnavn <span class="sc">%in%</span> stations_sel[<span class="dv">6</span><span class="sc">:</span><span class="dv">7</span>] <span class="sc">~</span> <span class="dv">3</span>)</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="test-plot" class="level3">
+<h3 class="anchored" data-anchor-id="test-plot">Test plot</h3>
+<ul>
+<li>In order to check the similarity to the original figure</li>
+</ul>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(dat_nnord_from_graph, <span class="fu">aes</span>(year, min_ox_annual, <span class="at">color =</span> Vannlokalitetsnavn)) <span class="sc">+</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span> </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">c</span>(<span class="fl">1.5</span>,<span class="fl">2.5</span>,<span class="fl">3.5</span>,<span class="fl">4.5</span>), <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(graph_group), <span class="at">ncol =</span> <span class="dv">1</span>, <span class="at">scales =</span> <span class="st">"free_x"</span>) <span class="sc">+</span> </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="NIVA_Oksygen_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="calculate-minimum-oxygen-value-over-the-years-2022-2024" class="level3">
+<h3 class="anchored" data-anchor-id="calculate-minimum-oxygen-value-over-the-years-2022-2024">Calculate minimum oxygen value over the years 2022-2024</h3>
+<ul>
+<li>Calculated on per-station basis</li>
+</ul>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dat_nnord_from_graph_mean <span class="ot">&lt;-</span> dat_nnord_from_graph <span class="sc">|&gt;</span> </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    year <span class="sc">%in%</span> <span class="dv">2022</span><span class="sc">:</span><span class="dv">2024</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    station) <span class="sc">|&gt;</span> </span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">oxygen_ml_l_new =</span> <span class="fu">min</span>(min_ox_annual)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="add-norskehavet-nord-to-main-data-dat_2-dat_3" class="level3">
+<h3 class="anchored" data-anchor-id="add-norskehavet-nord-to-main-data-dat_2-dat_3">Add Norskehavet nord to main data (dat_2, dat_3)</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># dat_2 |&gt; head(12) |&gt; tail(7)</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Add column 'oxygen_ml_l_new'  </span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>dat_2 <span class="ot">&lt;-</span> dat_1 <span class="sc">|&gt;</span> </span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(dat_nnord_from_graph_mean, <span class="at">by =</span> <span class="fu">join_by</span>(station))</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># for checking  </span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>check <span class="ot">&lt;-</span> dat_2 <span class="sc">|&gt;</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(region <span class="sc">%in%</span> <span class="st">"Norskehavet Nord"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(station, oxygen_ml_l, oxygen_ml_l_new)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Update column 'oxygen_ml_l'  </span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>dat_3 <span class="ot">&lt;-</span> dat_2 <span class="sc">|&gt;</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># set oxygen_ml_l to oxygen_ml_l_new for rows with new station values</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">oxygen_ml_l =</span> <span class="fu">case_when</span>(</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>      <span class="sc">!</span><span class="fu">is.na</span>(oxygen_ml_l_new) <span class="sc">~</span> oxygen_ml_l_new,</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>      <span class="fu">is.na</span>(oxygen_ml_l_new) <span class="sc">~</span> oxygen_ml_l)</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  <span class="co"># remove oxygen_ml_l_new</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>oxygen_ml_l_new)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+</section>
+<section id="add-outer-oslofjord-data" class="level2">
+<h2 class="anchored" data-anchor-id="add-outer-oslofjord-data">Add Outer Oslofjord data</h2>
+<ul>
+<li>For Outer Oslofjord, there were no acceptable oxygen data in 2024 due to instrument problems<br>
+</li>
+<li>We use 2022-2024 data instead (from NIVA’s archives)</li>
+</ul>
+<section id="read-data" class="level3">
+<h3 class="anchored" data-anchor-id="read-data">Read data</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>dat_yo <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"../data/okokyst_oxygen_ytreoslofjord_2021-2023.csv"</span>,</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">region =</span> <span class="st">"Ytre Oslofjord"</span>,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">period =</span> <span class="st">"2021-2023"</span>,</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">Betegnelse =</span> <span class="fu">case_when</span>(</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>      Stasjon <span class="sc">%in%</span> <span class="st">"SF-1/SF-3"</span> <span class="sc">~</span> <span class="st">"SF-3"</span>,</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> Stasjon)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">station =</span> Stasjon,</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">watertype =</span> Vanntype,</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">oxygen_pct_sat =</span> oxygen_sat,</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>    <span class="sc">-</span>Salinitet, <span class="sc">-</span>Vannlokalitetsnavn</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>    station <span class="sc">!=</span> <span class="st">"I-5"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="add-to-main-data" class="level3">
+<h3 class="anchored" data-anchor-id="add-to-main-data">Add to main data</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>dat_4 <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(dat_3, dat_yo)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Set order for "region" variable  </span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>region_order <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Barentshavet"</span>, <span class="st">"Norskehavet Nord"</span>, <span class="st">"Norskehavet Sør"</span>, <span class="st">"Nordsjøen"</span>, </span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Skagerrak"</span>, <span class="st">"Ytre Oslofjord"</span>, <span class="st">"Indre Oslofjord"</span>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>dat_4 <span class="ot">&lt;-</span> dat_4 <span class="sc">|&gt;</span> </span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">region =</span> <span class="fu">factor</span>(region, <span class="at">levels =</span> region_order))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="test-plot-for-oxygen-concentration-data" class="level3">
+<h3 class="anchored" data-anchor-id="test-plot-for-oxygen-concentration-data">Test plot for oxygen concentration data</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>dat_4 <span class="sc">|&gt;</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(oxygen_ml_l) <span class="sc">|&gt;</span> </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">paste</span>(region, station),</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">fct_inorder</span>(x)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(x, oxygen_ml_l, <span class="at">fill =</span> region)) <span class="sc">+</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">c</span>(<span class="fl">1.5</span>,<span class="fl">2.5</span>,<span class="fl">3.5</span>,<span class="fl">4.5</span>)) <span class="sc">+</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span> </span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="NIVA_Oksygen_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="add-station-metadata" class="level2">
+<h2 class="anchored" data-anchor-id="add-station-metadata">Add station metadata</h2>
+<section id="station-metadata" class="level3">
+<h3 class="anchored" data-anchor-id="station-metadata">Station metadata</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># station metadata  </span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>dat_station_metadata1 <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"../data/vm_okokyst_ctd_stations.xlsx"</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>dat_station_metadata2 <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"../data/vm_indreoslo_ctd_stations.xlsx"</span>)  </span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>dat_station_metadata <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(dat_station_metadata1,</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>                                  dat_station_metadata2) <span class="sc">|&gt;</span>  </span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">Vannlokalitet_id =</span> <span class="st">`</span><span class="at">Vannlokalitet ID</span><span class="st">`</span>,</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">Vannforekomst_id =</span> <span class="st">`</span><span class="at">Vannforekomst ID</span><span class="st">`</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">Betegnelse =</span> <span class="fu">case_when</span>(</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>      Vannlokalitetsnavn <span class="sc">%in%</span> <span class="st">"Indre Oslofjord, Bunnebotten"</span> <span class="sc">~</span> <span class="st">"Gp 2"</span>,</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>      Vannlokalitetsnavn <span class="sc">%in%</span> <span class="st">"Østerelva, Kallera"</span> <span class="sc">~</span> <span class="st">"I-4"</span>,</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>      Vannlokalitetsnavn <span class="sc">%in%</span> <span class="st">"Skjebergkilen ved Sildevika"</span> <span class="sc">~</span> <span class="st">"SKJ-1"</span>,</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>      Vannlokalitetsnavn <span class="sc">%in%</span> <span class="st">"Sponvika"</span> <span class="sc">~</span> <span class="st">"SP-1"</span>,</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>      Vannlokalitetsnavn <span class="sc">%in%</span> <span class="st">"Bolærne"</span> <span class="sc">~</span> <span class="st">"BO-1"</span>,</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>      Vannlokalitetsnavn <span class="sc">%in%</span> <span class="st">"Ringdalsfjorden, Isebakke"</span> <span class="sc">~</span> <span class="st">"R-5"</span>,</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>      Vannlokalitetsnavn <span class="sc">%in%</span> <span class="st">"Krokstadfjorden"</span> <span class="sc">~</span> <span class="st">"KF-1"</span>,</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>      Vannlokalitetsnavn <span class="sc">%in%</span> <span class="st">"Bolærne"</span> <span class="sc">~</span> <span class="st">"BO-1"</span>,</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> Betegnelse)</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="add-metadata-to-data-dat_5" class="level3">
+<h3 class="anchored" data-anchor-id="add-metadata-to-data-dat_5">Add metadata to data (dat_5)</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>dat_5 <span class="ot">&lt;-</span> dat_4 <span class="sc">|&gt;</span> </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    dat_station_metadata <span class="sc">|&gt;</span> </span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">select</span>(Betegnelse, Vannlokalitet_id, ,</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>             Vannforekomst_id,</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>             Breddegrad, Lengdegrad),</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">join_by</span>(Betegnelse)</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+</section>
+<section id="add-neqr" class="level2">
+<h2 class="anchored" data-anchor-id="add-neqr">Add nEQR</h2>
+<ul>
+<li>Where nEQR is given in the report (Indre Oslofjord, Barentshavet)<br>
+</li>
+<li>If not, it is calculated from oxygen concentration</li>
+</ul>
+<section id="plot-neqr-from-reports" class="level3">
+<h3 class="anchored" data-anchor-id="plot-neqr-from-reports">Plot nEQR from reports</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(dat_5, <span class="fu">aes</span>(<span class="fu">paste</span>(region, station), oxygen_nEQR, <span class="at">fill =</span> region)) <span class="sc">+</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">c</span>(<span class="fl">0.2</span>,<span class="fl">0.4</span>,<span class="fl">0.6</span>,<span class="fl">0.8</span>), <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span> </span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 45 rows containing missing values or values outside the scale range
+(`geom_col()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="NIVA_Oksygen_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="plot-neqr-vs-concentration-from-reports" class="level3">
+<h3 class="anchored" data-anchor-id="plot-neqr-vs-concentration-from-reports">Plot nEQR vs concentration, from reports</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(dat_5, <span class="fu">aes</span>(oxygen_ml_l, oxygen_nEQR, <span class="at">color =</span> region)) <span class="sc">+</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># status limits  </span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">c</span>(<span class="fl">1.5</span>,<span class="fl">2.5</span>,<span class="fl">3.5</span>,<span class="fl">4.5</span>)) <span class="sc">+</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># expected line nEQR ~ oxygen concentration (two parts); </span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">c</span>(<span class="fl">0.2</span>,<span class="fl">0.4</span>,<span class="fl">0.6</span>,<span class="fl">0.8</span>), <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> <span class="dv">0</span>, <span class="at">xend =</span> <span class="fl">1.5</span>, <span class="at">yend =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">x =</span> <span class="fl">1.5</span>, <span class="at">y =</span> <span class="fl">0.2</span>, <span class="at">xend =</span> <span class="fl">5.5</span>, <span class="at">yend =</span> <span class="dv">1</span>) <span class="sc">+</span> </span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 45 rows containing missing values or values outside the scale range
+(`geom_point()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="NIVA_Oksygen_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="calculate-oxygen-index-missing-neqr-values-dat" class="level3">
+<h3 class="anchored" data-anchor-id="calculate-oxygen-index-missing-neqr-values-dat">Calculate oxygen index missing nEQR values (dat)</h3>
+<ul>
+<li>the index is very similar to nEQR, except that for the purpose of making indicators for ecosystem condition, we choose to not truncate the index to the interval 0-1 (oxygen conecntrations above 5.5 will get index &gt; 1, but nEQR will be = 1)<br>
+</li>
+<li>for oxygen_ml_l between 0 and 1.5: nEQR = 0.133*oxygen_ml_l<br>
+</li>
+<li>for oxygen_ml_l between 1.5 and 5.5: nEQR = -0.5 + 0.2*oxygen_ml_l</li>
+</ul>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># two different regression lines (for oxygen_ml_l below / above 1.5)  </span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co"># oxygen_nEQR should normally not be &gt;1 or &lt;0  </span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> dat_5 <span class="sc">|&gt;</span> </span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">oxygen_index =</span> <span class="fu">case_when</span>(</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>      <span class="sc">!</span><span class="fu">is.na</span>(oxygen_nEQR) <span class="sc">~</span> oxygen_nEQR,</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>      oxygen_ml_l <span class="sc">&gt;=</span> <span class="fl">1.5</span> <span class="sc">~</span> <span class="sc">-</span><span class="fl">0.1</span> <span class="sc">+</span> <span class="fl">0.2</span><span class="sc">*</span>oxygen_ml_l,</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>      oxygen_ml_l <span class="sc">&lt;</span> <span class="fl">1.5</span> <span class="sc">~</span> <span class="fl">0.2</span><span class="sc">/</span><span class="fl">1.5</span><span class="sc">*</span>oxygen_ml_l)</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="plot-index-vs-concentration-final" class="level3">
+<h3 class="anchored" data-anchor-id="plot-index-vs-concentration-final">Plot index vs concentration, final</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(dat, <span class="fu">aes</span>(oxygen_ml_l, oxygen_index, <span class="at">color =</span> region)) <span class="sc">+</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">c</span>(<span class="fl">1.5</span>,<span class="fl">2.5</span>,<span class="fl">3.5</span>,<span class="fl">4.5</span>)) <span class="sc">+</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">c</span>(<span class="fl">0.2</span>,<span class="fl">0.4</span>,<span class="fl">0.6</span>,<span class="fl">0.8</span>), <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># geom_abline(intercept = -0.1, slope = 0.2, color = "brown")</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> <span class="dv">0</span>, <span class="at">xend =</span> <span class="fl">1.5</span>, <span class="at">yend =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">x =</span> <span class="fl">1.5</span>, <span class="at">y =</span> <span class="fl">0.2</span>, <span class="at">xend =</span> <span class="fl">5.5</span>, <span class="at">yend =</span> <span class="dv">1</span>) <span class="sc">+</span> </span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="NIVA_Oksygen_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="map-of-regions" class="level2">
+<h2 class="anchored" data-anchor-id="map-of-regions">Map of regions</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(leaflet)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(leafem)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co"># set colours</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"pink2"</span>, <span class="st">"brown"</span>, <span class="st">"green3"</span>, <span class="st">"purple"</span>, <span class="st">"blue"</span>, <span class="st">"red"</span>)</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>factpal <span class="ot">&lt;-</span> <span class="fu">colorFactor</span>(cols, dat<span class="sc">$</span>region)</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>lf <span class="ot">&lt;-</span> <span class="fu">leaflet</span>(dat) <span class="sc">|&gt;</span> </span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addTiles</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addCircles</span>(<span class="at">lng =</span> <span class="sc">~</span>Lengdegrad, <span class="at">lat =</span> <span class="sc">~</span>Breddegrad, <span class="at">color =</span> <span class="sc">~</span><span class="fu">factpal</span>(region)) <span class="sc">|&gt;</span> </span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addMouseCoordinates</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="find-mean-values" class="level2">
+<h2 class="anchored" data-anchor-id="find-mean-values">Find mean values</h2>
+<section id="means-by-region" class="level3">
+<h3 class="anchored" data-anchor-id="means-by-region">Means by region</h3>
+<ul>
+<li>We estimate marginal means per region (using R package emmeans)<br>
+</li>
+<li>This puts equal weight to each water body (Vannforekomst) irrespective of the number of stations in the water body<br>
+</li>
+<li>Also, we treat water body as a random effect, i.e.&nbsp;we take into account that the large majority of water bodies are not sampled</li>
+</ul>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># start table  </span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>tab_region <span class="ot">&lt;-</span> dat <span class="sc">|&gt;</span> </span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(region, period, Vannforekomst_id) <span class="sc">|&gt;</span> </span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(region, period) <span class="sc">|&gt;</span> </span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_stations =</span> <span class="fu">sum</span>(n),</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_waterbodies =</span> <span class="fu">n</span>(), <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="co"># tab_regions</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="co"># estimate means per region, using water body as main unit</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="co"># treating water body as a random effect (this to some extent taking into </span></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="co"># account that the large majority of water bodies are not covered)</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a><span class="co"># statistical model</span></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>mod1 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(</span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>  oxygen_index <span class="sc">~</span> region <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Vannforekomst_id),</span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dat</span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a><span class="co"># estimate marginal means  </span></span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>means_region <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(mod1, <span class="sc">~</span>region)  </span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>means_region_s <span class="ot">&lt;-</span> <span class="fu">summary</span>(means_region) <span class="sc">|&gt;</span> <span class="fu">as.data.frame</span>()</span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a><span class="co"># add to table</span></span>
+<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a>tab_region<span class="sc">$</span>index_mean <span class="ot">&lt;-</span> means_region_s<span class="sc">$</span>emmean</span>
+<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a>tab_region<span class="sc">$</span>index_SE <span class="ot">&lt;-</span> means_region_s<span class="sc">$</span>SE</span>
+<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a>tab_region<span class="sc">$</span>CI95_lo <span class="ot">&lt;-</span> means_region_s<span class="sc">$</span>asymp.LCL</span>
+<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a>tab_region<span class="sc">$</span>CI95_up <span class="ot">&lt;-</span> means_region_s<span class="sc">$</span>asymp.UCL</span>
+<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a>tab_region <span class="ot">&lt;-</span> tab_region <span class="sc">|&gt;</span></span>
+<span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(region, period, index_mean, index_SE, CI95_lo, CI95_up, n_waterbodies, n_stations)</span>
+<span id="cb20-32"><a href="#cb20-32" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb20-33"><a href="#cb20-33" aria-hidden="true" tabindex="-1"></a>tab_region <span class="sc">|&gt;</span> </span>
+<span id="cb20-34"><a href="#cb20-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_hux</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb20-35"><a href="#cb20-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_number_format</span>(<span class="at">row =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">col =</span> <span class="dv">3</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">value =</span> <span class="dv">3</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb20-36"><a href="#cb20-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_bold</span>(<span class="at">row =</span> <span class="dv">1</span>, <span class="at">col =</span> everywhere) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<table class="huxtable" data-quarto-disable-processing="true" style="margin-left: auto; margin-right: auto;   break-inside: avoid; page-break-inside: avoid;">
+<colgroup><col><col><col><col><col><col><col><col></colgroup><thead>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">region</th><th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">period</th><th class="huxtable-cell huxtable-header" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">index_mean</th><th class="huxtable-cell huxtable-header" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">index_SE</th><th class="huxtable-cell huxtable-header" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">CI95_lo</th><th class="huxtable-cell huxtable-header" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">CI95_up</th><th class="huxtable-cell huxtable-header" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">n_waterbodies</th><th class="huxtable-cell huxtable-header" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">n_stations</th></tr>
+</thead>
+<tbody>
+<tr>
+<td class="huxtable-cell" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">Barentshavet</td><td class="huxtable-cell" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">2022-2024</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">1.006</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.105</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.800</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">1.212</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">5</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">5</td></tr>
+<tr>
+<td class="huxtable-cell" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">Norskehavet Nord</td><td class="huxtable-cell" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">2022-2024</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.853</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.089</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.678</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">1.027</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">7</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">7</td></tr>
+<tr>
+<td class="huxtable-cell" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">Norskehavet Sør</td><td class="huxtable-cell" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">2022-2024</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.762</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.105</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.556</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.968</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">5</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">5</td></tr>
+<tr>
+<td class="huxtable-cell" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">Nordsjøen</td><td class="huxtable-cell" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">2022-2024</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.535</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.083</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.372</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.699</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">8</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">8</td></tr>
+<tr>
+<td class="huxtable-cell" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">Skagerrak</td><td class="huxtable-cell" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">2022-2024</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.728</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.083</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.565</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.892</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">8</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">8</td></tr>
+<tr>
+<td class="huxtable-cell" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">Ytre Oslofjord</td><td class="huxtable-cell" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">2021-2023</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.436</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.060</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.318</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.553</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">15</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">17</td></tr>
+<tr>
+<td class="huxtable-cell" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">Indre Oslofjord</td><td class="huxtable-cell" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">2022-2024</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.335</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.080</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.177</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.492</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">8</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">12</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="national-mean-without-area-weighting" class="level3">
+<h3 class="anchored" data-anchor-id="national-mean-without-area-weighting">National mean, without area weighting</h3>
+<ul>
+<li>Each region have equal weight (independent of number of stations)</li>
+</ul>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>tab_national <span class="ot">&lt;-</span> dat <span class="sc">|&gt;</span> </span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">region =</span> <span class="st">"Norway"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(region, Vannforekomst_id) <span class="sc">|&gt;</span> </span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(region) <span class="sc">|&gt;</span> </span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_stations =</span> <span class="fu">sum</span>(n),</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_waterbodies =</span> <span class="fu">n</span>()</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="co"># mean putting equal weight on regions</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>means_national <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(mod1, <span class="sc">~</span><span class="dv">1</span>)</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>means_national_s <span class="ot">&lt;-</span> <span class="fu">summary</span>(means_national)</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>tab_national<span class="sc">$</span>index_mean <span class="ot">&lt;-</span> means_national_s<span class="sc">$</span>emmean</span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>tab_national<span class="sc">$</span>index_SE <span class="ot">&lt;-</span> means_national_s<span class="sc">$</span>SE</span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>tab_national<span class="sc">$</span>CI95_lo <span class="ot">&lt;-</span> means_national_s<span class="sc">$</span>asymp.LCL</span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>tab_national<span class="sc">$</span>CI95_up <span class="ot">&lt;-</span> means_national_s<span class="sc">$</span>asymp.UCL</span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>tab_national <span class="ot">&lt;-</span> tab_national <span class="sc">|&gt;</span></span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(region, index_mean, index_SE, CI95_lo, CI95_up, n_waterbodies, n_stations)</span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>tab_national <span class="sc">|&gt;</span> </span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_hux</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_number_format</span>(<span class="at">col =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>, <span class="at">value =</span> <span class="dv">3</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_bold</span>(<span class="at">row =</span> <span class="dv">1</span>, <span class="at">col =</span> everywhere) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<table class="huxtable" data-quarto-disable-processing="true" style="margin-left: auto; margin-right: auto;   break-inside: avoid; page-break-inside: avoid;">
+<colgroup><col><col><col><col><col><col><col></colgroup><thead>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">region</th><th class="huxtable-cell huxtable-header" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">index_mean</th><th class="huxtable-cell huxtable-header" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">index_SE</th><th class="huxtable-cell huxtable-header" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">CI95.000_lo</th><th class="huxtable-cell huxtable-header" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">CI95.000_up</th><th class="huxtable-cell huxtable-header" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">n_waterbodies</th><th class="huxtable-cell huxtable-header" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">n_stations</th></tr>
+</thead>
+<tbody>
+<tr>
+<td class="huxtable-cell" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">Norway</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.665</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.033</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.600</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.730</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">56</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">62</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="set-region2" class="level3">
+<h3 class="anchored" data-anchor-id="set-region2">Set region2</h3>
+<ul>
+<li>We set region2 for the purpose of area-weighting of indices<br>
+</li>
+<li>region2 is equal to ecoregions except that “Indre Oslofjord” is split off from “Skagerrak” and “Ytre Oslofjord”<br>
+</li>
+<li>The rest of the Skagerrak area we call “Skagerrak/Ytre Oslofjord”, as “Skagerrak” and “Ytre Oslofjord” overlap spatially</li>
+</ul>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>region2_order <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Barentshavet"</span>, <span class="st">"Norskehavet Nord"</span>, <span class="st">"Norskehavet Sør"</span>, <span class="st">"Nordsjøen"</span>, </span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Skagerrak/Ytre Oslofjord"</span>, <span class="st">"Indre Oslofjord"</span>)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> dat <span class="sc">|&gt;</span> </span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">region2 =</span> <span class="fu">case_when</span>(</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>      region <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Skagerrak"</span>, <span class="st">"Ytre Oslofjord"</span>) <span class="sc">~</span> <span class="st">"Skagerrak/Ytre Oslofjord"</span>,</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> region),</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">region2 =</span> <span class="fu">factor</span>(region2, <span class="at">levels =</span> region2_order)</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>  ) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="region2-areas" class="level3">
+<h3 class="anchored" data-anchor-id="region2-areas">region2 areas</h3>
+<ul>
+<li>Calculated elsewhere</li>
+</ul>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 6533 + 7136 = 13669</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>lookup_region2_areas <span class="ot">&lt;-</span> tibble<span class="sc">::</span><span class="fu">tribble</span>(</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>                  <span class="sc">~</span>region2, <span class="sc">~</span>area_km2,</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>         <span class="st">"Norskehavet Sør"</span>,     <span class="dv">33405</span>,</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Norskehavet Nord"</span>,     <span class="dv">29091</span>,</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>               <span class="st">"Nordsjøen"</span>,     <span class="dv">13669</span>,</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Barentshavet"</span>,     <span class="dv">17337</span>,</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>         <span class="st">"Indre Oslofjord"</span>,       <span class="dv">211</span>,</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a><span class="st">"Skagerrak/Ytre Oslofjord"</span>,      <span class="dv">3856</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="means-by-region2" class="level3">
+<h3 class="anchored" data-anchor-id="means-by-region2">Means by region2</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># start table  </span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>tab_region2 <span class="ot">&lt;-</span> dat <span class="sc">|&gt;</span> </span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(region2, Vannforekomst_id) <span class="sc">|&gt;</span> </span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(region2) <span class="sc">|&gt;</span> </span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_stations =</span> <span class="fu">sum</span>(n),</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_waterbodies =</span> <span class="fu">n</span>()</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>    lookup_region2_areas, <span class="at">by =</span> <span class="fu">join_by</span>(region2))</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a><span class="co"># tab_region2</span></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a><span class="co"># estimate means per region2, using water body as main unit</span></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a><span class="co"># treating water body as a random effect (this to some extent taking into </span></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a><span class="co"># account that the large majority of water bodies are not covered)</span></span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a><span class="co"># statistical model</span></span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>mod2 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(</span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>  oxygen_index <span class="sc">~</span> region2 <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Vannforekomst_id),</span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dat</span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a><span class="co"># estimate marginal means  </span></span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a>means_region2 <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(mod2, <span class="sc">~</span>region2)  </span>
+<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a>means_region2_s <span class="ot">&lt;-</span> <span class="fu">summary</span>(means_region2) <span class="sc">|&gt;</span> <span class="fu">as.data.frame</span>()</span>
+<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a><span class="co"># add to table</span></span>
+<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a>tab_region2<span class="sc">$</span>index_mean <span class="ot">&lt;-</span> means_region2_s<span class="sc">$</span>emmean</span>
+<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a>tab_region2<span class="sc">$</span>index_SE <span class="ot">&lt;-</span> means_region2_s<span class="sc">$</span>SE</span>
+<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a>tab_region2<span class="sc">$</span>CI95_lo <span class="ot">&lt;-</span> means_region2_s<span class="sc">$</span>asymp.LCL</span>
+<span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a>tab_region2<span class="sc">$</span>CI95_up <span class="ot">&lt;-</span> means_region2_s<span class="sc">$</span>asymp.UCL</span>
+<span id="cb24-31"><a href="#cb24-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-32"><a href="#cb24-32" aria-hidden="true" tabindex="-1"></a>tab_region2 <span class="ot">&lt;-</span> tab_region2 <span class="sc">|&gt;</span></span>
+<span id="cb24-33"><a href="#cb24-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(region2, area_km2, index_mean, index_SE, CI95_lo, CI95_up, n_waterbodies, n_stations)</span>
+<span id="cb24-34"><a href="#cb24-34" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb24-35"><a href="#cb24-35" aria-hidden="true" tabindex="-1"></a>tab_region2 <span class="sc">|&gt;</span> </span>
+<span id="cb24-36"><a href="#cb24-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_hux</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb24-37"><a href="#cb24-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_number_format</span>(<span class="at">row =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">col =</span> <span class="dv">2</span>, <span class="at">value =</span> <span class="st">"%i"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb24-38"><a href="#cb24-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_number_format</span>(<span class="at">row =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">col =</span> <span class="dv">4</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">value =</span> <span class="dv">3</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb24-39"><a href="#cb24-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_bold</span>(<span class="at">row =</span> <span class="dv">1</span>, <span class="at">col =</span> everywhere) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<table class="huxtable" data-quarto-disable-processing="true" style="margin-left: auto; margin-right: auto;   break-inside: avoid; page-break-inside: avoid;">
+<colgroup><col><col><col><col><col><col><col><col></colgroup><thead>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">region2</th><th class="huxtable-cell huxtable-header" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">area_km2</th><th class="huxtable-cell huxtable-header" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">index_mean</th><th class="huxtable-cell huxtable-header" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">index_SE</th><th class="huxtable-cell huxtable-header" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">CI95_lo</th><th class="huxtable-cell huxtable-header" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">CI95_up</th><th class="huxtable-cell huxtable-header" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">n_waterbodies</th><th class="huxtable-cell huxtable-header" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">n_stations</th></tr>
+</thead>
+<tbody>
+<tr>
+<td class="huxtable-cell" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">Barentshavet</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">17337</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">1.01&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.113</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.785</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">1.227</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">5</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">5</td></tr>
+<tr>
+<td class="huxtable-cell" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">Norskehavet Nord</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">29091</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.853</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.095</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.666</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">1.040</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">7</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">7</td></tr>
+<tr>
+<td class="huxtable-cell" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">Norskehavet Sør</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">33405</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.762</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.113</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.541</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.983</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">5</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">5</td></tr>
+<tr>
+<td class="huxtable-cell" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">Nordsjøen</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">13669</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.535</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.089</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.361</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.710</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">8</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">8</td></tr>
+<tr>
+<td class="huxtable-cell" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">Skagerrak/Ytre Oslofjord</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">3856</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.537</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.052</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.435</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.639</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">23</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">25</td></tr>
+<tr>
+<td class="huxtable-cell" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">Indre Oslofjord</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">211</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.335</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.087</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.165</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.504</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">8</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">12</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="national-mean-with-area-weighting" class="level3">
+<h3 class="anchored" data-anchor-id="national-mean-with-area-weighting">National mean, with area weighting</h3>
+<ul>
+<li>Each region have equal weight (independent of number of stations)</li>
+</ul>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>tab_national_w <span class="ot">&lt;-</span> tab_national <span class="sc">|&gt;</span> </span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(region, n_waterbodies, n_stations)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>w <span class="ot">&lt;-</span> tab_region2<span class="sc">$</span>area_km2 <span class="sc">/</span> <span class="fu">sum</span>(tab_region2<span class="sc">$</span>area_km2)</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>national <span class="ot">&lt;-</span> <span class="fu">contrast</span>(</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  means_region2,</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="fu">list</span>(</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"National mean"</span> <span class="ot">=</span> w</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>means_national_s_w <span class="ot">&lt;-</span> <span class="fu">summary</span>(national, <span class="at">infer =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>tab_national_w<span class="sc">$</span>index_mean <span class="ot">&lt;-</span> means_national_s_w<span class="sc">$</span>estimate</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>tab_national_w<span class="sc">$</span>index_SE <span class="ot">&lt;-</span> means_national_s_w<span class="sc">$</span>SE</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>tab_national_w<span class="sc">$</span>CI95_lo <span class="ot">&lt;-</span> means_national_s_w<span class="sc">$</span>asymp.LCL</span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>tab_national_w<span class="sc">$</span>CI95_up <span class="ot">&lt;-</span> means_national_s_w<span class="sc">$</span>asymp.UCL</span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>tab_national_w <span class="ot">&lt;-</span> tab_national_w <span class="sc">|&gt;</span></span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(region, index_mean, index_SE, CI95_lo, CI95_up, n_waterbodies, n_stations)</span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>tab_national_w <span class="sc">|&gt;</span> </span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_hux</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_number_format</span>(<span class="at">col =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>, <span class="at">value =</span> <span class="dv">3</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_bold</span>(<span class="at">row =</span> <span class="dv">1</span>, <span class="at">col =</span> everywhere) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<table class="huxtable" data-quarto-disable-processing="true" style="margin-left: auto; margin-right: auto;   break-inside: avoid; page-break-inside: avoid;">
+<colgroup><col><col><col><col><col><col><col></colgroup><thead>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">region</th><th class="huxtable-cell huxtable-header" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">index_mean</th><th class="huxtable-cell huxtable-header" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">index_SE</th><th class="huxtable-cell huxtable-header" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">CI95.000_lo</th><th class="huxtable-cell huxtable-header" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">CI95.000_up</th><th class="huxtable-cell huxtable-header" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">n_waterbodies</th><th class="huxtable-cell huxtable-header" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">n_stations</th></tr>
+</thead>
+<tbody>
+<tr>
+<td class="huxtable-cell" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">Norway</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.791</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.053</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.686</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.896</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">56</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">62</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+</section>
+<section id="final-result" class="level2">
+<h2 class="anchored" data-anchor-id="final-result">Final result</h2>
+<p>Putting equal weight on the “report areas”, the national nEQR mean (giving equal weight to regions) is 0.665 with a standard error of 0.033. Weighting the data by region area yields a national nEQR mean of 0.791 with a standard error of 0.053.</p>
+</section>
+<section id="session-info" class="level2">
+<h2 class="anchored" data-anchor-id="session-info">Session info</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>R version 4.5.3 (2026-03-11 ucrt)
+Platform: x86_64-w64-mingw32/x64
+Running under: Windows 11 x64 (build 26200)
+
+Matrix products: default
+  LAPACK version 3.12.1
+
+locale:
+[1] LC_COLLATE=C                   LC_CTYPE=Norwegian_Norway.utf8
+[3] LC_MONETARY=C                  LC_NUMERIC=C                  
+[5] LC_TIME=C                     
+
+time zone: Europe/Oslo
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] leafem_0.2.5    leaflet_2.2.3   here_1.0.2      huxtable_6.0.2 
+ [5] lme4_2.0-6      Matrix_1.7-4    emmeans_2.0.4   readxl_1.5.0.1 
+ [9] readr_2.2.0     ggeasy_0.1.6    ggplot2_4.0.3   lubridate_1.9.5
+[13] forcats_1.0.1   purrr_1.2.2     dplyr_1.2.1    
+
+loaded via a namespace (and not attached):
+ [1] tidyselect_1.2.1   farver_2.1.2       S7_0.2.1           fastmap_1.2.0     
+ [5] digest_0.6.39      timechange_0.4.0   estimability_2.0.0 lifecycle_1.0.5   
+ [9] sf_1.1-3           terra_1.9-11       magrittr_2.0.5     compiler_4.5.3    
+[13] rlang_1.3.0        tools_4.5.3        yaml_2.3.12        knitr_1.51        
+[17] labeling_0.4.3     htmlwidgets_1.6.4  bit_4.6.0          sp_2.2-1          
+[21] classInt_0.4-11    xml2_1.5.2         RColorBrewer_1.1-3 KernSmooth_2.23-26
+[25] withr_3.0.2        grid_4.5.3         xtable_1.8-8       e1071_1.7-17      
+[29] scales_1.4.0       MASS_7.3-65        dichromat_2.0-0.1  cli_3.6.6         
+[33] mvtnorm_1.4-2      rmarkdown_2.31     crayon_1.5.3       reformulas_0.4.4  
+[37] generics_0.1.4     otel_0.2.0         rstudioapi_0.18.0  tzdb_0.5.0        
+[41] commonmark_2.0.0   minqa_1.2.8        DBI_1.3.0          proxy_0.4-29      
+[45] stringr_1.6.0      splines_4.5.3      assertthat_0.2.1   parallel_4.5.3    
+[49] cellranger_1.1.0   base64enc_0.1-6    vctrs_0.7.3        boot_1.3-32       
+[53] jsonlite_2.0.0     hms_1.1.4          bit64_4.6.0-1      crosstalk_1.2.2   
+[57] jquerylib_0.1.4    units_1.0-1        glue_1.8.1         nloptr_2.2.1      
+[61] codetools_0.2-20   stringi_1.8.9      gtable_0.3.6       raster_3.6-32     
+[65] tibble_3.3.1       pillar_1.11.1      htmltools_0.5.9    R6_2.6.1          
+[69] Rdpack_2.6.6       rprojroot_2.1.1    vroom_1.7.1        evaluate_1.0.5    
+[73] lattice_0.22-9     rbibutils_2.4.1    png_0.1-9          class_7.3-23      
+[77] Rcpp_1.1.2         nlme_3.1-168       xfun_0.60          pkgconfig_2.0.3   </code></pre>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="cn">FALSE</span>){</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="do">## CODE APPENDIX: calculating areas of region2 ('lookup_region2_areas' above)</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(dplyr)</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(sf)</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(datapasta)  <span class="co"># tribble_paste(), not strictly necesssary but handy</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>  <span class="co">#</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 1. Read geodata for marine ecoregions  </span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>  <span class="co">#</span></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># downloaded from GeoNoirge Kartlatalogen</span></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># https://kartkatalog.geonorge.no/metadata/administrative-omraader-vanndirektivet-wms/50263c33-74bc-4ea8-b44e-a0c470e57904</span></span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>  wb_orig <span class="ot">&lt;-</span> <span class="fu">read_sf</span>(<span class="st">"C:/Data/Mapdata/NVE_Water_framework_directive/NVEData/Vanndirektiv_OekoregionMarin.geojson"</span>)  </span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># wb_orig$arealKvadratkilometer</span></span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># wb_orig$oekoregionMarinnavn</span></span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>  <span class="co"># transform to long. lat (for leaflet)  </span></span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>  wb <span class="ot">&lt;-</span> wb_orig <span class="sc">|&gt;</span> </span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">st_transform</span>(<span class="dv">4326</span>)</span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a>  <span class="co">#</span></span>
+<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 2. Split Skagerrak region in two: "Indre Oslofjord" and "Skagerrak/Ytre Oslofjord"</span></span>
+<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a>  <span class="co">#</span></span>
+<span id="cb28-27"><a href="#cb28-27" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb28-28"><a href="#cb28-28" aria-hidden="true" tabindex="-1"></a>  wb_skag <span class="ot">&lt;-</span> wb <span class="sc">|&gt;</span> </span>
+<span id="cb28-29"><a href="#cb28-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(oekoregionMarinnavn <span class="sc">==</span> <span class="st">"Skagerak"</span>)</span>
+<span id="cb28-30"><a href="#cb28-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(wb_skag[<span class="st">"oekoregionMarinnavn"</span>])  </span>
+<span id="cb28-31"><a href="#cb28-31" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb28-32"><a href="#cb28-32" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb28-33"><a href="#cb28-33" aria-hidden="true" tabindex="-1"></a>  <span class="co"># use leaflet to define a rectangle encompassing Indre Oslofjord  </span></span>
+<span id="cb28-34"><a href="#cb28-34" aria-hidden="true" tabindex="-1"></a>  <span class="co"># (by reading mouse coordinates from the screen)  </span></span>
+<span id="cb28-35"><a href="#cb28-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(leaflet)</span>
+<span id="cb28-36"><a href="#cb28-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(leafem)</span>
+<span id="cb28-37"><a href="#cb28-37" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb28-38"><a href="#cb28-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">leaflet</span>(wb_skag) <span class="sc">|&gt;</span> </span>
+<span id="cb28-39"><a href="#cb28-39" aria-hidden="true" tabindex="-1"></a>    <span class="fu">addTiles</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb28-40"><a href="#cb28-40" aria-hidden="true" tabindex="-1"></a>    <span class="fu">addPolygons</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb28-41"><a href="#cb28-41" aria-hidden="true" tabindex="-1"></a>    <span class="fu">addMouseCoordinates</span>()</span>
+<span id="cb28-42"><a href="#cb28-42" aria-hidden="true" tabindex="-1"></a>  <span class="co"># lower left corner: 10.453, 59.667</span></span>
+<span id="cb28-43"><a href="#cb28-43" aria-hidden="true" tabindex="-1"></a>  <span class="co"># upper right corner:10.90, 59.95</span></span>
+<span id="cb28-44"><a href="#cb28-44" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb28-45"><a href="#cb28-45" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Rectangle coordinates (lon/lat)</span></span>
+<span id="cb28-46"><a href="#cb28-46" aria-hidden="true" tabindex="-1"></a>  rect_coords <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
+<span id="cb28-47"><a href="#cb28-47" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(</span>
+<span id="cb28-48"><a href="#cb28-48" aria-hidden="true" tabindex="-1"></a>      <span class="fl">10.453</span>, <span class="fl">59.667</span>,  <span class="co"># lower left</span></span>
+<span id="cb28-49"><a href="#cb28-49" aria-hidden="true" tabindex="-1"></a>      <span class="fl">10.900</span>, <span class="fl">59.667</span>,  <span class="co"># lower right</span></span>
+<span id="cb28-50"><a href="#cb28-50" aria-hidden="true" tabindex="-1"></a>      <span class="fl">10.900</span>, <span class="fl">59.950</span>,  <span class="co"># upper right</span></span>
+<span id="cb28-51"><a href="#cb28-51" aria-hidden="true" tabindex="-1"></a>      <span class="fl">10.453</span>, <span class="fl">59.950</span>,  <span class="co"># upper left</span></span>
+<span id="cb28-52"><a href="#cb28-52" aria-hidden="true" tabindex="-1"></a>      <span class="fl">10.453</span>, <span class="fl">59.667</span>   <span class="co"># close polygon</span></span>
+<span id="cb28-53"><a href="#cb28-53" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb28-54"><a href="#cb28-54" aria-hidden="true" tabindex="-1"></a>    <span class="at">ncol =</span> <span class="dv">2</span>,</span>
+<span id="cb28-55"><a href="#cb28-55" aria-hidden="true" tabindex="-1"></a>    <span class="at">byrow =</span> <span class="cn">TRUE</span></span>
+<span id="cb28-56"><a href="#cb28-56" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb28-57"><a href="#cb28-57" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb28-58"><a href="#cb28-58" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create geodata from rectangle coordinates</span></span>
+<span id="cb28-59"><a href="#cb28-59" aria-hidden="true" tabindex="-1"></a>  rect_sf <span class="ot">&lt;-</span> <span class="fu">st_sf</span>(</span>
+<span id="cb28-60"><a href="#cb28-60" aria-hidden="true" tabindex="-1"></a>    <span class="at">geometry =</span> <span class="fu">st_sfc</span>(</span>
+<span id="cb28-61"><a href="#cb28-61" aria-hidden="true" tabindex="-1"></a>      <span class="fu">st_polygon</span>(<span class="fu">list</span>(rect_coords)),</span>
+<span id="cb28-62"><a href="#cb28-62" aria-hidden="true" tabindex="-1"></a>      <span class="at">crs =</span> <span class="dv">4326</span></span>
+<span id="cb28-63"><a href="#cb28-63" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb28-64"><a href="#cb28-64" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb28-65"><a href="#cb28-65" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb28-66"><a href="#cb28-66" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Transform rectangle to same CRS as waterbody layer</span></span>
+<span id="cb28-67"><a href="#cb28-67" aria-hidden="true" tabindex="-1"></a>  rect_sf <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(rect_sf, <span class="fu">st_crs</span>(wb))</span>
+<span id="cb28-68"><a href="#cb28-68" aria-hidden="true" tabindex="-1"></a>  <span class="co"># plot(rect_sf)</span></span>
+<span id="cb28-69"><a href="#cb28-69" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb28-70"><a href="#cb28-70" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Skagerak polygon</span></span>
+<span id="cb28-71"><a href="#cb28-71" aria-hidden="true" tabindex="-1"></a>  skag <span class="ot">&lt;-</span> wb <span class="sc">%&gt;%</span></span>
+<span id="cb28-72"><a href="#cb28-72" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(oekoregionMarinnavn <span class="sc">==</span> <span class="st">"Skagerak"</span>)</span>
+<span id="cb28-73"><a href="#cb28-73" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb28-74"><a href="#cb28-74" aria-hidden="true" tabindex="-1"></a>  <span class="co"># find and repair geometry problem</span></span>
+<span id="cb28-75"><a href="#cb28-75" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_is_valid</span>(skag)</span>
+<span id="cb28-76"><a href="#cb28-76" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_is_valid</span>(rect_sf)</span>
+<span id="cb28-77"><a href="#cb28-77" aria-hidden="true" tabindex="-1"></a>  skag <span class="ot">&lt;-</span> <span class="fu">st_make_valid</span>(skag)</span>
+<span id="cb28-78"><a href="#cb28-78" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb28-79"><a href="#cb28-79" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Part inside rectangle</span></span>
+<span id="cb28-80"><a href="#cb28-80" aria-hidden="true" tabindex="-1"></a>  skag_rect <span class="ot">&lt;-</span> <span class="fu">st_intersection</span>(skag, rect_sf)</span>
+<span id="cb28-81"><a href="#cb28-81" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb28-82"><a href="#cb28-82" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Remaining part</span></span>
+<span id="cb28-83"><a href="#cb28-83" aria-hidden="true" tabindex="-1"></a>  skag_rest <span class="ot">&lt;-</span> <span class="fu">st_difference</span>(skag, <span class="fu">st_geometry</span>(rect_sf))</span>
+<span id="cb28-84"><a href="#cb28-84" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb28-85"><a href="#cb28-85" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Give distinct names</span></span>
+<span id="cb28-86"><a href="#cb28-86" aria-hidden="true" tabindex="-1"></a>  skag_rect<span class="sc">$</span>oekoregionMarinnavn <span class="ot">&lt;-</span> <span class="st">"Indre Oslofjord"</span></span>
+<span id="cb28-87"><a href="#cb28-87" aria-hidden="true" tabindex="-1"></a>  skag_rest<span class="sc">$</span>oekoregionMarinnavn <span class="ot">&lt;-</span> <span class="st">"Skagerrak/Ytre Oslofjord"</span></span>
+<span id="cb28-88"><a href="#cb28-88" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb28-89"><a href="#cb28-89" aria-hidden="true" tabindex="-1"></a>  <span class="co">#</span></span>
+<span id="cb28-90"><a href="#cb28-90" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 3. Replace the old Skagerrak region with the two parts </span></span>
+<span id="cb28-91"><a href="#cb28-91" aria-hidden="true" tabindex="-1"></a>  <span class="co">#</span></span>
+<span id="cb28-92"><a href="#cb28-92" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb28-93"><a href="#cb28-93" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Replace original polygon with the two new ones</span></span>
+<span id="cb28-94"><a href="#cb28-94" aria-hidden="true" tabindex="-1"></a>  wb_new <span class="ot">&lt;-</span> wb <span class="sc">%&gt;%</span></span>
+<span id="cb28-95"><a href="#cb28-95" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(oekoregionMarinnavn <span class="sc">!=</span> <span class="st">"Skagerak"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb28-96"><a href="#cb28-96" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bind_rows</span>(skag_rect, skag_rest)</span>
+<span id="cb28-97"><a href="#cb28-97" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb28-98"><a href="#cb28-98" aria-hidden="true" tabindex="-1"></a>  <span class="co">#</span></span>
+<span id="cb28-99"><a href="#cb28-99" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 4. Add area column  </span></span>
+<span id="cb28-100"><a href="#cb28-100" aria-hidden="true" tabindex="-1"></a>  <span class="co">#</span></span>
+<span id="cb28-101"><a href="#cb28-101" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb28-102"><a href="#cb28-102" aria-hidden="true" tabindex="-1"></a>  <span class="co"># find and repair geometry problem</span></span>
+<span id="cb28-103"><a href="#cb28-103" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_is_valid</span>(wb_new)</span>
+<span id="cb28-104"><a href="#cb28-104" aria-hidden="true" tabindex="-1"></a>  wb_new <span class="ot">&lt;-</span> <span class="fu">st_make_valid</span>(wb_new) </span>
+<span id="cb28-105"><a href="#cb28-105" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb28-106"><a href="#cb28-106" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add area column</span></span>
+<span id="cb28-107"><a href="#cb28-107" aria-hidden="true" tabindex="-1"></a>  wb_new<span class="sc">$</span>area_km2 <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(</span>
+<span id="cb28-108"><a href="#cb28-108" aria-hidden="true" tabindex="-1"></a>    units<span class="sc">::</span><span class="fu">set_units</span>(<span class="fu">st_area</span>(</span>
+<span id="cb28-109"><a href="#cb28-109" aria-hidden="true" tabindex="-1"></a>      wb_new), km<span class="sc">^</span><span class="dv">2</span>) <span class="sc">|&gt;</span> <span class="fu">round</span>(<span class="dv">0</span>)</span>
+<span id="cb28-110"><a href="#cb28-110" aria-hidden="true" tabindex="-1"></a>  ) </span>
+<span id="cb28-111"><a href="#cb28-111" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb28-112"><a href="#cb28-112" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Check all areas</span></span>
+<span id="cb28-113"><a href="#cb28-113" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(wb_new[<span class="st">"oekoregionMarinnavn"</span>])  </span>
+<span id="cb28-114"><a href="#cb28-114" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Check the manipulated areas</span></span>
+<span id="cb28-115"><a href="#cb28-115" aria-hidden="true" tabindex="-1"></a>  check <span class="ot">&lt;-</span> wb_new <span class="sc">|&gt;</span> </span>
+<span id="cb28-116"><a href="#cb28-116" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(oekoregionMarinnavn <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Skagerrak/Ytre Oslofjord"</span>, <span class="st">"Indre Oslofjord"</span>))</span>
+<span id="cb28-117"><a href="#cb28-117" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(check[<span class="st">"oekoregionMarinnavn"</span>])  </span>
+<span id="cb28-118"><a href="#cb28-118" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb28-119"><a href="#cb28-119" aria-hidden="true" tabindex="-1"></a>  <span class="co"># </span></span>
+<span id="cb28-120"><a href="#cb28-120" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 5. Get area data  </span></span>
+<span id="cb28-121"><a href="#cb28-121" aria-hidden="true" tabindex="-1"></a>  <span class="co">#</span></span>
+<span id="cb28-122"><a href="#cb28-122" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb28-123"><a href="#cb28-123" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Get areas as data frame</span></span>
+<span id="cb28-124"><a href="#cb28-124" aria-hidden="true" tabindex="-1"></a>  dat_area1 <span class="ot">&lt;-</span> wb_new <span class="sc">|&gt;</span></span>
+<span id="cb28-125"><a href="#cb28-125" aria-hidden="true" tabindex="-1"></a>    <span class="fu">st_drop_geometry</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb28-126"><a href="#cb28-126" aria-hidden="true" tabindex="-1"></a>    datapasta<span class="sc">::</span><span class="fu">tribble_paste</span>()</span>
+<span id="cb28-127"><a href="#cb28-127" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb28-128"><a href="#cb28-128" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb28-129"><a href="#cb28-129" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb28-130"><a href="#cb28-130" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+<script src="NIVA_Oksygen_files/libs/quarto-html/zenscroll-min.js"></script>
+</body></html>
