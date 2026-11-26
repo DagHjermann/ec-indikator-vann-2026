@@ -1,0 +1,141 @@
+---
+title: "Freshwater discharge from rivers to fjords"
+subtitle: NiVA_Fjord
+editor_options: 
+  chunk_output_type: console
+format:
+  html:
+    code-fold: true
+    toc: true
+    toc-title: Contents
+    toc-depth: 3
+    smooth-scroll: true
+---
+
+## National estimate for NIVA_Fjord
+
+### Load packages
+
+```{r, include = FALSE}
+library(tidyverse)
+library(here)
+library(broom)
+library(scales)
+```
+
+### Read data
+
+```{r}
+dat <- read_csv(
+  here("data/NIVA_fjord/regulerte_elver_kyst.csv"),
+  show_col_types = FALSE
+)
+
+cat("Number of rows:", nrow(dat), "\n")
+```
+
+### Aggregate observations to water-body level
+
+```{r}
+by_vannforekomst <- dat %>%
+  mutate(
+    andel_qnormal_klasse = andel_qnormal_klasse / 100
+  ) %>%
+  group_by(
+    vannforekomstid,
+    okoregion
+  ) %>%
+  summarise(
+    andel_qnormal_klasse = mean(andel_qnormal_klasse),
+    .groups = "drop"
+  )
+
+cat("Number of rows:", nrow(by_vannforekomst), "\n")
+```
+
+### Remove non-marine observations
+
+```{r}
+by_vannforekomst <- by_vannforekomst %>%
+  filter(okoregion != "")
+
+cat("Number of rows:", nrow(by_vannforekomst), "\n")
+
+```
+
+### Plot  
+```{r}
+ggplot(by_vannforekomst, aes(x = fct_rev(okoregion), y = andel_qnormal_klasse)) +
+  geom_jitter(width = 0.2) +
+  coord_flip() +
+  labs(
+    x = "Region", y = "Indikator NIVA_Fjord"
+  ) +
+  theme_bw()
+```
+
+### Calculate ecoregion weights
+
+```{r}
+n_ecoregion <- table(by_vannforekomst$okoregion)
+
+weights_tbl <- data.frame(
+  okoregion = names(n_ecoregion),
+  w = 1 / as.numeric(n_ecoregion)
+) %>%
+  mutate(
+    w = w / sum(w)
+  )
+```
+
+### Add weights to the data
+
+```{r}
+by_vannforekomst <- by_vannforekomst %>%
+  left_join(
+    weights_tbl,
+    by = "okoregion"
+  )
+```
+
+### Fit weighted model
+
+```{r}
+mod_weighted <- lm(
+  andel_qnormal_klasse ~ 1,
+  data = by_vannforekomst,
+  weights = w
+)
+```
+
+### Extract estimate and standard error
+
+```{r}
+res_weighted <- tidy(mod_weighted)
+
+estimate <- res_weighted$estimate
+se <- res_weighted$std.error
+```
+
+### Present results
+
+```{r}
+tibble(
+  Statistic = c(
+    "Weighted mean",
+    "Standard error"
+  ),
+  Value = c(
+    estimate,
+    se
+  )
+) %>%
+  mutate(
+    Value = round(Value, 2)
+  ) %>%
+  knitr::kable()
+```
+
+The estimated national NIVA_Fjord index was **`r round(estimate, 2)`** (SE = **`r round(se, 3)`**).
+
+The estimate was calculated as a weighted mean across water bodies, with equal total weight assigned to each ecoregion.
