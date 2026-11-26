@@ -365,14 +365,16 @@ Why was the current option chosen and how were the reference levels quantified? 
 -->
 The reference levels for Total Nitrogen in Norwegian coastal waters are determined for three salinity categories: 0-5 PSU, 5-18 PSU and over 18 PSU. (klassifiseringsveilederen, xx-xx-2026)
 
-Summer:
+#### Summer  
+
 |Salinity | X~100~ | X~80~ | X~60~ | X~40~ | X~20~ | X~0~|
 |---------|---------|---------|---------|---------|---------|
 |<5 PSU | NA | <250	| 250-383 | 383-538 | 538-800 | >800
 |5-18 PSU | NA | <250 | 250-337 | 337-505 | 505-800 | >800
 |>18 PSU | NA | < 250 |	250-330 | 330-500 | 500-800 | >800
  
-Winter:
+#### Winter    
+
 |Salinity | X~100~ | X~80~ | X~60~ | X~40~ | X~20~ | X~0~|
 |---------|---------|---------|---------|---------|---------|
 |<5 PSU  | NA |<261 |	261-385	| 385-553	| 553-800	| >800 |
@@ -433,7 +435,7 @@ However, the variation in the mean is defined by the spatial variation only, and
 
 <!--# Import and prepare the first dataset for analysis. Change the header from Dataset A to the name of the actual dataset. -->
 
-```{r}
+```{r, message=FALSE}
 
 # read data in Vannmiljø format  
 
@@ -449,7 +451,7 @@ ntot_raw <-
 
 ### 7.2. Station metadata (ecoregion and water type)
 
-```{r}
+```{r, message=FALSE}
 
 # . # . # . # . # . # . # . # . # . # . # . # . # . # . # . # . # . 
 # Station metadata ----
@@ -459,6 +461,19 @@ vannlok_vannmiljø <- read_csv("../data/NIVA_NitroVinter_Fosforvinter/vannlokali
 vf_vannmiljø <- read_csv("../data/NIVA_NitroVinter_Fosforvinter/vannforekomster_kyst_2024.csv")
 class_limits_sum <- read_xlsx("../data/NIVA_NitroVinter_Fosforvinter/klassegrenser_TOTN_sommer.xlsx")
 class_limits_win <- read_xlsx("../data/NIVA_NitroVinter_Fosforvinter/klassegrenser_TOTN_vinter.xlsx")
+
+# remove two duplicates
+class_limits_sum <- class_limits_sum |> 
+  group_by(typ) |> 
+  mutate(i = 1:length(typ)) |> 
+  filter(i == 1) |> 
+  select(-i)
+class_limits_win <- class_limits_win |> 
+  group_by(typ) |> 
+  mutate(i = 1:length(typ)) |> 
+  filter(i == 1) |> 
+  select(-i)
+
 
 station_lookup <- ntot_raw %>% dplyr::select(Vannlokalitet_kode, Vannlokalitetsnavn) %>% distinct()
 
@@ -551,8 +566,8 @@ ntot_mean_win_meta <- ntot_mean_win %>% left_join(., stat_meta_classlim_win, by 
 ntot_mean_sum_meta <- ntot_mean_sum %>% left_join(., stat_meta_classlim_sum, by = c("Vannlokalitet_kode", "Vannlokalitetsnavn"))
 ```
 
-The calculation of nEQR is based on 
-```{r calculate_nEQR}
+The calculation of nEQR is based on the classification.  
+```{r calculate_nEQR, results="hold"}
 
 # calculate nEQR for each water locality  
 # 
@@ -563,10 +578,16 @@ ntot_win_neqr <- ntot_mean_win_meta %>% mutate(nEQR = case_when(verdi >= X20 ~ 0
                               verdi < X80 ~ 0.9,
                               TRUE ~ NA))  
 
-mean(ntot_win_neqr$nEQR, na.rm = T)
-median(ntot_win_neqr$nEQR, na.rm = T)
-sd(ntot_win_neqr$nEQR, na.rm = T)
-length(!is.na(ntot_win_neqr$nEQR))
+# mean(ntot_win_neqr$nEQR, na.rm = T)
+# median(ntot_win_neqr$nEQR, na.rm = T)
+# sd(ntot_win_neqr$nEQR, na.rm = T)
+# length(!is.na(ntot_win_neqr$nEQR))
+
+cat("Winter values:")
+cat("\n  mean nEQR =", mean(ntot_win_neqr$nEQR, na.rm = T))
+cat("\n  median nEQR =", median(ntot_win_neqr$nEQR, na.rm = T))
+cat("\n  sd nEQR =", sd(ntot_win_neqr$nEQR, na.rm = T))
+cat("\n  sample size:", length(!is.na(ntot_win_neqr$nEQR)))
 
 ntot_sum_neqr <- ntot_mean_sum_meta %>% mutate(nEQR = case_when(verdi >= X20 ~ 0.1,
                               verdi < X20 & verdi >= X40 ~ 0.3,
@@ -575,10 +596,17 @@ ntot_sum_neqr <- ntot_mean_sum_meta %>% mutate(nEQR = case_when(verdi >= X20 ~ 0
                               verdi < X80 ~ 0.9,
                               TRUE ~ NA))  
 
-mean(ntot_sum_neqr$nEQR, na.rm = T)
-median(ntot_sum_neqr$nEQR, na.rm = T)
-sd(ntot_sum_neqr$nEQR, na.rm = T)
-length(!is.na(ntot_sum_neqr$nEQR))
+# mean(ntot_sum_neqr$nEQR, na.rm = T)
+# median(ntot_sum_neqr$nEQR, na.rm = T)
+# sd(ntot_sum_neqr$nEQR, na.rm = T)
+# length(!is.na(ntot_sum_neqr$nEQR))
+
+cat("\n\n")
+cat("Summer values:")
+cat("\n  mean nEQR =", mean(ntot_sum_neqr$nEQR, na.rm = T))
+cat("\n  median nEQR =", median(ntot_sum_neqr$nEQR, na.rm = T))
+cat("\n  sd nEQR =", sd(ntot_sum_neqr$nEQR, na.rm = T))
+cat("\n  sample size:", length(!is.na(ntot_sum_neqr$nEQR)))
 
 
 ```

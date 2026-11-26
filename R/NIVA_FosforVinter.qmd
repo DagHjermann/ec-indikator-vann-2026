@@ -365,7 +365,8 @@ Why was the current option chosen and how were the reference levels quantified? 
 -->
 The reference levels for Total Phosphorous in Norwegian coastal waters are determined for three salinity categories: 0-5 PSU, 5-18 PSU and over 18 PSU. (klassifiseringsveilederen, xx-xx-2026)
 
-Summer:
+#### Summer
+
 |Salinity | X~100~ | X~80~ | X~60~ | X~40~ | X~20~ | X~0~|
 |---------|---------|---------|---------|---------|---------|
 |<5 PSU | NA | <8 |	8-12 | 12-22 | 22-53 | >53 |
@@ -373,7 +374,8 @@ Summer:
 |>18 PSU | NA | < 11.5 | 11.5-16 | 16-29 | 29-60 | >60 |
 
  
-Winter:
+#### Winter  
+
 |Salinity | X~100~ | X~80~ | X~60~ | X~40~ | X~20~ | X~0~|
 |---------|---------|---------|---------|---------|---------|
 |<5 PSU  | NA | <10.5 |	10.5-14.5 |	14.5-26 |	26-53 |	>53
@@ -435,7 +437,7 @@ However, the variation in the mean is defined by the spatial variation only, and
 
 <!--# Import and prepare the first dataset for analysis. Change the header from Dataset A to the name of the actual dataset. -->
 
-```{r}
+```{r, message=FALSE}
 
 # read data in Vannmiljø format  
 
@@ -449,7 +451,7 @@ ptot_raw <-
 
 ### 7.2. Station metadata (ecoregion and water type)
 
-```{r}
+```{r, message=FALSE}
 
 # . # . # . # . # . # . # . # . # . # . # . # . # . # . # . # . # . 
 # Station metadata ----
@@ -459,6 +461,18 @@ vannlok_vannmiljø <- read_csv("../data/NIVA_NitroVinter_Fosforvinter/vannlokali
 vf_vannmiljø <- read_csv("../data/NIVA_NitroVinter_Fosforvinter/vannforekomster_kyst_2024.csv")
 class_limits_sum <- read_xlsx("../data/NIVA_NitroVinter_Fosforvinter/klassegrenser_TOTP_sommer.xlsx")
 class_limits_win <- read_xlsx("../data/NIVA_NitroVinter_Fosforvinter/klassegrenser_TOTP_vinter.xlsx")
+
+# remove two duplicates
+class_limits_sum <- class_limits_sum |> 
+  group_by(typ) |> 
+  mutate(i = 1:length(typ)) |> 
+  filter(i == 1) |> 
+  select(-i)
+class_limits_win <- class_limits_win |> 
+  group_by(typ) |> 
+  mutate(i = 1:length(typ)) |> 
+  filter(i == 1) |> 
+  select(-i)
 
 station_lookup <- ptot_raw %>% dplyr::select(Vannlokalitet_kode, Vannlokalitetsnavn) %>% distinct()
 
@@ -551,8 +565,8 @@ ptot_mean_win_meta <- ptot_mean_win %>% left_join(., stat_meta_classlim_win, by 
 ptot_mean_sum_meta <- ptot_mean_sum %>% left_join(., stat_meta_classlim_sum, by = c("Vannlokalitet_kode", "Vannlokalitetsnavn"))
 ```
 
-The calculation of nEQR is based on 
-```{r calculate_nEQR}
+The calculation of nEQR is based on the classification.
+```{r calculate_nEQR, results="hold"}
 
 # calculate nEQR for each water locality  
 # 
@@ -563,10 +577,11 @@ ptot_win_neqr <- ptot_mean_win_meta %>% mutate(nEQR = case_when(verdi >= X20 ~ 0
                               verdi < X80 ~ 0.9,
                               TRUE ~ NA))  
 
-mean(ptot_win_neqr$nEQR, na.rm = T)
-median(ptot_win_neqr$nEQR, na.rm = T)
-sd(ptot_win_neqr$nEQR, na.rm = T)
-length(!is.na(ptot_win_neqr$nEQR))
+cat("Winter values:")
+cat("\n  mean nEQR =", mean(ptot_win_neqr$nEQR, na.rm = T))
+cat("\n  median nEQR =", median(ptot_win_neqr$nEQR, na.rm = T))
+cat("\n  sd nEQR =", sd(ptot_win_neqr$nEQR, na.rm = T))
+cat("\n  sample size:", length(!is.na(ptot_win_neqr$nEQR)))
 
 ptot_sum_neqr <- ptot_mean_sum_meta %>% mutate(nEQR = case_when(verdi >= X20 ~ 0.1,
                               verdi < X20 & verdi >= X40 ~ 0.3,
@@ -575,10 +590,17 @@ ptot_sum_neqr <- ptot_mean_sum_meta %>% mutate(nEQR = case_when(verdi >= X20 ~ 0
                               verdi < X80 ~ 0.9,
                               TRUE ~ NA))  
 
-mean(ptot_sum_neqr$nEQR, na.rm = T)
-median(ptot_sum_neqr$nEQR, na.rm = T)
-sd(ptot_sum_neqr$nEQR, na.rm = T)
-length(!is.na(ptot_sum_neqr$nEQR))
+cat("\n\n")
+cat("Summer values:")
+cat("\n  mean nEQR =", mean(ptot_sum_neqr$nEQR, na.rm = T))
+cat("\n  median nEQR =", median(ptot_sum_neqr$nEQR, na.rm = T))
+cat("\n  sd nEQR =", sd(ptot_sum_neqr$nEQR, na.rm = T))
+cat("\n  sample size:", length(!is.na(ptot_sum_neqr$nEQR)))
+
+# mean(ptot_sum_neqr$nEQR, na.rm = T)
+# median(ptot_sum_neqr$nEQR, na.rm = T)
+# sd(ptot_sum_neqr$nEQR, na.rm = T)
+# length(!is.na(ptot_sum_neqr$nEQR))
 
 
 ```
