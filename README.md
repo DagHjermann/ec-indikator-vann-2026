@@ -87,24 +87,21 @@ Oppdragstaker kan opprette andre nødvendige filer (som feks. .gitignore etc.) s
 
 ## 5. Input / Output
 
-- **Input**: Beskriv hvilke filer som trengs, filformat og eksempeldata. Dersom data hentes fra eksterne kilder, skal versjon, uttrekkstidspunkt og framgangsmåte for å hente ut de samme dataene dokumenteres.
-- **Output**: Beskriv hva skriptene genererer, f.eks. figurer, tabeller, filer eller rapporter
-
 
 | Indikator-kode     | Fullt navn                             | Sti til kode                                           | Sti til dokumentasjon           | Input                    | Output                                                                |
 |--------------------|----------------------------------------|--------------------------------------------------------|---------------------------------|--------------------------|-----------------------------------------------------------------------|
 | NIVA_FosforVinter  | Vannets fosformengde (vinter)          | R/NIVA_FosforVinter.qmd                                | R/NIVA_FosforVinter.qmd         | Står i dokumentasjonen   | R/NIVA_FosforVinter.html                                              |
 | NIVA_NitroVinter   | Vannets nitrogenmengde (vinter)        | R/NIVA_NitroVinter.qmd                                 | R/NIVA_NitroVinter.qmd          | Står i dokumentasjonen   | R/NIVA_NitroVinter.html                                               |
-| NIVA_FosforSommer  | Vannets fosformengde (sommer)          | R/Code_Secchi_NitroSommer_FosforSommer/PTOT.R          |                                 |                          | R/Code_Secchi_NitroSommer_FosforSommer/indikator values results.xlsx  |
-| NIVA_NitroSommer   | Vannets nitrogenmengde (sommer)        | R/Code_Secchi_NitroSommer_FosforSommer/NTOT.R          |                                 | Står i readme.md         | R/Code_Secchi_NitroSommer_FosforSommer/indikator values results.xlsx  |
+| NIVA_FosforSommer  | Vannets fosformengde (sommer)          | R/Code_Secchi_NitroSommer_FosforSommer/PTOT.R          | R/NIVA_FosforVinter.qmd         | Står i dokumentasjonen   | R/Code_Secchi_NitroSommer_FosforSommer/indikator values results.xlsx  |
+| NIVA_NitroSommer   | Vannets nitrogenmengde (sommer)        | R/Code_Secchi_NitroSommer_FosforSommer/NTOT.R          | R/NIVA_NitroVinter.qmd          | Står i dokumentasjonen   | R/Code_Secchi_NitroSommer_FosforSommer/indikator values results.xlsx  |
 | NIVA_Secchi        | Vannets secchidyp                      | R/Code_Secchi_NitroSommer_FosforSommer/SECCI.R         | docs/Doc_NIVA_Secchi.docx       | Står i readme.md         | R/Code_Secchi_NitroSommer_FosforSommer/indikator values results.xlsx  |
 | NIVA_KlorofyllA    | Vannets klorofyllmengde                | R/Code_Secchi_NitroSommer_FosforSommer/KLFA.R          | docs/Doc_NIVA_KlorofyllA.docx   | Står i readme.md         | R/Code_Secchi_NitroSommer_FosforSommer/indikator values results.xlsx  |
 | NIVA_Oksygen       | Oksygen i bunnvann                     | R/NIVA_Oksygen.qmd                                     | docs/Doc_NIVA_Oksygen.docx      | Står i kodefil           | R/NIVA_Oksygen.html                                                   |
 | NIVA_PH            | pH i marine vannmasser                 | R/NIVA_PH.qmd                                          | docs/Doc_NIVA_KlorofyllA.docx   | Står i kodefil           | R/NIVA_PH.html                                                        |
 | NIVA_Ålegress      | Tilstand for ålegress (Zostera marina) | R/NIVA_Ålegress.qmd                                    | R/NIVA_pH.qmd                   | Står i dokumentasjonen   | R/NIVA_Ålegress.html                                                  |
 | NIVA_Hardbunn      | Økologisk tilstand på marin hardbunn   | R/NIVA_Hardbunn.qmd                                    | R/NIVA_Hardbunn.qmd             | Står i dokumentasjonen   | R/NIVA_Hardbunn.html                                                  |
-| NIVA_Flom          | Flomregime i elver                     | R/NIVA_Flom.qmd                                        | R/NIVA_Flom.qmd                 | Står i dokumentasjonen   | R/NIVA_Flom.html                                                      |
-| NIVA_Fjord         | Fjordtilstand                          | R/NIVA_Fjord.R                                         | docs/Doc_NIVA_Fjord.docx        | Står i kodefil           | R/NIVA_Fjord.csv                                                      |
+| NIVA_Flom          | Effekt av vannkraft på flom i elver    | R/NIVA_Flom.qmd                                        | R/NIVA_Flom.qmd                 | Står i dokumentasjonen   | R/NIVA_Flom.html                                                      |
+| NIVA_Fjord         | Tilførsel av elvevann til fjorder      | R/NIVA_Fjord.qmd                                       | docs/Doc_NIVA_Fjord.docx        | Står i kodefil           | R/NIVA_Fjord.html                                                     |
 
 ## 6. Installasjon / Kjøring
 
