@@ -7,8 +7,11 @@ R/*_cache/*
 # R/*_files/*
 R/*.tex
 r/NIVA_Oksygen_internal.qmd
+r/NIVA_Oksygen_blotbunn*
+r/NIVA_Oksygen_blotbunn_files/*
 data/*.html
 data/data_Secchi_NitroSommer_FosforSommer/VF.gdb/*
 data/code_Secchi_NitroSommer_FosforSommer/WFD2ECA/*
+data/*OLD.*
 R/code_Secchi_NitroSommer_FosforSommer/NVE.RData
 fix_filenames_etc.R
