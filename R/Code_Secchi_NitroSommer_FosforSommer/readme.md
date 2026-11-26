@@ -55,7 +55,7 @@ folder, and no relative `"../data"` paths are used.
 By running the first section of the code (KLFA.R, SECCI.R, NTOTs.R, PTOTs.R) 
 
 
-
+```
 \# if(!file.exists(datasti("VF.RData"))) {
 
 \#   download.file("https://zenodo.org/records/17702361/files/NINAnor/WFD2ECA-v2.1.zip",
@@ -129,7 +129,7 @@ By running the first section of the code (KLFA.R, SECCI.R, NTOTs.R, PTOTs.R)
 \#   unlink(datasti("WFD2ECA"), recursive = TRUE)
 
 \# }
-
+```
 
 
 the above code will download the R files and data files from the Sandvik repository and save them in the code and data folders respectively. 

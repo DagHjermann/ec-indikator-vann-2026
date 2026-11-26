@@ -61,7 +61,7 @@ _Dokumenter alle forutsetninger som kreves for å kjøre analysen og gjenskape r
   - Vi har ikke brukt noen KI-instruksjonsfiler er brukt for vedlagte leveranse  
   - KI er brukt til en viss grad for genrerering av kode, mest i chat-modus  
 - **Programmeringsspråk:**
-  - R 4.5.3; pakker er oppgitt i de enkelte script    
+  - R >= 4.5.3; pakker er oppgitt i de enkelte script    
 
 ## 4. Struktur
 
@@ -70,13 +70,20 @@ Dette repoet følger en standard mappestruktur for å gjøre det enkelt å navig
 - _/config_ - Konfigurasjonsfiler, parameterfiler.
 - _/notebooks_ - Python eller Rmd Notebooks
 - _/src_, _/R_, _/sql_ - Alle kodefiler
-- _/data_ - Eksempeldata eller små testfiler (Dersom hensiktsmessig), samt metadata
+    - Quarto-script (`.qmd*) for de fleste indikatorer
+        - Disse har tilhørende HTML-filer (og mappe for bildefiler) som er rendret av NIVA  
+        - HTML-filene har session info (R and R package versions at the time of the project)  
+    - R-script (`.R`) for NIVA_Fjord  
+    - En egen undermappe `Code_Secchi_NitroSommer_FosforSommer` for NIVA_Secchi, NIVA_KlorofyllA, 
+    NIVA_FosforSommer, NIVA_NitroSommer   
+        - legg merke til at det er en egen `readme.md` for disse scriptene  
+- _/data_ - Data for indikatorene-, samt metadata
 - _/docs_ - Metodikk, rapporter, dokumentasjon
-- _/outputs_ - Resultater (figurer, tabeller, rapporter)
+- _/outputs_ - Resultater (figurer, tabeller, rapporter)  
 
 Oppdragstaker kan opprette andre nødvendige filer (som feks. .gitignore etc.) selv.  
 
-De flesr
+
 
 ## 5. Input / Output
 
